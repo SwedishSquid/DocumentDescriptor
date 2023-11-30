@@ -17,10 +17,11 @@ class BookMeta:
         return self._filename
 
     def dump_to_str(self):
-        return json.dumps(self.fields)
+        data = {'data': self.fields}
+        return json.dumps(data)
 
     @staticmethod
     def load_from_str(str_data: str):
-        data = json.loads(str_data)
+        data = json.loads(str_data)['data']
         return BookMeta(data)
     pass

@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 from domain.new.book_data_holders.book_record import BookRecord
-from domain.new.description_stage import DescriptionStage
+from domain.new.book_data_holders.description_stage import DescriptionStage
 
 
 class WorkState:
@@ -9,18 +9,11 @@ class WorkState:
 
     def __init__(self, book_records: list):
         self._book_records = book_records
-        # self._new_paths_to_stage = dict()
-        # for record in self._book_records:
-        #     self._new_paths_to_stage[record.new_book_path] = record.description_stage
         pass
 
     @property
     def book_records(self):
         return self._book_records
-
-    # @property
-    # def new_paths_to_stage_mapping(self):
-    #     return self._new_paths_to_stage
 
     def update_with_paths(self, paths):
         new_paths_to_records = dict()

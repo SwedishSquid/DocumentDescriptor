@@ -30,12 +30,6 @@ class BookMetaScheme:
                     data[field_name] = ''
             else:
                 data[field_name] = ''
-        # mapping = self.readme_name_to_name
-        # for readme_field_name, value in readme_data.items():
-        #     if readme_field_name not in mapping:
-        #         raise ValueError(f'readme field name \"{readme_field_name}\" is not mapped')
-        #     name = mapping[readme_field_name]
-        #     data[name] = value
         return BookMeta(data)
 
     def make_empty_book_meta(self):

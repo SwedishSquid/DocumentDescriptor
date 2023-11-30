@@ -1,7 +1,7 @@
 from domain.new.book_data_holders.book_meta import BookMeta
 from pathlib import Path
 from domain.new.engine import Engine
-from domain.new.description_stage import DescriptionStage
+from domain.new.book_data_holders.description_stage import DescriptionStage
 
 
 class CLI:
@@ -36,7 +36,7 @@ class CLI:
             print(f'working on book at {p}')
             meta = self.read_book_meta(meta)
             d_stage = self.read_descr_stage()
-            print(f'stage = {d_stage}')
+            print(f'stage = {d_stage.name}')
             engine.save_book_data(meta, d_stage)
             print('saved')
             if not engine.try_set_book_index(engine.current_book_index + 1):
