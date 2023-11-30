@@ -6,7 +6,7 @@ from domain.new.description_stage import DescriptionStage
 class BookRecord:
     def __init__(self, old_book_path, new_book_path, description_stage: DescriptionStage):
         self.old_book_path = Path(old_book_path)
-        self.new_book_path = Path(new_book_path)
+        self.new_book_path: Path = None if new_book_path is None else Path(new_book_path)
         self.description_stage = description_stage
         pass
 

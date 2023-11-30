@@ -47,7 +47,7 @@ def read_meta_from_file():
 
 def write_work_state():
     state_data = {'source_and_result_book_mapping': [
-        {'source': 'source path', 'result': 'result path'}
+        {'source': 'source path_to_config_file', 'result': 'result path_to_config_file'}
     ]}
     s = json.dumps(state_data)
     dir_path.joinpath('workstate.json').write_text(s)
@@ -70,4 +70,15 @@ def do_pathlib_stuff():
     pass
 
 
-do_pathlib_stuff()
+# do_pathlib_stuff()
+
+# print(path_to_config_file)
+# print(path_to_config_file.with_suffix(''))
+# print(path_to_config_file)
+
+fish_path = pathlib.Path(r'E:\dev\DocumentDescriptor\DocumentDescriptor\dir_that_git_ignores\text.txt')
+fish_dir = fish_path.with_suffix('')
+fish_dir.mkdir()
+dst_path = pathlib.Path(fish_dir, fish_path.name)
+fish_path.rename(dst_path)
+print(fish_path)

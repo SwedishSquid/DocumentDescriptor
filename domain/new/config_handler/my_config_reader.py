@@ -6,8 +6,8 @@ from domain.new.book_data_holders.book_meta_scheme import BookMetaScheme
 class MyConfigReader:
     _field_section_name = 'field_section'
 
-    def __init__(self, path):
-        self.path = Path(path)
+    def __init__(self, path_to_config_file):
+        self.path = Path(path_to_config_file)
         self.config_data = json.loads(self.path.read_text())
         pass
 

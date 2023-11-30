@@ -38,6 +38,9 @@ class BookMetaScheme:
         #     data[name] = value
         return BookMeta(data)
 
+    def make_empty_book_meta(self):
+        return self.make_book_meta_from_readme_data(dict())
+
     @property
     def name_to_human_readable_name(self):
         data = dict()

@@ -12,7 +12,7 @@ class ReadmeReader:
     def read(self, path_to_readme):
         with codecs.open(path_to_readme, 'r', self.encoding) as f:
             readme_text = f.read()
-        print(readme_text)
+        # print(readme_text)
         m = re.findall(r'(.+):(.+)', readme_text)
         readme_data = dict()
         for readme_field_name, readme_field_value in m:
