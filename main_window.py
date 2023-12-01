@@ -10,14 +10,21 @@ class MainWindow(QMainWindow):
         self.setSizePolicy(size_policy)
         self.setWindowTitle("Document descriptor")
         self.setCentralWidget(FileMenuWidget())
-        self.setMenuBar(QMenuBar())
-        self.file_menu = QMenu("Файл")
+        self.setMenuBar(self._create_menu_bar())
+
+    def _create_menu_bar(self):
+        menu_bar = QMenuBar()
+        menu_bar.addMenu(self._create_file_menu())
         self.help_action = QAction("Помощь")
+        menu_bar.addAction(self.help_action)
+        return menu_bar
+
+    def _create_file_menu(self):
+        file_menu = QMenu("Файл")
         self.open_file_action = QAction("Открыть файл")
         self.open_folder_action = QAction("Открыть папку")
         self.open_recent_action = QAction("Открыть недавние...")
-        self.menuBar().addMenu(self.file_menu)
-        self.menuBar().addAction(self.help_action)
-        self.file_menu.addAction(self.open_file_action)
-        self.file_menu.addAction(self.open_folder_action)
-        self.file_menu.addAction(self.open_recent_action)
+        file_menu.addAction(self.open_file_action)
+        file_menu.addAction(self.open_folder_action)
+        file_menu.addAction(self.open_recent_action)
+        return file_menu

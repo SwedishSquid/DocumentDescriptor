@@ -1,30 +1,53 @@
 import os
 from PySide6.QtGui import QPalette, QColorConstants, QPixmap, QFont
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QSizePolicy, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, \
+    QSizePolicy, QHBoxLayout, QPushButton, QFileDialog
 
 
 class SelectLocationWidget(QWidget):
-    def __init__(self, do_selection):
+    def __init__(self, caption: str, input_field_info: str):
         super().__init__()
-        self.select_file_sub_widget = QWidget()
-        self.select_file_sub_widget.setLayout(QHBoxLayout())
-        self.setLayout(QVBoxLayout())
-        self.header_label = QLabel('Путь до исходных файлов' if do_selection else "Где сохранить результат")
-        self.header_label.setMargin(10)
-        self.header_label.setFont(QFont('Arial', 14))
-        self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText(f"*путь до {'файла или ' if do_selection else ''}папки*")
-        self.enter_file_manager_context_button = QPushButton()  # к этой кнопке надо прикрутить тот самый функционал
-        self.enter_file_manager_context_button.setIcon(
-            QPixmap(os.path.join('resources', 'folder')))
-        self.layout().addWidget(self.header_label)
-        self.layout().addWidget(self.select_file_sub_widget)
-        self.select_file_sub_widget.layout().addWidget(self.input_field)
-        self.select_file_sub_widget.layout().addWidget(self.enter_file_manager_context_button)
-        self.select_file_sub_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        self.palette = QPalette()
-        self.palette.setColor(self.backgroundRole(), QColorConstants.Gray)
-        self.setAutoFillBackground(True)
-        self.setPalette(self.palette)
-        self.setSizePolicy(QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum))
+        sub_widget = QWidget()
+        sub_widget.setLayout(QHBoxLayout())
+        sub_widget.layout().addWidget(
+            self._create_input_field(input_field_info))
+        sub_widget.layout().addWidget(self._create_enter_file_manager_button())
+        sub_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self._create_header_label(caption))
+        layout.addWidget(sub_widget)
+        self.setLayout(layout)
+
+        self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
         self.setMinimumWidth(500)
+
+        palette = QPalette()
+        palette.setColor(self.backgroundRole(), QColorConstants.Gray)
+        self.setPalette(palette)
+        self.setAutoFillBackground(True)
+
+    def _create_header_label(self, caption: str):
+        label = QLabel(caption)
+        label.setMargin(10)
+        label.setFont(QFont('Arial', 14))
+        return label
+
+    def _create_input_field(self, info: str):
+        input_field = QLineEdit()
+        input_field.setPlaceholderText(info)
+        return input_field
+
+    def _create_enter_file_manager_button(self):
+        button = QPushButton()
+        button.setIcon(QPixmap(os.path.join('resources', 'folder')))
+        button.clicked.connect(self._get_directory)
+        return button
+
+    def _get_directory(self):
+        response = \
+            QFileDialog.getExistingDirectory(self,
+                                             caption="Выбрать папку",
+                                             options=QFileDialog.ShowDirsOnly)
+        if response:
+            print(response)
