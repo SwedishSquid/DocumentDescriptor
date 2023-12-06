@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
-from domain.new.book_data_holders.book_meta_scheme import BookMetaScheme
+from domain.book_data_holders.book_meta_scheme import BookMetaScheme
 
 
+# fixme: конфиг неразрывно связан с читалкой
 class MyConfigReader:
     _field_section_name = 'field_section'
 

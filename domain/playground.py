@@ -1,8 +1,8 @@
 import json
 import pathlib
-from domain.new.book_data_holders.readme_handler import readme_reader
-from domain.new.config_handler.my_config_reader import MyConfigReader
-from domain.new.meta_handler.meta_filehandler import MetaFilehandler
+from domain.submodules import readme_reader
+from domain.submodules.my_config_reader import MyConfigReader
+from domain.submodules.meta_filehandler import MetaFilehandler
 
 path = pathlib.Path(r'E:\dev\DocumentDescriptor\DocumentDescriptor\dir_that_git_ignores\config.json')
 dir_path = path.parent

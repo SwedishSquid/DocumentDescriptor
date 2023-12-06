@@ -1,6 +1,6 @@
 import codecs
 import re
-from domain.new.book_data_holders.book_meta_scheme import BookMetaScheme
+from domain.book_data_holders.book_meta_scheme import BookMetaScheme
 
 
 class ReadmeReader:

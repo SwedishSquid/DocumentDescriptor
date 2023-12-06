@@ -1,15 +1,16 @@
-from domain.new.book_data_holders.book_meta import BookMeta
+from domain.book_data_holders.book_info import BookInfo
 from pathlib import Path
-from domain.new.engine import Engine
-from domain.new.book_data_holders.description_stage import DescriptionStage
+from domain.engine import Engine
+from domain.book_data_holders.description_stage import DescriptionStage
 
 
 class CLI:
-    def read_book_meta(self, meta: BookMeta):
-        for k in meta.fields:
-            print(f'{k} : {meta.fields[k]}', end='')
+    def read_book_meta(self, info: BookInfo):
+        meta = info.book_meta
+        for name in meta.fields.keys():
+            print(f'{name} aka {info.get_human_readable_name(name)} : {meta.fields[name]}', end='')
             plus = input()
-            meta.fields[k] += plus
+            meta.fields[name] += plus
             # print()
         return meta
 
@@ -32,9 +33,10 @@ class CLI:
         print(f'start at {path}')
         engine = Engine(path)
         while True:
-            p, meta = engine.get_current_book()
-            print(f'working on book at {p}')
-            meta = self.read_book_meta(meta)
+            book_info = engine.get_current_book()
+            print(f'working on book at {book_info.absolute_path}')
+            print(f'current stage is {book_info.description_stage.name}')
+            meta = self.read_book_meta(book_info)
             d_stage = self.read_descr_stage()
             print(f'stage = {d_stage.name}')
             engine.save_book_data(meta, d_stage)

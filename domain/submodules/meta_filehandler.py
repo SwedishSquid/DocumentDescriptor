@@ -1,5 +1,5 @@
 from pathlib import Path
-from domain.new.book_data_holders.book_meta import BookMeta
+from domain.book_data_holders.book_meta import BookMeta
 
 
 class MetaFilehandler:

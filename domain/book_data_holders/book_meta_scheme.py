@@ -1,4 +1,4 @@
-from domain.new.book_data_holders.book_meta import BookMeta
+from domain.book_data_holders.book_meta import BookMeta
 
 
 class BookMetaScheme:
@@ -34,6 +34,11 @@ class BookMetaScheme:
 
     def make_empty_book_meta(self):
         return self.make_book_meta_from_readme_data(dict())
+
+    def get_human_readable_name(self, name: str):
+        if name not in self._name_to_data:
+            raise ValueError(f'field with name {name} not found in the scheme')
+        return self._name_to_data[name][0]
 
     @property
     def name_to_human_readable_name(self):

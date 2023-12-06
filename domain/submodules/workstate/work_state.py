@@ -1,13 +1,13 @@
 from pathlib import Path
 import json
-from domain.new.book_data_holders.book_record import BookRecord
-from domain.new.book_data_holders.description_stage import DescriptionStage
+from domain.submodules.workstate.workstate_book_record import WorkstateBookRecord
+from domain.book_data_holders.description_stage import DescriptionStage
 
 
 class WorkState:
     records_list_name = 'book_records_list'
 
-    def __init__(self, book_records: list):
+    def __init__(self, book_records: list[WorkstateBookRecord]):
         self._book_records = book_records
         pass
 
@@ -20,13 +20,13 @@ class WorkState:
         for record in self._book_records:
             if record.description_stage == DescriptionStage.NOT_STARTED:
                 continue
-            new_paths_to_records[str(record.new_book_path)] = record
+            new_paths_to_records[str(record.book_path)] = record
         result_records = []
         for path in paths:
             if str(path) in new_paths_to_records:
                 result_records.append(new_paths_to_records[str(path)])
             else:
-                result_records.append(BookRecord(path, None, DescriptionStage.NOT_STARTED))
+                result_records.append(WorkstateBookRecord(path, None, DescriptionStage.NOT_STARTED))
         self._book_records = result_records
         pass
 
@@ -45,7 +45,7 @@ class WorkState:
         if not path.is_file():
             raise ValueError(f'{path} is not a file')
         data = json.loads(path.read_text())
-        records = [BookRecord.load_from_str(record_str)
+        records = [WorkstateBookRecord.load_from_str(record_str)
                    for record_str in data[cls.records_list_name]]
         return WorkState(records)
     pass
