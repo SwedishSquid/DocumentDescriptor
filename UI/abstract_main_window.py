@@ -2,7 +2,7 @@ from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QSizePolicy, QMainWindow, QMenuBar, QMenu
 
 
-class MainWindow(QMainWindow):
+class AMainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)

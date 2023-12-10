@@ -1,11 +1,11 @@
-from UI.main_window import MainWindow
+from UI.abstract_main_window import AMainWindow
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 from PySide6.QtCore import Qt
 from UI.BeginningScreen.select_folder_location_widget\
     import SelectFolderLocationWidget
 
 
-class BeginningWindow(MainWindow):
+class BeginningWindow(AMainWindow):
     def __init__(self):
         super().__init__()
         self.setCentralWidget(self._create_select_folders_widget())
