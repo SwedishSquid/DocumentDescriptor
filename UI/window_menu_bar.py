@@ -1,20 +1,13 @@
+from PySide6.QtWidgets import QMenuBar, QMenu
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QSizePolicy, QMainWindow, QMenuBar, QMenu
 
 
-class AMainWindow(QMainWindow):
+class MenuBar(QMenuBar):
     def __init__(self):
         super().__init__()
-        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        self.setWindowTitle("Document descriptor")
-        self.setMenuBar(self._create_menu_bar())
-
-    def _create_menu_bar(self):
-        menu_bar = QMenuBar()
-        menu_bar.addMenu(self._create_file_menu())
+        self.addMenu(self._create_file_menu())
         self.help_action = QAction("Помощь")
-        menu_bar.addAction(self.help_action)
-        return menu_bar
+        self.addAction(self.help_action)
 
     def _create_file_menu(self):
         file_menu = QMenu("Файл")

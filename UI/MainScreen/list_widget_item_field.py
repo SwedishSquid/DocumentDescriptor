@@ -10,18 +10,8 @@ class Field(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self._create_label(caption))
         layout.addWidget(QLineEdit())
-        layout.addStretch()
-        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
 
         self.setLayout(layout)
-
-        self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-        self.setMinimumWidth(500)
-
-        palette = QPalette()
-        palette.setColor(self.backgroundRole(), QColorConstants.Gray)
-        self.setPalette(palette)
-        self.setAutoFillBackground(True)
 
     def _create_label(self, caption: str):
         label = QLabel(caption)
