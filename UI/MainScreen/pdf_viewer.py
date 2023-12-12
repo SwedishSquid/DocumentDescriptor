@@ -8,8 +8,7 @@ class PDFViewer(QWidget):
         super().__init__()
 
         self.document = QPdfDocument()
-        self.document.load(
-            r"C:\Users\Евгений\Downloads\lib\lib\Только image.Райзер Герберт Дж. Комбинаторная математика.pdf")
+        # self.document.load(r"C:\Users\Евгений\Downloads\lib\lib\Только image.Райзер Герберт Дж. Комбинаторная математика.pdf")
         view = QPdfView()
         view.setPageMode(QPdfView.PageMode.MultiPage)
         view.setDocument(self.document)

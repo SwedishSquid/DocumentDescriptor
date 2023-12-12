@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
             item = QListWidgetItem()
             widget = Field("Автор" + str(i))
 
-            item.setSizeHint(widget.sizeHint())
+            item.setSizeHint(widget.size())
             list_widget.addItem(item)
             list_widget.setItemWidget(item, widget)
 

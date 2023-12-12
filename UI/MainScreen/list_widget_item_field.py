@@ -10,6 +10,7 @@ class Field(QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self._create_label(caption))
         layout.addWidget(QLineEdit())
+        self.setFixedHeight(120)
 
         self.setLayout(layout)
 
