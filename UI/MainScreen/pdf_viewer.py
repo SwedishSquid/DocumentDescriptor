@@ -11,6 +11,7 @@ class PDFViewer(QWidget):
         # self.document.load(r"C:\Users\Евгений\Downloads\lib\lib\Только image.Райзер Герберт Дж. Комбинаторная математика.pdf")
         view = QPdfView()
         view.setPageMode(QPdfView.PageMode.MultiPage)
+        view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
         view.setDocument(self.document)
 
         self.setLayout(QVBoxLayout())

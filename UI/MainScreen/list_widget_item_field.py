@@ -8,8 +8,13 @@ class Field(QWidget):
         super().__init__()
 
         layout = QVBoxLayout()
-        layout.addWidget(self._create_label(caption))
-        layout.addWidget(QLineEdit())
+        layout.addStretch()
+        layout.addWidget(self._create_label(caption), 1)
+        line_edit = QLineEdit()
+        line_edit.setMinimumHeight(50)
+        line_edit.setFrame(True)
+        line_edit.setFont(QFont('Arial', 14))
+        layout.addWidget(line_edit, 5)
         self.setFixedHeight(120)
 
         self.setLayout(layout)

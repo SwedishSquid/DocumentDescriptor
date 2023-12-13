@@ -1,4 +1,4 @@
-import os
+from UI.constant_paths import path_to_pictures
 from PySide6.QtGui import QPalette, QColorConstants, QPixmap, QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, \
     QSizePolicy, QHBoxLayout, QPushButton, QFileDialog
@@ -40,7 +40,7 @@ class SelectFolderLocationWidget(QWidget):
 
     def _create_enter_file_manager_button(self):
         button = QPushButton()
-        button.setIcon(QPixmap(os.path.join('resources', 'folder')))
+        button.setIcon(QPixmap(str(path_to_pictures.joinpath('folder'))))
         button.clicked.connect(self._get_directory)
         return button
 
