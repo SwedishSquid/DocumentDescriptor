@@ -5,8 +5,10 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, \
 
 
 class SelectFolderLocationWidget(QWidget):
-    def __init__(self, caption: str, input_field_info: str):
+    def __init__(self, caption: str, input_field_info: str, set_project_path_func):
         super().__init__()
+        self.set_project_path_func = set_project_path_func
+
         sub_widget = QWidget()
         sub_widget.setLayout(QHBoxLayout())
         sub_widget.layout().addWidget(
@@ -51,4 +53,4 @@ class SelectFolderLocationWidget(QWidget):
                                              options=
                                              QFileDialog.Option.ShowDirsOnly)
         if response:
-            print(response)
+            self.set_project_path_func(response)

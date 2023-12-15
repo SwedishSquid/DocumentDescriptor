@@ -13,10 +13,11 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Document descriptor")
         self.setMenuBar(MenuBar())
+        self.pdf_viewer = PDFViewer()
 
         layout = QHBoxLayout()
         layout.addWidget(self._create_left_widget())
-        layout.addWidget(PDFViewer())
+        layout.addWidget(self.pdf_viewer)
         widget = QWidget()
         widget.setLayout(layout)
 

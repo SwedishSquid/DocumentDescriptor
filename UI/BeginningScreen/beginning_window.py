@@ -6,34 +6,35 @@ from UI.window_menu_bar import MenuBar
 
 
 class BeginningWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, set_project_path, show_main_window):
         super().__init__()
         self.setWindowTitle("Document descriptor")
         self.setMenuBar(MenuBar())
 
-        self.setCentralWidget(self._create_select_folders_widget())
+        self.setCentralWidget(self._create_select_folders_widget(set_project_path, show_main_window))
 
-    def _create_select_folders_widget(self):
+    def _create_select_folders_widget(self, set_project_path, show_main_window):
         widget = QWidget()
         layout = QVBoxLayout()
         layout.addWidget(
             SelectFolderLocationWidget(
-                "Путь до исходных файлов", "Введите путь"))
-        layout.addWidget(
-            SelectFolderLocationWidget(
-                "Где сохранить результат", "Введите путь"))
+                "Путь до исходных файлов", "Введите путь", set_project_path))
+        # layout.addWidget(
+        #     SelectFolderLocationWidget(
+        #         "Где сохранить результат", "Введите путь", set_project_path))
 
-        layout.addWidget(self._create_continue_button())
+        layout.addWidget(self._create_continue_button(show_main_window))
 
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         widget.setLayout(layout)
         return widget
 
-    def _create_continue_button(self):
+    def _create_continue_button(self, show_main_window):
         widget = QWidget()
         layout = QVBoxLayout()
         button = QPushButton("Продолжить")
         button.setMinimumWidth(200)
+        button.clicked.connect(show_main_window)
         layout.addWidget(button)
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         widget.setLayout(layout)

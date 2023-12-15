@@ -7,8 +7,8 @@ from domain.book_data_holders.description_stage import DescriptionStage
 from domain.submodules.my_config_reader import MyConfigReader
 from domain.submodules.readme_reader import ReadmeReader
 from domain.book_data_holders.book_info import BookInfo
-from submodules.lib_scanner import LibScanner
-from submodules.book_preprocessor import BookPreprocessor
+from domain.submodules.lib_scanner import LibScanner
+from domain.submodules.book_preprocessor import BookPreprocessor
 from collections import namedtuple
 
 FullListRecord = namedtuple('FullListRecord', 'rel_path descr_stage')
@@ -97,7 +97,7 @@ class Engine:
     def _get_current_book_workstate_record(self) -> WorkstateBookRecord:
         return self.workstate.book_records[self._current_book_index]
 
-    def _get_book_meta(self) -> BookMeta | None:
+    def _get_book_meta(self):
         """return book_meta for an index
         None if index not found"""
         workstate_record = self._get_current_book_workstate_record()
@@ -129,7 +129,7 @@ class Engine:
     def _scan_lib(self):
         """gets relative paths from lib_root to every file of book-like
         extension """
-        extensions = ['djvu', 'pdf']
+        extensions = ['pdf']
 
         scanner = LibScanner()
         absolute_paths = scanner.find_all_files(extensions, self.lib_root_path)
