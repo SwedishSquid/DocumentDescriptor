@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QMainWindow
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QMainWindow, QPushButton
 from PySide6.QtCore import Qt
 from UI.BeginningScreen.select_folder_location_widget\
     import SelectFolderLocationWidget
@@ -23,6 +23,20 @@ class BeginningWindow(QMainWindow):
             SelectFolderLocationWidget(
                 "Где сохранить результат", "Введите путь"))
 
+        layout.addWidget(self._create_continue_button())
+
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         widget.setLayout(layout)
         return widget
+
+    def _create_continue_button(self):
+        widget = QWidget()
+        layout = QVBoxLayout()
+        button = QPushButton("Продолжить")
+        button.setMinimumWidth(200)
+        layout.addWidget(button)
+        layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        widget.setLayout(layout)
+
+        return widget
+

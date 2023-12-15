@@ -6,8 +6,8 @@ from UI.MainScreen.main_window import MainWindow
 
 if __name__ == "__main__":
     app = QApplication()
-    # main_window = BeginningWindow()
-    main_window = MainWindow()
+    main_window = BeginningWindow()
+    # main_window = MainWindow()
     main_window.showMaximized()
     app.setWindowIcon(QIcon(str(path_to_pictures.joinpath('file'))))
     app.exec()
