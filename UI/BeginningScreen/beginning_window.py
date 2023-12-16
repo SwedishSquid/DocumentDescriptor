@@ -6,35 +6,36 @@ from UI.window_menu_bar import MenuBar
 
 
 class BeginningWindow(QMainWindow):
-    def __init__(self, set_project_path, show_main_window):
+    def __init__(self, view):
         super().__init__()
+        self.view = view
         self.setWindowTitle("Document descriptor")
         self.setMenuBar(MenuBar())
 
-        self.setCentralWidget(self._create_select_folders_widget(set_project_path, show_main_window))
+        self.setCentralWidget(self._create_select_folders_widget())
 
-    def _create_select_folders_widget(self, set_project_path, show_main_window):
+    def _create_select_folders_widget(self):
         widget = QWidget()
         layout = QVBoxLayout()
         layout.addWidget(
             SelectFolderLocationWidget(
-                "Путь до исходных файлов", "Введите путь", set_project_path))
+                "Путь до исходных файлов", "Введите путь", self.view))
         # layout.addWidget(
         #     SelectFolderLocationWidget(
         #         "Где сохранить результат", "Введите путь", set_project_path))
 
-        layout.addWidget(self._create_continue_button(show_main_window))
+        layout.addWidget(self._create_continue_button())
 
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         widget.setLayout(layout)
         return widget
 
-    def _create_continue_button(self, show_main_window):
+    def _create_continue_button(self):
         widget = QWidget()
         layout = QVBoxLayout()
         button = QPushButton("Продолжить")
         button.setMinimumWidth(200)
-        button.clicked.connect(show_main_window)
+        button.clicked.connect(self.view.show_main_window)
         layout.addWidget(button)
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         widget.setLayout(layout)

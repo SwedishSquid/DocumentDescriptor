@@ -5,8 +5,9 @@ from PySide6.QtCore import QSize
 
 
 class ControlButtons(QWidget):
-    def __init__(self):
+    def __init__(self, view):
         super().__init__()
+        self.view = view
         layout = QHBoxLayout()
         layout.addWidget(self._create_full_list_button_())
         layout.addWidget(self._create_decline_button())
@@ -64,6 +65,8 @@ class ControlButtons(QWidget):
 
     def _create_continue_button(self):
         button = QPushButton()
+        button.clicked.connect(self.view.save_book_meta_as_finished)
+        button.clicked.connect(self.view.show_next_book)
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('right-arrow'))))
         button.setIconSize(QSize(96, 96))
