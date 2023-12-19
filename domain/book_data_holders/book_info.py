@@ -1,6 +1,7 @@
 from domain.book_data_holders.book_meta import BookMeta
 from domain.book_data_holders.book_meta_scheme import BookMetaScheme
 from domain.submodules.workstate.workstate_book_record import WorkstateBookRecord
+from pathlib import Path
 
 
 class BookInfo:
@@ -12,7 +13,7 @@ class BookInfo:
     def __init__(self, book_meta: BookMeta, absolute_path,
                  meta_scheme: BookMetaScheme, workstate_record: WorkstateBookRecord):
         self.book_meta = book_meta
-        self.absolute_path = absolute_path
+        self.absolute_path = Path(absolute_path)
         self.meta_scheme = meta_scheme
         self.workstate_record = workstate_record.__copy__()
         pass

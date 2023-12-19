@@ -129,7 +129,7 @@ class Engine:
     def _scan_lib(self):
         """gets relative paths from lib_root to every file of book-like
         extension """
-        extensions = ['pdf']
+        extensions = ['djvu', 'pdf']
 
         scanner = LibScanner()
         absolute_paths = scanner.find_all_files(extensions, self.lib_root_path)
