@@ -1,14 +1,14 @@
-from PySide6.QtWidgets import QListWidget, QListWidgetItem, QHBoxLayout,\
-    QWidget, QVBoxLayout, QAbstractItemView
-from UI.MainScreen.list_item_field import Field
+from PySide6.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
+from UI.MainScreen.field_list_item import Field
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColorConstants
 
 
-class ListFields(QListWidget):
+class FieldList(QListWidget):
     def __init__(self):
         super().__init__()
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
+        self.verticalScrollBar().setSingleStep(5)
         self.setSpacing(3)
 
     def add_field(self, caption: str, content: str, name: str):

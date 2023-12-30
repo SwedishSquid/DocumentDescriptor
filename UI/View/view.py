@@ -1,7 +1,7 @@
 from app.App import App
-from domain.book_data_holders.book_info import BookInfo
 from UI.BeginningScreen.beginning_window import BeginningWindow
 from UI.MainScreen.main_window import MainWindow
+from UI.MainScreen.book_list import BookList
 from UI.constant_paths import path_to_pictures
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
@@ -36,6 +36,7 @@ class View:
         self.current_book_info = self.app.get_next_book()
         if self.current_book_info is None:
             quit()
+        self.app.save_as_in_progress(self.current_book_info.book_meta)
         self._show_book()
 
     def _show_book(self):
@@ -44,18 +45,30 @@ class View:
         self._show_book_meta_fields()
 
     def _show_book_meta_fields(self):
-        list_fields = self.main_window.list_fields
-        list_fields.clear()
+        field_list = self.main_window.field_list
+        field_list.clear()
         fields = self.current_book_info.book_meta.fields
         meta_scheme = self.current_book_info.meta_scheme
         for field_name in fields:
             name = meta_scheme.get_human_readable_name(field_name)
-            list_fields.add_field(name, fields[field_name], field_name)
+            field_list.add_field(name, fields[field_name], field_name)
 
-    def save_book_meta_as_finished(self):
-        list_fields = self.main_window.list_fields
+    def _save_fields_to_book_meta(self):
+        field_list = self.main_window.field_list
         book_meta = self.current_book_info.book_meta
-        for name, content in list_fields.get_all_fields():
+        for name, content in field_list.get_all_fields():
             book_meta.fields[name] = content
 
-        self.app.save_as_finished(book_meta)
+    def save_book_meta_as_finished(self):
+        self._save_fields_to_book_meta()
+        self.app.save_as_finished(self.current_book_info.book_meta)
+
+    def save_book_meta_as_rejected(self):
+        self._save_fields_to_book_meta()
+        self.app.save_as_rejected(self.current_book_info.book_meta)
+
+    def show_full_book_list(self, book_list: BookList):
+        book_list.clear()
+        for book_record in self.app.get_full_book_list():
+            book_list.add_book(
+                str(book_record.rel_path), book_record.descr_stage)

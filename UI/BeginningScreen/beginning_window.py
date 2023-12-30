@@ -20,9 +20,6 @@ class BeginningWindow(QMainWindow):
         layout.addWidget(
             SelectFolderLocationWidget(
                 "Путь до исходных файлов", "Введите путь", self.view))
-        # layout.addWidget(
-        #     SelectFolderLocationWidget(
-        #         "Где сохранить результат", "Введите путь", set_project_path))
 
         layout.addWidget(self._create_continue_button())
 

@@ -1,6 +1,5 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit,\
-    QSizePolicy, QLayout
-from PySide6.QtGui import QFont, QPalette, QColorConstants
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit
+from PySide6.QtGui import QFont
 
 
 class Field(QWidget):
