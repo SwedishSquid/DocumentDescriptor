@@ -10,6 +10,7 @@ class ReadmeReader:
         pass
 
     def read(self, path_to_readme):
+        # todo: check if this (codecs.open) works with long filenames
         with codecs.open(path_to_readme, 'r', self.encoding) as f:
             readme_text = f.read()
         # print(readme_text)

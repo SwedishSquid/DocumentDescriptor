@@ -8,11 +8,13 @@ class MetaFilehandler:
 
     def write_book_meta(self, book_meta: BookMeta, path_to_book_dir):
         path = self._make_path(path_to_book_dir)
+        # todo: replace with utils call (if it is still in use)
         path.write_text(book_meta.dump_to_str(), encoding=self.encoding)
         pass
 
     def read_from_file(self, path_to_book_dir):
         path = self._make_path(path_to_book_dir)
+        # todo: replace with utils call
         str_data = path.read_text(encoding=self.encoding)
         return BookMeta.load_from_str(str_data)
 
