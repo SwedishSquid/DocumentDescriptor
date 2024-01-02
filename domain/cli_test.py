@@ -47,5 +47,5 @@ class CLI:
         pass
 
 
-path_to_proj = Path(r'E:\ProjectLib\result_root')
+path_to_proj = Path(r"D:\InterestingStuff\DocDescriptorLib")
 CLI().run(path_to_proj)
