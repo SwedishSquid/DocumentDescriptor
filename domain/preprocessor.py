@@ -18,16 +18,14 @@ class Preprocessor:
 
     def preprocess_with_generator(self):
         """yields current preprocessed count and total amount"""
-        abs_paths = LibScanner.find_all_files(self.config.extensions,
-                                              lib_root_path=self.proj_folder_manager.lib_root_path)
-        # todo: delegate state creation to project folder manager
-        state = State.create_new(self.project_dir, abs_paths)
-        state.dump_all()
-
         # todo: check if already preprocessed
+        if State.exists(self.project_dir):
+            raise FileExistsError('it seems that preprocessing already took place')
 
-        # todo: take those from state
-        books_to_preprocess_paths = abs_paths
+        books_abs_paths = LibScanner.find_all_files(self.config.extensions,
+                                              lib_root_path=self.proj_folder_manager.lib_root_path)
+
+        books_to_preprocess_paths = books_abs_paths
 
         count = 0
         total_amount = len(books_to_preprocess_paths)
@@ -38,6 +36,10 @@ class Preprocessor:
             self.preprocess_book(p)
             count += 1
             yield count, total_amount
+
+        folders_paths = [p.with_suffix('') for p in books_abs_paths]
+
+        State.create_new(self.project_dir, folders_paths)
         pass
 
     def preprocess_book(self, book_path: Path):
@@ -64,11 +66,3 @@ class Preprocessor:
         print(f'pretend to recognize text at {folder_manager.temp_book_path}')
         pass
     pass
-
-
-proje_dir = r'E:\ProjectLib\result_root'
-
-
-for cow, total in Preprocessor(proje_dir).preprocess_with_generator():
-    print(f'{cow}/{total}')
-

@@ -1,49 +1,86 @@
 from pathlib import Path
-import json
 from collections import namedtuple
-from domain.book_data_holders.description_stage import DescriptionStage
+from domain.book_data_holders.book_folder_manager import BookFolderManager
+import utils
 
 
 BookStateRecord = namedtuple('BookStateRecord', 'rel_folder_path descr_stage')
 
 
 class State:
-    encoding = 'utf-8'
+    _state_folder_name = 'state'
+    _book_folders_filename = 'book_folders.json'
+    _dynamic_state_filename = 'dynamic_state.json'
 
-    def __init__(self, project_path, book_index, records: list):
+    _book_folders_key = 'book_folders'
+    _index_key = 'index'
+
+    def __init__(self, project_path):
         self.project_path = Path(project_path)
-        self.state_file_path = Path(project_path, 'state.json')
-        self.book_index = book_index
-        self._records = records
+        if not self.project_path.exists() or not self.project_path.is_dir():
+            raise NotADirectoryError(f'project path must be a directory and exist; got {self.project_path}')
+
+        self.book_folders = self._load_book_folders()
+
+        self.book_folders_managers = [BookFolderManager(bf)
+                                      for bf in self.book_folders]
         pass
 
-    @classmethod
-    def load(cls, project_path):
-        state_file_path = Path(project_path, 'state.json')
-        return cls._loads(state_file_path.read_text(encoding=cls.encoding),
-                          project_path=project_path)
+    def save_index(self, index):
+        dynamic_state_filepath = Path(self.project_path,
+                                      self._state_folder_name,
+                                      self._dynamic_state_filename)
+        dynamic_data = {self._index_key: index}
+        utils.write_text_to_file(dynamic_state_filepath,
+                                 utils.json_dumps(dynamic_data))
+        pass
 
-    @staticmethod
-    def _loads(s, project_path):
-        data = json.loads(s)
-        records = [BookStateRecord(rel_folder_path=Path(r['rel_folder_path']),
-                                   descr_stage=DescriptionStage(r['descr_stage']))
-                   for r in data['records']]
-        return State(project_path=project_path, book_index=data['book_index'],
-                     records=records)
+    def _load_book_folders(self):
+        """:returns: absolute paths to book folders"""
+        book_folders_path = Path(self.project_path,
+                                 self._state_folder_name,
+                                 self._book_folders_filename)
+        data = utils.json_loads(utils.read_text_from_file(book_folders_path))
+        return [Path(self.project_path, p_str) for p_str in data[self._book_folders_key]]
+
+    def _load_index(self):
+        dynamic_state_path = Path(self.project_path,
+                                  self._state_folder_name,
+                                  self._dynamic_state_filename)
+        data = utils.json_loads(utils.read_text_from_file(dynamic_state_path))
+        return int(data[self._index_key])
+
+    @classmethod
+    def exists(cls, project_path: Path):
+        # todo: make more reliable check
+        return Path(project_path, cls._state_folder_name).exists()
 
     @classmethod
     def create_new(cls, project_path, book_folders_paths: list):
-        """takes absolute paths to books' folders
-        ! don't forget to save"""
-        rel_paths = cls._make_relative_paths(project_path, book_folders_paths)
-        records = [BookStateRecord(rel_folder_path=p,
-                                   descr_stage=DescriptionStage.NOT_STARTED)
-                   for p in rel_paths]
-        return State(project_path=project_path, book_index=0, records=records)
+        """takes absolute paths to books' folders"""
+        if cls.exists(project_path):
+            raise FileExistsError('state already exists')
+        utils.make_directory(Path(project_path, cls._state_folder_name))
 
-    def add_books(self, book_folders):
-        raise NotImplementedError('have some trouble making that one; how to detect what books were already prepared? to delegate!')
+        rel_paths = cls._make_relative_paths(project_path, book_folders_paths)
+        book_folders_filepath = Path(project_path,
+                                     cls._state_folder_name,
+                                     cls._book_folders_filename)
+        folders_paths_data = {cls._book_folders_key: [str(p) for p in rel_paths]}
+        utils.write_text_to_file(book_folders_filepath,
+                                 utils.json_dumps(folders_paths_data))
+
+        index = 0
+        dynamic_state_filepath = Path(project_path,
+                                      cls._state_folder_name,
+                                      cls._dynamic_state_filename)
+        dynamic_data = {cls._index_key: index}
+        utils.write_text_to_file(dynamic_state_filepath,
+                                 utils.json_dumps(dynamic_data))
+        return State(project_path=project_path)
+
+    # def add_books(self, book_folders):
+    #     raise NotImplementedError('have some trouble making that one; how to detect what books were already prepared? to delegate!')
 
     @classmethod
     def _make_relative_paths(cls, project_path, book_folders_paths: list):
@@ -60,16 +97,4 @@ class State:
                     f'book folders must be inside project folder; proj: {project_path}; book_folder: {p}')
             rel_paths.append(Path(*p.parts[proj_path_parts_len:]))
         return rel_paths
-
-    def dump_all(self):
-        self.state_file_path.write_text(self._dumps_all(), encoding=self.encoding)
-        pass
-
-    def _dumps_all(self):
-        data = {'book_index': self.book_index,
-                'records': [{'rel_folder_path': str(record.rel_folder_path),
-                             'descr_stage': record.descr_stage}
-                            for record in self._records]}
-        s = json.dumps(data, ensure_ascii=False, indent='    ')
-        return s
     pass

@@ -16,6 +16,8 @@ class BookFolderManager:
 
     def __init__(self, book_folder_path):
         self.folder_path = Path(book_folder_path)
+        if not self.folder_path.is_absolute():
+            raise ValueError(f'book_folder_path must be absolute; got {book_folder_path}')
 
         self.book_state_filepath = Path(self.folder_path,
                                         self._temp_folder_name,
@@ -39,6 +41,13 @@ class BookFolderManager:
     @property
     def temp_book_path(self):
         return self._book_copy_path
+
+    def save_book_state(self, book_state: BookState = None):
+        """if book_state == None, saves self.book_state"""
+        if book_state is not None:
+            self.book_state = book_state
+        self._dump_book_state()
+        pass
 
     def _load_book_state(self):
         return BookState.load_from_file(self.book_state_filepath)
