@@ -4,9 +4,6 @@ from domain.book_data_holders.book_folder_manager import BookFolderManager
 import utils
 
 
-BookStateRecord = namedtuple('BookStateRecord', 'rel_folder_path descr_stage')
-
-
 class State:
     _state_folder_name = 'state'
     _book_folders_filename = 'book_folders.json'
@@ -16,6 +13,8 @@ class State:
     _index_key = 'index'
 
     def __init__(self, project_path):
+        """caution: resource intensive operation
+        collects every book state in library"""
         self.project_path = Path(project_path)
         if not self.project_path.exists() or not self.project_path.is_dir():
             raise NotADirectoryError(f'project path must be a directory and exist; got {self.project_path}')
@@ -24,13 +23,17 @@ class State:
 
         self.book_folders_managers = [BookFolderManager(bf)
                                       for bf in self.book_folders]
+
+        # fixme: index not working and not saving when run via main
+        self.index = self._load_index()
         pass
 
     def save_index(self, index):
+        self.index = index
         dynamic_state_filepath = Path(self.project_path,
                                       self._state_folder_name,
                                       self._dynamic_state_filename)
-        dynamic_data = {self._index_key: index}
+        dynamic_data = {self._index_key: self.index}
         utils.write_text_to_file(dynamic_state_filepath,
                                  utils.json_dumps(dynamic_data))
         pass

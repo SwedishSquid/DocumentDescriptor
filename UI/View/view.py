@@ -29,6 +29,9 @@ class View:
     def show_main_window(self):
         self.beginning_window.close()
         self.main_window.show()
+        # todo: использовать для получения первой книги get_current_book
+        #  (позволит начать с того места, где остановились в прошлый раз)
+        #  [раньше метода get_current_book не было :)]
         self.current_book_info = self.app.try_set_index_and_get_book(0)
         self._show_book()
 

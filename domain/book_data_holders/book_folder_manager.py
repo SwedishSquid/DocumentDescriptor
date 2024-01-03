@@ -49,6 +49,13 @@ class BookFolderManager:
         self._dump_book_state()
         pass
 
+    def save_book_meta(self, meta: BookMeta = None):
+        """if meta is None, saves self.meta"""
+        if meta is not None:
+            self.meta = meta
+        self._dump_my_meta_data()
+        pass
+
     def _load_book_state(self):
         return BookState.load_from_file(self.book_state_filepath)
 

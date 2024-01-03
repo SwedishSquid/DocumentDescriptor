@@ -4,7 +4,6 @@ from domain.book_data_holders.book_meta_scheme import BookMetaSchemeAdapter
 
 
 class Config:
-    # filename = 'config.json'
 
     def __init__(self, fields: list, extensions: list, lib_root_folder_name):
         self.fields = fields
@@ -30,7 +29,7 @@ class Config:
     def loads(s):
         data = json.loads(s)
         extensions = data['extensions']
-        # fixme: fails when no readme mapping
+        # fixme: might fail when no readme mapping
         fields = [
             FieldConfigRecord(name=name,
                               human_readable_name=content['human_readable_name'],

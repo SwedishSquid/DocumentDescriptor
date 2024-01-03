@@ -4,6 +4,7 @@ from domain.engine import Engine
 from domain.book_data_holders.description_stage import DescriptionStage
 from domain.preprocessor import Preprocessor
 from domain.submodules.state import State
+from domain.submodules.project_folder_manager import ProjectFolderManager
 
 
 class CLI:
@@ -55,6 +56,13 @@ class CLI:
         pass
 
     def run(self, path: Path):
+        if not ProjectFolderManager.probe_config_file(path):
+            print('not found config file; generate new? y/n')
+            if input() != 'y':
+                print('terminate process')
+                return
+            ProjectFolderManager.create_default_config_file(path)
+
         if State.exists(path):
             print('state found; boot description')
             self.run_description_mode(path)
@@ -64,5 +72,6 @@ class CLI:
         pass
 
 
-path_to_proj = Path(r'E:\ProjectLib\result_root')
-CLI().run(path_to_proj)
+if __name__ == "__main__":
+    path_to_proj = Path(r'E:\ProjectLib\result_root')
+    CLI().run(path_to_proj)

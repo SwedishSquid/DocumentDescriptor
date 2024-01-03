@@ -39,7 +39,12 @@ class ProjectFolderManager:
     def create_default_config_file(cls, project_folder: Path):
         cls.check_project_folder(project_folder)
         conf = Config(
-            [FieldConfigRecord('author', 'Автор здесь был', 'Author')],
+            [FieldConfigRecord('author', 'Автор', 'Author'),
+             FieldConfigRecord('title', 'Название', 'Title'),
+             FieldConfigRecord('publisher', 'Издатель', 'Publisher'),
+             FieldConfigRecord('pages', 'Количество страниц', 'Pages'),
+             FieldConfigRecord('year', 'Год издания', 'Year'),
+             FieldConfigRecord('field_with_no_readme_field', 'Поле без соответствующего поля в README', None)],
             ['.pdf', '.djvu'], lib_root_folder_name='lib_root')
         utils.write_text_to_file(Path(project_folder, cls._config_file_name),
                                  conf._dumps())

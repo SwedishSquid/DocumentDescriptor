@@ -1,6 +1,6 @@
 from domain.book_data_holders.book_meta import BookMeta
 from domain.book_data_holders.book_meta_scheme import BookMetaScheme
-from domain.submodules.workstate.workstate_book_record import WorkstateBookRecord
+from domain.book_data_holders.description_stage import DescriptionStage
 from pathlib import Path
 
 
@@ -11,11 +11,11 @@ class BookInfo:
     например путь до книги, названия полей на русском, description stage"""
 
     def __init__(self, book_meta: BookMeta, absolute_path,
-                 meta_scheme: BookMetaScheme, workstate_record: WorkstateBookRecord):
+                 meta_scheme: BookMetaScheme, descr_stage: DescriptionStage):
         self.book_meta = book_meta
         self.absolute_path = Path(absolute_path)
         self.meta_scheme = meta_scheme
-        self.workstate_record = workstate_record.__copy__()
+        self._description_stage = descr_stage
         pass
 
     def get_human_readable_name(self, name: str):
@@ -23,5 +23,5 @@ class BookInfo:
 
     @property
     def description_stage(self):
-        return self.workstate_record.description_stage
+        return self._description_stage
     pass
