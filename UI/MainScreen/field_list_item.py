@@ -13,7 +13,6 @@ class Field(QWidget):
         layout.addWidget(self._create_label(caption), 1)
         layout.addWidget(self._line_edit, 5)
 
-        self.setFixedHeight(120)
         self.setLayout(layout)
 
     def get_content(self):

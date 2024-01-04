@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QDialog, QWidget, QPushButton, QLabel,\
-    QLineEdit, QVBoxLayout
+    QTextEdit, QVBoxLayout
 from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt
 
@@ -12,7 +12,7 @@ class Reject(QDialog):
         self.resize(500, 250)
 
         layout = QVBoxLayout()
-        self._line_edit = self._create_line_edit()
+        self._text_edit = self._create_line_edit()
 
         layout.addWidget(self._create_central_widget())
         layout.addWidget(self._create_confirm_button())
@@ -27,7 +27,7 @@ class Reject(QDialog):
         layout = QVBoxLayout()
         layout.addStretch()
         layout.addWidget(self._create_label("Причина отклонения документа"), 1)
-        layout.addWidget(self._line_edit, 5)
+        layout.addWidget(self._text_edit, 5)
         widget.setLayout(layout)
         widget.setMaximumHeight(100)
         return widget
@@ -39,12 +39,11 @@ class Reject(QDialog):
         return label
 
     def _create_line_edit(self):
-        line_edit = QLineEdit()
-        line_edit.setMinimumHeight(50)
-        line_edit.setFrame(True)
-        line_edit.setFont(QFont('Arial', 14))
+        text_edit = QTextEdit()
+        text_edit.setMinimumHeight(50)
+        text_edit.setFont(QFont('Arial', 14))
 
-        return line_edit
+        return text_edit
 
     def _create_confirm_button(self):
         button = QPushButton("Подтвердить")

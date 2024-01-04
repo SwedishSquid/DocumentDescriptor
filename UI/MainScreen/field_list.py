@@ -15,7 +15,7 @@ class FieldList(QListWidget):
         item = QListWidgetItem()
         widget = Field(caption, content, name)
 
-        item.setSizeHint(widget.size())
+        item.setSizeHint(widget.sizeHint())
         item.setFlags(Qt.ItemFlag.NoItemFlags)
         item.setBackground(QColorConstants.Gray)
         self.addItem(item)

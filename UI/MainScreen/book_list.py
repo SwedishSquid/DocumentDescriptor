@@ -9,13 +9,14 @@ class BookList(QListWidget):
     def __init__(self):
         super().__init__()
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
+        self.verticalScrollBar().setSingleStep(5)
         self.setSpacing(3)
 
     def add_book(self, book_name: str, stage: DescriptionStage):
         item = QListWidgetItem()
         widget = Book(self.count() + 1, book_name, stage)
 
-        item.setSizeHint(widget.size())
+        item.setSizeHint(widget.sizeHint())
         item.setFlags(Qt.ItemFlag.NoItemFlags)
         item.setBackground(QColorConstants.Gray)
         self.addItem(item)

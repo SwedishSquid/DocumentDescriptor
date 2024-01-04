@@ -22,9 +22,13 @@ class View:
         self.beginning_window.show()
         self.qapp.exec()
 
-    def set_project_path(self, path: str):
+    def try_set_project_path(self, path: str):
         if self.app.try_set_project_path(path):
-            pass
+            self.beginning_window.show_continue_button()
+            return True
+        self.beginning_window.hide_continue_button()
+        return False
+
 
     def show_main_window(self):
         self.beginning_window.close()
@@ -71,4 +75,4 @@ class View:
         book_list.clear()
         for book_record in self.app.get_full_book_list():
             book_list.add_book(
-                str(book_record.rel_path), book_record.descr_stage)
+                str(book_record.rel_path.name), book_record.descr_stage)

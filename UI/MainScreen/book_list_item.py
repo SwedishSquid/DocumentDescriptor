@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QWidget, QLabel, QHBoxLayout, QTextEdit
+from PySide6.QtWidgets import QWidget, QLabel, QHBoxLayout, QTextEdit, \
+    QSizePolicy
 from PySide6.QtGui import QFont
 from domain.book_data_holders.description_stage import DescriptionStage
 
@@ -8,11 +9,11 @@ class Book(QWidget):
         super().__init__()
 
         layout = QHBoxLayout()
-        layout.addStretch()
-        layout.addWidget(self._create_label(str(number)), 1)
-        layout.addWidget(self._create_text_holder(name), 5)
+        layout.addWidget(self._create_label(str(number)))
 
-        self.setFixedHeight(120)
+        self._text_holder = self._create_text_holder(name)
+        layout.addWidget(self._text_holder)
+
         self.setLayout(layout)
 
     def _create_label(self, caption: str):
@@ -25,4 +26,10 @@ class Book(QWidget):
         text_edit = QTextEdit()
         text_edit.setText(content)
         text_edit.setReadOnly(True)
+        text_edit.setFont(QFont('Arial', 14))
+        text_edit.document().setTextWidth(text_edit.viewport().width())
+        margins = text_edit.contentsMargins()
+        height = text_edit.document().size().height() + margins.top() \
+                                                      + margins.bottom()
+        text_edit.setFixedHeight(height)
         return text_edit
