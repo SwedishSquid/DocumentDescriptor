@@ -8,7 +8,6 @@ class PDFViewer(QWidget):
         super().__init__()
 
         self.document = QPdfDocument()
-        # self.document.load(r"C:\Users\Евгений\Downloads\lib\lib\Только image.Райзер Герберт Дж. Комбинаторная математика.pdf")
         self.view = QPdfView()
         self.view.setPageMode(QPdfView.PageMode.MultiPage)
         self.view.setZoomMode(QPdfView.ZoomMode.FitToWidth)

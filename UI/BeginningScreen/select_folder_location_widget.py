@@ -5,14 +5,14 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, \
 
 
 class SelectFolderLocationWidget(QWidget):
-    def __init__(self, caption: str, input_field_info: str, set_project_path_func):
+    def __init__(self, caption: str, input_field_info: str, view):
         super().__init__()
-        self.set_project_path_func = set_project_path_func
+        self.view = view
 
         sub_widget = QWidget()
         sub_widget.setLayout(QHBoxLayout())
-        sub_widget.layout().addWidget(
-            self._create_input_field(input_field_info))
+        self._input_field = self._create_input_field(input_field_info)
+        sub_widget.layout().addWidget(self._input_field)
         sub_widget.layout().addWidget(self._create_enter_file_manager_button())
         sub_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
@@ -47,10 +47,13 @@ class SelectFolderLocationWidget(QWidget):
         return button
 
     def _get_directory(self):
-        response = \
+        dir_path = \
             QFileDialog.getExistingDirectory(self,
                                              caption="Выбрать папку",
                                              options=
                                              QFileDialog.Option.ShowDirsOnly)
-        if response:
-            self.set_project_path_func(response)
+        if dir_path:
+            if self.view.try_set_project_path(dir_path):
+                self._input_field.setText(dir_path)
+            else:
+                self._input_field.clear()

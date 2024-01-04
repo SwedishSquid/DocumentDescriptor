@@ -2,6 +2,9 @@ from domain.book_data_holders.book_info import BookInfo
 from pathlib import Path
 from domain.engine import Engine
 from domain.book_data_holders.description_stage import DescriptionStage
+from domain.preprocessor import Preprocessor
+from domain.submodules.state import State
+from domain.submodules.project_folder_manager import ProjectFolderManager
 
 
 class CLI:
@@ -29,7 +32,7 @@ class CLI:
             else:
                 return DescriptionStage(data)
 
-    def run(self, path: Path):
+    def run_description_mode(self, path: Path):
         print(f'start at {path}')
         engine = Engine(path)
         while True:
@@ -46,6 +49,29 @@ class CLI:
         print('finished')
         pass
 
+    def run_preprocessing_mode(self, path: Path):
+        for cow, total in Preprocessor(path).preprocess_with_generator():
+            print(f'{cow}/{total}')
+        print('finished')
+        pass
 
-path_to_proj = Path(r'E:\ProjectLib\result_root')
-CLI().run(path_to_proj)
+    def run(self, path: Path):
+        if not ProjectFolderManager.probe_config_file(path):
+            print('not found config file; generate new? y/n')
+            if input() != 'y':
+                print('terminate process')
+                return
+            ProjectFolderManager.create_default_config_file(path)
+
+        if State.exists(path):
+            print('state found; boot description')
+            self.run_description_mode(path)
+        else:
+            print('state not found; begin preprocessing')
+            self.run_preprocessing_mode(path)
+        pass
+
+
+if __name__ == "__main__":
+    path_to_proj = Path(r'E:\ProjectLib\result_root')
+    CLI().run(path_to_proj)

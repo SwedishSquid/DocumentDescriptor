@@ -18,7 +18,7 @@ class BookMeta:
 
     def dump_to_str(self):
         data = {'data': self.fields}
-        return json.dumps(data)
+        return json.dumps(data, ensure_ascii=False, indent='    ')
 
     @staticmethod
     def load_from_str(str_data: str):
