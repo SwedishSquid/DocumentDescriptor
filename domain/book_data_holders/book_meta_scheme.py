@@ -1,8 +1,9 @@
 from domain.book_data_holders.book_meta import BookMeta
+from domain.field_config_record import FieldConfigRecord
 
 
 class BookMetaScheme:
-    def __init__(self, name_to_human_read_plus_readme_pair: dict = None):
+    def __init__(self, name_to_human_read_plus_readme_pair: dict):
         self._name_to_data = dict()
         for name in name_to_human_read_plus_readme_pair:
             human_readable = name_to_human_read_plus_readme_pair[name][0]
@@ -61,4 +62,16 @@ class BookMetaScheme:
             readme_field_name = self._name_to_data[name][1]
             data[readme_field_name] = name
         return data
+    pass
+
+
+class BookMetaSchemeAdapter(BookMetaScheme):
+    def __init__(self, records: list):
+        name_to_human_read_plus_readme_pair = dict()
+        for r in records:
+            r: FieldConfigRecord = r
+            name_to_human_read_plus_readme_pair[r.name] = \
+                (r.human_readable_name, r.readme_field_name)
+        super().__init__(name_to_human_read_plus_readme_pair)
+        pass
     pass

@@ -18,14 +18,21 @@ class App:
     def get_next_book(self):
         if not self.engine.try_set_book_index(self.engine.current_book_index + 1):
             return None
-        return self.engine.get_current_book()
+        return self.get_current_book()
+
+    def get_current_book(self):
+        book_info = self.engine.get_current_book()
+        return book_info
 
     def try_set_index_and_get_book(self, index: int):
+        #
         if not self.engine.try_set_book_index(index):
             return False
-        return self.engine.get_current_book()
+        return self.get_current_book()
 
-    def save_as_rejected(self, meta: BookMeta):
+    def save_as_rejected(self, meta: BookMeta, message=''):
+        """:param message: text explaining why this book is rejected"""
+        # todo: save this message somewhere
         self.engine.save_book_data(meta, DescriptionStage.REJECTED)
         pass
 
@@ -38,5 +45,4 @@ class App:
 
     def get_full_book_list(self):
         return self.engine.get_full_book_list()
-
     pass
