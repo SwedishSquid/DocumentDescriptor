@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import ocrmypdf
+
 from domain.submodules.state import State
 from domain.submodules.lib_scanner import LibScanner
 
@@ -14,6 +16,7 @@ class Preprocessor:
         self.project_dir = Path(project_dir)
         self.proj_folder_manager = ProjectFolderManager(project_dir)
         self.config = self.proj_folder_manager.config
+        self.do_book_recognition = False
         pass
 
     def preprocess_with_generator(self):
@@ -23,7 +26,7 @@ class Preprocessor:
             raise FileExistsError('it seems that preprocessing already took place')
 
         books_abs_paths = LibScanner.find_all_files(self.config.extensions,
-                                              lib_root_path=self.proj_folder_manager.lib_root_path)
+                                                    lib_root_path=self.proj_folder_manager.lib_root_path)
 
         books_to_preprocess_paths = books_abs_paths
 
@@ -45,24 +48,51 @@ class Preprocessor:
     def preprocess_book(self, book_path: Path):
         folder_manager = BookFolderManager.create_folder_from(book_path, self.config)
         self._populate_temp_folder_with_pdf(folder_manager)
-        self._apply_text_recognition(folder_manager)
         pass
 
     def _populate_temp_folder_with_pdf(self, folder_manager: BookFolderManager):
-        """copy book to temp if it is pdf; else convert and place in temp"""
+        """
+        makes showing copy of book in /temp if it is pdf; else converts and does the same;
+
+        showing - means the one, that will be put in pdf_view widget
+        """
         original = folder_manager.original_book_path
         extension = original.suffix.strip('.')
         if extension == 'pdf':
-            utils.copy_file(original, folder_manager.temp_book_path)
+            self._make_book_for_showing(original, folder_manager.temp_book_path)
         elif extension == 'djvu':
             djvu_to_pdf.convert_djvu_to_pdf(original, folder_manager.temp_book_path)
-            pass
+            self._make_book_for_showing(folder_manager.temp_book_path)
         else:
             raise ValueError(f'book files with {extension} extension not supported; got on file {original}')
         pass
 
-    def _apply_text_recognition(self, folder_manager: BookFolderManager):
-        """after this method temp_book should contain text layer"""
-        print(f'pretend to recognize text at {folder_manager.temp_book_path}')
-        pass
-    pass
+    # todo: somehow specify language of the book
+    def _make_book_for_showing(self, source, destination=None):
+        if self.do_book_recognition:
+            Preprocessor._make_recognized_copy(source, destination)
+        else:
+            utils.copy_file(source, destination)
+
+    @staticmethod
+    def _make_recognized_copy(source, destination=None, language="rus"):
+        """replaces source pdf if destination not stated,
+
+        Parameters
+        ----------
+        language: [str] | str
+            possible values: "eng", "rus", ...
+            works fine only with single language
+        """
+        if destination is None:
+            destination = source
+        try:
+            ocrmypdf.ocr(source, destination, language=language)
+        except ocrmypdf.exceptions.PriorOcrFoundError:
+            # in case text already exists
+            utils.copy_file(source, destination)
+        except ocrmypdf.exceptions.MissingDependencyError:
+            print("Some dependency missing")
+            raise
+        except Exception as e:
+            raise
