@@ -18,8 +18,7 @@ class Preprocessor:
 
     def preprocess_with_generator(self):
         """yields current preprocessed count and total amount"""
-        # todo: check if already preprocessed
-        if State.exists(self.project_dir):
+        if self.is_preprocessed(self.project_dir):
             raise FileExistsError('it seems that preprocessing already took place')
 
         books_abs_paths = LibScanner.find_all_files(self.config.extensions,
@@ -48,6 +47,12 @@ class Preprocessor:
         self._apply_text_recognition(folder_manager)
         pass
 
+    @classmethod
+    def is_preprocessed(cls, project_dir):
+        ans = State.exists(project_dir)
+        # todo: check if already preprocessed
+        return ans
+
     def _populate_temp_folder_with_pdf(self, folder_manager: BookFolderManager):
         """copy book to temp if it is pdf; else convert and place in temp"""
         original = folder_manager.original_book_path
@@ -63,6 +68,6 @@ class Preprocessor:
 
     def _apply_text_recognition(self, folder_manager: BookFolderManager):
         """after this method temp_book should contain text layer"""
-        print(f'pretend to recognize text at {folder_manager.temp_book_path}')
+        # print(f'pretend to recognize text at {folder_manager.temp_book_path}')
         pass
     pass

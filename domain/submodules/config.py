@@ -14,7 +14,7 @@ class Config:
     def get_meta_scheme(self):
         return BookMetaSchemeAdapter(self.fields)
 
-    def _dumps(self):
+    def dumps(self):
         """use for default config generation maybe"""
         fields_data = {record.name:
                            {'human_readable_name': record.human_readable_name,
