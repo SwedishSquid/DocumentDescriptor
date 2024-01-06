@@ -36,14 +36,17 @@ class View:
         # todo: использовать для получения первой книги get_current_book
         #  (позволит начать с того места, где остановились в прошлый раз)
         #  [раньше метода get_current_book не было :)]
-        self.current_book_info = self.app.try_set_index_and_get_book(0)
-        self._show_book()
+        self.show_book_by_number(0)
 
     def show_next_book(self):
         self.current_book_info = self.app.get_next_book()
         if self.current_book_info is None:
             quit()
         self.app.save_as_in_progress(self.current_book_info.book_meta)
+        self._show_book()
+
+    def show_book_by_number(self, num: int):
+        self.current_book_info = self.app.try_set_index_and_get_book(num)
         self._show_book()
 
     def _show_book(self):
@@ -70,9 +73,9 @@ class View:
         self._save_fields_to_book_meta()
         self.app.save_as_finished(self.current_book_info.book_meta)
 
-    def save_book_meta_as_rejected(self):
+    def save_book_meta_as_rejected(self, message: str):
         self._save_fields_to_book_meta()
-        self.app.save_as_rejected(self.current_book_info.book_meta)
+        self.app.save_as_rejected(self.current_book_info.book_meta, message)
 
     def show_full_book_list(self, book_list: BookList):
         book_list.clear()
