@@ -1,4 +1,4 @@
-import json
+import utils
 
 
 class BookMeta:
@@ -18,10 +18,10 @@ class BookMeta:
 
     def dump_to_str(self):
         data = {'data': self.fields}
-        return json.dumps(data, ensure_ascii=False, indent='    ')
+        return utils.json_dumps(data)
 
     @staticmethod
     def load_from_str(str_data: str):
-        data = json.loads(str_data)['data']
+        data = utils.json_loads(str_data)['data']
         return BookMeta(data)
     pass

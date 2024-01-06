@@ -85,9 +85,9 @@ class BookFolderManager:
 
     @classmethod
     def _check_book_file(cls, book_file: Path):
-        if not book_file.exists():
+        if not utils.exists(book_file):
             raise FileNotFoundError(f'cannot find {book_file}')
-        if not book_file.is_file():
+        if not utils.is_file(book_file):
             raise ValueError(f'{book_file} is not a file')
         pass
 
@@ -100,7 +100,7 @@ class BookFolderManager:
         #  like book file???
 
         book_folder_path = book_path.with_suffix('')
-        if book_folder_path.exists():
+        if utils.exists(book_folder_path):
             raise FileExistsError(f'directory {book_folder_path} already exists')
 
         utils.make_directory(book_folder_path)        # make result folder
@@ -120,7 +120,7 @@ class BookFolderManager:
         if not readme_path.is_absolute():
             raise ValueError(
                 f'dir_to_search must be absolute path; got {dir_to_search}')
-        if readme_path.exists() and readme_path.is_file():
+        if utils.is_file(readme_path):
             return readme_path
         return None
 

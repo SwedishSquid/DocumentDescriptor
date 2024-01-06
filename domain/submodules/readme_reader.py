@@ -1,6 +1,6 @@
-import codecs
 import re
 from domain.book_data_holders.book_meta_scheme import BookMetaScheme
+import utils
 
 
 class ReadmeReader:
@@ -10,9 +10,7 @@ class ReadmeReader:
         pass
 
     def read(self, path_to_readme):
-        # todo: check if this (codecs.open) works with long filenames
-        with codecs.open(path_to_readme, 'r', self.encoding) as f:
-            readme_text = f.read()
+        readme_text = utils.read_text_from_file(path_to_readme, encoding=self.encoding)
         # print(readme_text)
         m = re.findall(r'(.+?):(.+)', readme_text)
         readme_data = dict()
