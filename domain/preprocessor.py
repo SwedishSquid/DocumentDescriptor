@@ -47,6 +47,7 @@ class Preprocessor:
     def preprocess_book(self, book_path: Path):
         folder_manager = BookFolderManager.create_folder_from(book_path, self.config)
         self._populate_temp_folder_with_pdf(folder_manager)
+        self._apply_text_recognition(folder_manager)
         pass
 
     @classmethod
@@ -56,28 +57,25 @@ class Preprocessor:
         return ans
 
     def _populate_temp_folder_with_pdf(self, folder_manager: BookFolderManager):
-        """
-        makes showing copy of book in /temp if it is pdf; else converts and does the same;
-
-        showing - means the one, that will be put in pdf_view widget
-        """
+        """copy book to temp if it is pdf; else convert and place in temp"""
         original = folder_manager.original_book_path
         extension = original.suffix.strip('.')
         if extension == 'pdf':
-            self._make_book_for_showing(original, folder_manager.temp_book_path)
+            utils.copy_file(original, folder_manager.temp_book_path)
         elif extension == 'djvu':
             djvu_to_pdf.convert_djvu_to_pdf(original, folder_manager.temp_book_path)
-            self._make_book_for_showing(folder_manager.temp_book_path)
+            pass
         else:
             raise ValueError(f'book files with {extension} extension not supported; got on file {original}')
         pass
 
     # todo: somehow specify language of the book
-    def _make_book_for_showing(self, source, destination=None):
-        if self.do_book_recognition:
-            Preprocessor._make_recognized_copy(source, destination)
-        else:
-            utils.copy_file(source, destination)
+
+    def _apply_text_recognition(self, folder_manager: BookFolderManager):
+        """after this method temp_book should contain text layer"""
+        if not self.do_book_recognition:
+            return
+        Preprocessor._make_recognized_copy(folder_manager.temp_book_path)
 
     @staticmethod
     def _make_recognized_copy(source, destination=None, language="rus"):
@@ -95,7 +93,7 @@ class Preprocessor:
             ocrmypdf.ocr(source, destination, language=language)
         except ocrmypdf.exceptions.PriorOcrFoundError:
             # in case text already exists
-            utils.copy_file(source, destination)
+            print(f"{source} already has text")
         except ocrmypdf.exceptions.MissingDependencyError:
             print("Some dependency missing")
             raise
