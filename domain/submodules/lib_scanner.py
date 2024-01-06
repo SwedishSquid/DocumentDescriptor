@@ -1,4 +1,5 @@
 from pathlib import Path
+import utils
 
 
 class LibScanner:
@@ -12,7 +13,8 @@ class LibScanner:
         absolute_paths = []
         for pattern in patterns:
             for p in lib_root_path.rglob(pattern):
-                if p.is_file():
+                if utils.is_file(p):
                     absolute_paths.append(p)
         return absolute_paths
     pass
+

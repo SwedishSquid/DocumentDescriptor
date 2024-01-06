@@ -1,5 +1,4 @@
 from pathlib import Path
-from collections import namedtuple
 from domain.book_data_holders.book_folder_manager import BookFolderManager
 import utils
 
