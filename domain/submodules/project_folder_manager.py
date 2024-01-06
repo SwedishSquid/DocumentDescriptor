@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import utils
-from domain.submodules.config import Config, FieldConfigRecord
+from domain.submodules.config import Config, FieldConfigRecord, OCRConfig
 
 
 class ProjectConsistencyError(Exception):
@@ -78,6 +78,7 @@ class ProjectFolderManager:
     @classmethod
     def create_default_config_file(cls, project_folder: Path):
         cls._probe_project_folder(project_folder)
+        ocr_config = OCRConfig(pages_arg='1-5', language_arg='rus+eng', do_ocr=True)
         conf = Config(
             [FieldConfigRecord('author', 'Автор', 'Author'),
              FieldConfigRecord('title', 'Название', 'Title'),
@@ -85,7 +86,8 @@ class ProjectFolderManager:
              FieldConfigRecord('pages', 'Количество страниц', 'Pages'),
              FieldConfigRecord('year', 'Год издания', 'Year'),
              FieldConfigRecord('field_with_no_readme_field', 'Поле без соответствующего поля в README', None)],
-            ['.pdf', '.djvu'], lib_root_folder_name='lib_root')
+            ['.pdf', '.djvu'], lib_root_folder_name='lib_root',
+            orc_config=ocr_config)
         utils.write_text_to_file(Path(project_folder, cls._config_file_name),
                                  text=conf.dumps())
         return conf

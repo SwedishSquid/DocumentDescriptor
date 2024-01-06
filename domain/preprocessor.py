@@ -1,6 +1,7 @@
 from pathlib import Path
 
-import ocrmypdf
+# import ocrmypdf
+from domain.converters.recognizer import Recognizer
 
 from domain.submodules.state import State
 from domain.submodules.lib_scanner import LibScanner
@@ -48,7 +49,8 @@ class Preprocessor:
     def preprocess_book(self, book_path: Path):
         folder_manager = BookFolderManager.create_folder_from(book_path, self.config)
         self._populate_temp_folder_with_pdf(folder_manager)
-        self._apply_text_recognition(folder_manager)
+        if self.config.orc_config.do_ocr:
+            self._apply_text_recognition(folder_manager)
         return folder_manager.folder_path
 
     @classmethod
@@ -73,30 +75,38 @@ class Preprocessor:
     # todo: somehow specify language of the book
 
     def _apply_text_recognition(self, folder_manager: BookFolderManager):
-        """after this method temp_book should contain text layer"""
-        if not self.do_book_recognition:
-            return
-        Preprocessor._make_recognized_copy(folder_manager.temp_book_path)
+        # todo: pages_arg may be None; how to achieve that?
+        Recognizer.ocr(src_path=folder_manager.temp_book_path,
+                       dst_path=folder_manager.temp_book_path,
+                       language_arg=self.config.orc_config.language_arg,
+                       pages_arg=self.config.orc_config.pages_arg)
+        pass
 
-    @staticmethod
-    def _make_recognized_copy(source, destination=None, language="rus"):
-        """replaces source pdf if destination not stated,
-
-        Parameters
-        ----------
-        language: [str] | str
-            possible values: "eng", "rus", ...
-            works fine only with single language
-        """
-        if destination is None:
-            destination = source
-        try:
-            ocrmypdf.ocr(source, destination, language=language)
-        except ocrmypdf.exceptions.PriorOcrFoundError:
-            # in case text already exists
-            print(f"{source} already has text")
-        except ocrmypdf.exceptions.MissingDependencyError:
-            print("Some dependency missing")
-            raise
-        except Exception as e:
-            raise
+    # def _apply_text_recognition(self, folder_manager: BookFolderManager):
+    #     """after this method temp_book should contain text layer"""
+    #     if not self.do_book_recognition:
+    #         return
+    #     Preprocessor._make_recognized_copy(folder_manager.temp_book_path)
+    #
+    # @staticmethod
+    # def _make_recognized_copy(source, destination=None, language="rus"):
+    #     """replaces source pdf if destination not stated,
+    #
+    #     Parameters
+    #     ----------
+    #     language: [str] | str
+    #         possible values: "eng", "rus", ...
+    #         works fine only with single language
+    #     """
+    #     if destination is None:
+    #         destination = source
+    #     try:
+    #         ocrmypdf.ocr(source, destination, language=language)
+    #     except ocrmypdf.exceptions.PriorOcrFoundError:
+    #         # in case text already exists
+    #         print(f"{source} already has text")
+    #     except ocrmypdf.exceptions.MissingDependencyError:
+    #         print("Some dependency missing")
+    #         raise
+    #     except Exception as e:
+    #         raise
