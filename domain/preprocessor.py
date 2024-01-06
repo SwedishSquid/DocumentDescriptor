@@ -31,12 +31,13 @@ class Preprocessor:
 
         yield count, total_amount
 
+        folders_paths = []
+
         for p in books_to_preprocess_paths:
-            self.preprocess_book(p)
+            folder = self.preprocess_book(p)
+            folders_paths.append(folder)
             count += 1
             yield count, total_amount
-
-        folders_paths = [p.with_suffix('') for p in books_abs_paths]
 
         State.create_new(self.project_dir, folders_paths)
         pass
@@ -45,7 +46,7 @@ class Preprocessor:
         folder_manager = BookFolderManager.create_folder_from(book_path, self.config)
         self._populate_temp_folder_with_pdf(folder_manager)
         self._apply_text_recognition(folder_manager)
-        pass
+        return folder_manager.folder_path
 
     @classmethod
     def is_preprocessed(cls, project_dir):

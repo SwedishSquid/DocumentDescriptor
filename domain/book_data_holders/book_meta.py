@@ -2,9 +2,12 @@ import utils
 
 
 class BookMeta:
-    def __init__(self, fields: dict, filename='book_meta.json'):
+    _fields_section_name = 'data'
+    _initial_filename_section_name = 'initial_filename'
+
+    def __init__(self, fields: dict, initial_file_name: str = ''):
         self.fields = fields
-        self._filename = filename
+        self.initial_file_name = initial_file_name
         pass
 
     def __repr__(self):
@@ -13,15 +16,16 @@ class BookMeta:
     def __str__(self):
         return self.__repr__()
 
-    def get_filename(self):
-        return self._filename
-
     def dump_to_str(self):
-        data = {'data': self.fields}
+        data = {self._fields_section_name: self.fields,
+                self._initial_filename_section_name: self.initial_file_name}
         return utils.json_dumps(data)
 
-    @staticmethod
-    def load_from_str(str_data: str):
-        data = utils.json_loads(str_data)['data']
-        return BookMeta(data)
+    @classmethod
+    def load_from_str(cls, str_data: str):
+        data = utils.json_loads(str_data)
+        fields = data[cls._fields_section_name]
+        initial_file_name = data[cls._initial_filename_section_name]
+        return BookMeta(fields, initial_file_name=initial_file_name)
+
     pass

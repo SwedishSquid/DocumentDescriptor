@@ -6,7 +6,6 @@ from domain.book_data_holders.book_meta import BookMeta
 
 class MetaFilehandler:
     filename = 'book_meta.json'
-    encoding = 'utf-8'
 
     def write_book_meta(self, book_meta: BookMeta, path_to_book_dir):
         path = self._make_path(path_to_book_dir)

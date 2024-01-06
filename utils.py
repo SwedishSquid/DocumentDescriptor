@@ -5,7 +5,7 @@ import platform
 
 
 def _make_long_path(path: Path):
-    """use externally only if you very sure that it must be used. pls"""
+    """use externally ONLY if you very sure that it must be used. pls"""
     if platform.system().lower() != 'windows':
         return path
     s = str(path)
