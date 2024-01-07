@@ -3,6 +3,7 @@ from UI.BeginningScreen.beginning_window import BeginningWindow
 from UI.MainScreen.main_window import MainWindow
 from UI.MainScreen.book_list import BookList
 from UI.constant_paths import path_to_pictures
+from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -41,7 +42,8 @@ class View:
     def show_next_book(self):
         self.current_book_info = self.app.get_next_book()
         if self.current_book_info is None:
-            quit()
+            NoMoreFilesDialog().exec()
+            return
         self.app.save_as_in_progress(self.current_book_info.book_meta)
         self._show_book()
 
