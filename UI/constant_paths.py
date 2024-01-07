@@ -1,4 +1,5 @@
-from pathlib import Path
+import resource_locator
 
 
-path_to_pictures = Path(r"resources/pictures")
+path_to_pictures = resource_locator.get_resource_folder().joinpath('pictures')
+
