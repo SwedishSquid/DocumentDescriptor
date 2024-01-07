@@ -48,7 +48,7 @@ class Reject(QDialog):
     def _create_confirm_button(self):
         button = QPushButton("Подтвердить")
         button.setMaximumWidth(100)
-        button.clicked.connect(lambda: self.done(2))
+        button.clicked.connect(lambda: self.done(1))
         button.clicked.connect(
             lambda:
             self.view.save_book_meta_as_rejected(
