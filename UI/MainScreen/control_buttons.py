@@ -9,9 +9,10 @@ from PySide6.QtCore import QSize
 class ControlButtons(QWidget):
     def __init__(self, view):
         super().__init__()
-        self.reject_dialog = Reject(view)
-        self.full_book_list_dialog = FullBookList()
         self.view = view
+        self.reject_dialog = Reject(self.view)
+        self.full_book_list_dialog = FullBookList(self.view)
+
         layout = QHBoxLayout()
         layout.addWidget(self._create_full_list_button_())
         layout.addWidget(self._create_reject_button())
