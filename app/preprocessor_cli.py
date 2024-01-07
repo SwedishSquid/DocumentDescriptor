@@ -6,7 +6,8 @@ from UI.console_progress_bar import printProgressBar
 
 
 class PreprocessorCLI:
-    _version = '0.1.0'
+    """console interface for preprocessing"""
+    _version = '0.1.0'      # todo: store version somewhere else
     _verbosity_level = 1
 
     def run(self, arguments):

@@ -4,10 +4,6 @@ import utils
 from domain.submodules.config import Config, FieldConfigRecord, OCRConfig
 
 
-class ProjectConsistencyError(Exception):
-    """raised when some parts of the project missing or not consistent"""
-
-
 class ProjectFolderManager:
     _config_file_name = 'config.json'
 
