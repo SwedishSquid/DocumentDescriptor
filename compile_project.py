@@ -24,7 +24,7 @@ def _make_resource_arguments():
 def compile_descriptor_app():
     PyInstaller.__main__.run([
         'main.py',
-        '--onefile',
+        # '--onefile',
         '--name', 'descriptor',
         # '--noconsole',     # leaves only GUI; ignored on linux
         *_make_resource_arguments(),
