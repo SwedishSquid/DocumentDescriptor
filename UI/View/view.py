@@ -49,7 +49,7 @@ class View:
         self._show_book()
 
     def _show_book(self):
-        self.main_window.pdf_viewer.set_document(
+        self.main_window.set_document(
             self.current_book_info.absolute_path)
         self._show_book_meta_fields()
 

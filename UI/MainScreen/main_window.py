@@ -1,8 +1,10 @@
 from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QMainWindow
 from UI.MainScreen.control_buttons import ControlButtons
-from UI.MainScreen.pdf_viewer import PDFViewer
+# from UI.MainScreen.pdf_viewer import PDFViewer
 from UI.window_menu_bar import MenuBar
 from UI.MainScreen.field_list import FieldList
+from UI.MainScreen.browser_pdf_viewer import BrowserPdfViewer
+from pathlib import Path
 
 
 class MainWindow(QMainWindow):
@@ -11,7 +13,8 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Document descriptor")
         self.setMenuBar(MenuBar())
-        self.pdf_viewer = PDFViewer()
+        self.pdf_viewer = BrowserPdfViewer()
+        self.pdf_viewer.set_file(Path("E:/dev/DocumentDescriptor/DocumentDescriptor/dir_that_git_ignores/2/test.pdf"))
         self.field_list = FieldList()
 
         layout = QHBoxLayout()
@@ -30,3 +33,6 @@ class MainWindow(QMainWindow):
         widget1 = QWidget()
         widget1.setLayout(layout1)
         return widget1
+
+    def set_document(self, path):
+        self.pdf_viewer.set_file(Path(path))
