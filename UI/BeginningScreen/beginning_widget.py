@@ -5,17 +5,14 @@ from UI.BeginningScreen.select_folder_location_widget\
 from UI.window_menu_bar import MenuBar
 
 
-class BeginningWindow(QMainWindow):
+class BeginningWidget(QWidget):
     def __init__(self, view):
         super().__init__()
         self.view = view
         self.setWindowTitle("Document descriptor")
-        self.setMenuBar(MenuBar())
 
         self._continue_button = self._create_continue_button()
         self.hide_continue_button()
-
-        self.setCentralWidget(self._create_central_widget())
 
     def _create_central_widget(self):
         widget = QWidget()
@@ -35,8 +32,11 @@ class BeginningWindow(QMainWindow):
     def _create_continue_button(self):
         button = QPushButton("Продолжить")
         button.setFixedWidth(200)
-        button.clicked.connect(self.view.show_main_window)
+        button.clicked.connect(self.view.switch_to_main_window)
 
+        size_policy = button.sizePolicy()
+        size_policy.setRetainSizeWhenHidden(True)
+        button.setSizePolicy(size_policy)
         return button
 
     def show_continue_button(self):

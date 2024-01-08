@@ -7,12 +7,11 @@ from UI.MainScreen.browser_pdf_viewer import BrowserPdfViewer
 from pathlib import Path
 
 
-class MainWindow(QMainWindow):
+class MainWidget(QWidget):
     def __init__(self, view):
         super().__init__()
 
         self.setWindowTitle("Document descriptor")
-        self.setMenuBar(MenuBar())
         self.pdf_viewer = BrowserPdfViewer()
         self.pdf_viewer.set_file(Path("E:/dev/DocumentDescriptor/DocumentDescriptor/dir_that_git_ignores/2/test.pdf"))
         self.field_list = FieldList()
@@ -20,10 +19,7 @@ class MainWindow(QMainWindow):
         layout = QHBoxLayout()
         layout.addWidget(self._create_left_widget(view))
         layout.addWidget(self.pdf_viewer)
-        widget = QWidget()
-        widget.setLayout(layout)
-
-        self.setCentralWidget(widget)
+        self.setLayout(layout)
 
     def _create_left_widget(self, view):
         layout1 = QVBoxLayout()
