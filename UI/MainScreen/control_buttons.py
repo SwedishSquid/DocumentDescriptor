@@ -50,7 +50,7 @@ class ControlButtons(QWidget):
         return button
 
     def _create_reject_button(self):
-        button = QPushButton()
+        button = self.create_blank_reject_button()
         button.clicked.connect(self.reject_dialog.run)
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('cross'))))
@@ -58,24 +58,10 @@ class ControlButtons(QWidget):
 
         button.setFixedSize(120, 100)
 
-        button.setFont(QFont('Arial', 14))
-
-        button.setStyleSheet("""
-                        QPushButton {
-                            background-color: #FF4040;
-                            border-radius: 40px;
-                        }
-                        QPushButton:hover {
-                            background-color: #D14040;
-                        }
-                        QPushButton:pressed {
-                            background-color: #A14040;
-                        }
-                    """)
         return button
 
     def _create_continue_button(self):
-        button = QPushButton()
+        button = self.create_blank_continue_button()
         button.clicked.connect(self.view.save_book_meta_as_finished)
         button.clicked.connect(self.view.show_next_book)
 
@@ -83,9 +69,11 @@ class ControlButtons(QWidget):
         button.setIconSize(QSize(96, 96))
 
         button.setFixedSize(150, 100)
+        return button
 
-        button.setFont(QFont('Arial', 14))
-
+    @staticmethod
+    def create_blank_continue_button(text=""):
+        button = QPushButton(text)
         button.setStyleSheet("""
                         QPushButton {
                             background-color: #91FF3A;
@@ -96,6 +84,24 @@ class ControlButtons(QWidget):
                         }
                         QPushButton:pressed {
                             background-color: #70C13A;
+                        }
+                    """)
+        return button
+
+    @staticmethod
+    def create_blank_reject_button(text=""):
+        button = QPushButton(text)
+        button.setFont(QFont('Arial', 14))
+        button.setStyleSheet("""
+                        QPushButton {
+                            background-color: #FF4040;
+                            border-radius: 40px;
+                        }
+                        QPushButton:hover {
+                            background-color: #D14040;
+                        }
+                        QPushButton:pressed {
+                            background-color: #A14040;
                         }
                     """)
         return button

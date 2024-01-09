@@ -74,7 +74,7 @@ class ProjectFolderManager:
     @classmethod
     def create_default_config_file(cls, project_folder: Path):
         cls._probe_project_folder(project_folder)
-        ocr_config = OCRConfig(pages_arg='1-5', language_arg='rus+eng', do_ocr=True)
+        ocr_config = OCRConfig(pages_arg='1-5', language_arg='rus+eng', do_ocr=False)
         conf = Config(
             [FieldConfigRecord('author', 'Автор', 'Author'),
              FieldConfigRecord('title', 'Название', 'Title'),

@@ -1,40 +1,65 @@
+from UI.ManagementScreen.management_widget import ManagementWidget
 from app.App import App
-from UI.BeginningScreen.beginning_window import BeginningWindow
-from UI.MainScreen.main_window import MainWindow
+from UI.BeginningScreen.beginning_widget import BeginningWidget
+from UI.window_menu_bar import MenuBar
+from UI.MainScreen.main_widget import MainWidget
 from UI.MainScreen.book_list import BookList
 from UI.constant_paths import path_to_pictures
 from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMainWindow, QSizePolicy, QStackedWidget
 
 
 class View:
     def __init__(self):
+        self.chosen_path = None
         self.app = App()
         self.current_book_info = None
 
         self.q_app = QApplication()
         self.q_app.setWindowIcon(QIcon(str(path_to_pictures.joinpath('file'))))
 
-        self.beginning_window = BeginningWindow(self)
-        self.main_window = MainWindow(self)
+        self.window = QMainWindow()
+        self.window.setMinimumSize(800, 600)
+        self.window.setMenuBar(MenuBar())
+        self.stacked_widget = QStackedWidget()
+        self.window.setCentralWidget(self.stacked_widget)
+
+        self.beginning_widget = BeginningWidget(self)
+        self.management_widget = ManagementWidget(self)
+        self.main_widget = MainWidget(self)
+        self.stacked_widget.addWidget(self.beginning_widget)
+        self.stacked_widget.addWidget(self.management_widget)
+        self.stacked_widget.addWidget(self.main_widget)
 
     def run(self):
-        self.beginning_window.show()
+        # self.beginning_window.show()
+        # self.stacked_widget.addWidget(self.beginning_widget)
+        # self.window.setCentralWidget(self.beginning_widget)
+        # self.window.showMaximized()
+        self.window.show()
         self.q_app.exec()
 
     def try_set_project_path(self, path: str):
         if self.app.try_set_project_path(path):
-            self.beginning_window.show_continue_button()
+            self.beginning_widget.show_continue_button()
+            self.chosen_path = path
             return True
-        self.beginning_window.hide_continue_button()
+        self.beginning_widget.hide_continue_button()
         return False
 
-    def show_main_window(self):
-        self.beginning_window.close()
-        self.main_window.show()
+    def switch_to_main_widget(self):
+        self.stacked_widget.setCurrentWidget(self.main_widget)
         self.current_book_info = self.app.get_current_book()
         self._show_book()
+
+    def switch_to_beginning_widget(self):
+        self.stacked_widget.setCurrentWidget(self.beginning_widget)
+        self.window.setWindowTitle("")
+
+    def switch_to_management_widget(self):
+        self.stacked_widget.setCurrentWidget(self.management_widget)
+        self.window.setWindowTitle(self.chosen_path)
 
     def show_next_book(self):
         self.current_book_info = self.app.get_next_book()
@@ -49,12 +74,12 @@ class View:
         self._show_book()
 
     def _show_book(self):
-        self.main_window.set_document(
+        self.main_widget.set_document(
             self.current_book_info.absolute_path)
         self._show_book_meta_fields()
 
     def _show_book_meta_fields(self):
-        field_list = self.main_window.field_list
+        field_list = self.main_widget.field_list
         field_list.clear()
         fields = self.current_book_info.book_meta.fields
         meta_scheme = self.current_book_info.meta_scheme
@@ -63,7 +88,7 @@ class View:
             field_list.add_field(name, fields[field_name], field_name)
 
     def _save_fields_to_book_meta(self):
-        field_list = self.main_window.field_list
+        field_list = self.main_widget.field_list
         book_meta = self.current_book_info.book_meta
         for name, content in field_list.get_all_fields():
             book_meta.fields[name] = content

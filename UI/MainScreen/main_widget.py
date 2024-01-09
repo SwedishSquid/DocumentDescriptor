@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QMainWindow
 from UI.MainScreen.control_buttons import ControlButtons
 # from UI.MainScreen.pdf_viewer import PDFViewer
-from UI.window_menu_bar import MenuBar
 from UI.MainScreen.field_list import FieldList
 from UI.MainScreen.browser_pdf_viewer import BrowserPdfViewer
 from pathlib import Path
