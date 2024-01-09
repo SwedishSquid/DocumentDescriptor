@@ -5,28 +5,20 @@ from domain.book_data_holders.book_info import BookInfo
 from collections import namedtuple
 
 from domain.submodules.project_folder_manager import ProjectFolderManager
+from domain.book_data_holders.book_folder_manager import BookFolderManager
 from domain.submodules.state import State
 
 FullListRecord = namedtuple('FullListRecord', 'rel_path descr_stage')
 
 
 class Engine:
-    def __init__(self, project_directory):
-        """ожидаю, что конфиг существует + предобработка выполнена"""
-        self.project_path = Path(project_directory)
-        if not self.project_path.is_dir():
-            raise NotADirectoryError(f'{self.project_path} is not a directory')
-
-        if not State.exists(self.project_path):
-            raise ValueError(f'state does not exist yet; preprocess before description')
-
-        self.project_folder_manager = ProjectFolderManager(self.project_path)
+    def __init__(self, project_folder_manager: ProjectFolderManager,
+                 book_folder_managers: list):
+        self.project_folder_manager = project_folder_manager
         self.config = self.project_folder_manager.config
         self.meta_scheme = self.config.get_meta_scheme()
-        self.proj_state = State(self.project_path)     # resource intensive operation
-
+        self.book_folder_managers = book_folder_managers
         self._current_book_index = 0
-        self.try_set_book_index(self.proj_state.index)
         pass
 
     def save_book_data(self, book_meta: BookMeta, stage: DescriptionStage):
@@ -60,21 +52,20 @@ class Engine:
         DO NOT use rel_path in any way except for showing book name. pls"""
         # todo: these records are low informative
         # todo: check that it is ok to give it abs_path in higher versions
-        return [FullListRecord(rel_path=fm.folder_path,
+        return [FullListRecord(rel_path=Path(fm.meta.initial_file_name),
                                descr_stage=fm.book_state.descr_stage)
-                for fm in self.proj_state.book_folders_managers]
+                for fm in self.book_folder_managers]
 
     @property
     def current_book_index(self):
         return self._current_book_index
 
     def try_set_book_index(self, index: int):
-        if -1 < index < len(self.proj_state.book_folders):
+        if -1 < index < len(self.book_folder_managers):
             self._current_book_index = index
-            self.proj_state.save_index(self._current_book_index)
             return True
         return False
 
     def _get_current_book_folder_manager(self):
-        return self.proj_state.book_folders_managers[self._current_book_index]
+        return self.book_folder_managers[self._current_book_index]
     pass
