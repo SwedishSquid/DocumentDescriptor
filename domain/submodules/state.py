@@ -81,9 +81,6 @@ class State:
                                  utils.json_dumps(dynamic_data))
         return State(project_path=project_path)
 
-    # def add_books(self, book_folders):
-    #     raise NotImplementedError('have some trouble making that one; how to detect what books were already prepared? to delegate!')
-
     @classmethod
     def _make_relative_paths(cls, project_path, book_folders_paths: list):
         project_path = Path(project_path)

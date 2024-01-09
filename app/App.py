@@ -1,6 +1,7 @@
 from domain.engine import Engine
 from domain.book_data_holders.book_meta import BookMeta
 from domain.book_data_holders.description_stage import DescriptionStage
+from domain.glue import Glue
 
 
 # todo: rename file??
@@ -10,10 +11,10 @@ class App:
         pass
 
     def try_set_project_path(self, project_path):
-        try:
-            self.engine = Engine(project_path)
-        except NotADirectoryError:
+        glue = Glue(project_path)
+        if not glue.init_happened():
             return False
+        self.engine = glue.get_engine()
         return True
 
     def get_next_book(self):

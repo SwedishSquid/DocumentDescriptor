@@ -1,8 +1,7 @@
 import argparse
 from pathlib import Path
-from domain.submodules.project_folder_manager import ProjectFolderManager
-from domain.preprocessor import Preprocessor
 from UI.console_progress_bar import printProgressBar
+from domain.glue import Glue
 
 
 class PreprocessorCLI:
@@ -18,12 +17,14 @@ class PreprocessorCLI:
         pass
 
     def start_handler(self, args):
-        if Preprocessor.is_preprocessed(args.project):
-            self.output('it seems that preprocessing already took place', verbosity=0)
-            return
         self.output('attempt to preprocess')
-        ProjectFolderManager.check_project_consistency(args.project)
-        for done, total in Preprocessor(project_dir=args.project).preprocess_with_generator():
+        glue = Glue(args.project)
+        ms_receiver = lambda s: self.output(s)
+        if not glue.init_happened(ms_receiver=ms_receiver):
+            self.output(f'folder {args.project} not recognized as a project')
+            return
+
+        for done, total in glue.get_preprocessor_generator(ms_receiver=ms_receiver):
             if self._verbosity_level >= 1:
                 printProgressBar(done, total, prefix='Progress', suffix=f'Complete | {done}/{total}', length=50)
         self.output('done')
@@ -31,9 +32,7 @@ class PreprocessorCLI:
 
     def init_handler(self, args):
         self.output('attempt to initialize the project')
-        results = ProjectFolderManager.init_project(project_folder=args.project)
-        for res in results:
-            self.output(res)
+        Glue(args.project).init_project(ms_receiver=lambda s: self.output(s))
         pass
 
     def _get_parser(self):

@@ -1,18 +1,17 @@
 from pathlib import Path
 
 import utils
-from domain.submodules.config import Config, FieldConfigRecord, OCRConfig
+from domain.submodules.config import Config, ConfigFormatError
 
 
 class ProjectFolderManager:
     _config_file_name = 'config.json'
+    _copy_folder_name = 'copy'
 
-    def __init__(self, project_folder):
+    def __init__(self, project_folder, config: Config):
         self.project_folder = Path(project_folder)
-        self.check_project_consistency(project_folder)
-
-        self.config_path = Path(self.project_folder, self._config_file_name)
-        self.config = Config.loads(utils.read_text_from_file(self.config_path))
+        self.copy_folder_path = Path(project_folder, self._copy_folder_name)
+        self.config = config
         pass
 
     @property
@@ -20,37 +19,77 @@ class ProjectFolderManager:
         return Path(self.project_folder, self.config.lib_root_folder_name)
 
     @classmethod
+    def load_from_path(cls, project_path: Path, ms_receiver=None):
+        """loads ProjectFolderManager from project folder
+         returns None if not correct project
+         :param ms_receiver: function that takes str - for logging purposes"""
+        if ms_receiver is None:
+            ms_receiver = lambda s: print(s)
+
+        conf_path = Path(project_path, cls._config_file_name)
+        config = cls._load_config(conf_path, ms_receiver)
+        if config is None:
+            return None
+
+        copy_folder = Path(project_path, cls._copy_folder_name)
+        if not utils.is_dir(copy_folder):
+            ms_receiver('has no copy folder; attempt to create')
+            utils.make_directory(copy_folder)
+
+        source_folder = Path(project_path, config.lib_root_folder_name)
+        if not source_folder.is_dir():
+            ms_receiver(f'has no source folder; was looking for folder named {config.lib_root_folder_name}')
+            return None
+        return ProjectFolderManager(project_folder=project_path, config=config)
+
+    @classmethod
+    def init_project(cls, project_path: Path, ms_receiver=None):
+        """init or validate project"""
+        if ms_receiver is None:
+            ms_receiver = lambda s: print(s)
+        conf_path = Path(project_path, cls._config_file_name)
+        if not utils.is_file(conf_path):
+            cls.create_default_config_file(project_path)
+            ms_receiver('add confing')
+        else:
+            ms_receiver('config exists')
+
+        copy_folder = Path(project_path, cls._copy_folder_name)
+        if not utils.is_dir(copy_folder):
+            ms_receiver('added copy folder')
+            utils.make_directory(copy_folder)
+        else:
+            ms_receiver('copy folder exists')
+
+        config = cls._load_config(conf_path, ms_receiver)
+        if config is None:
+            return
+        source_folder = Path(project_path, config.lib_root_folder_name)
+        if not utils.is_dir(source_folder):
+            utils.make_directory(source_folder)
+            ms_receiver(f'added lib root folder named {config.lib_root_folder_name}')
+        else:
+            ms_receiver('lib root folder exist')
+    pass
+
+    @classmethod
+    def _load_config(cls, filepath: Path, ms_receiver):
+        if not filepath.is_file():
+            ms_receiver('config not found')
+            return None
+        try:
+            config = Config.loads(utils.read_text_from_file(filepath))
+        except ConfigFormatError as e:
+            ms_receiver(f'config format err: {e}')
+            return None
+        return config
+
+    @classmethod
     def _probe_project_folder(cls, project_folder: Path, raise_exc=False):
         ans = project_folder.is_dir()
         if not ans and raise_exc:
             raise NotADirectoryError(f'project folder must be a directory and exist; got {project_folder}')
         return ans
-
-    @classmethod
-    def check_project_consistency(cls, project_folder: Path):
-        cls._probe_project_folder(project_folder, True)
-        cls.probe_config_file(project_folder, True)
-        cls._probe_lib_root(project_folder, True)
-        pass
-
-    @classmethod
-    def init_project(cls, project_folder: Path):
-        cls._probe_project_folder(project_folder, raise_exc=True)
-        result_message = []
-        if not cls.probe_config_file(project_folder):
-            cls.create_default_config_file(project_folder)
-            result_message.append('default config created')
-        else:
-            result_message.append('config already exists')
-        if not cls._probe_lib_root(project_folder):
-            config = Config.loads(utils.read_text_from_file(
-                Path(project_folder, cls._config_file_name)))
-            lib_root_path = Path(project_folder, config.lib_root_folder_name)
-            utils.make_directory(lib_root_path)
-            result_message.append('empty lib root folder created')
-        else:
-            result_message.append('lib root folder already exists')
-        return result_message
 
     @classmethod
     def _probe_lib_root(cls, project_folder: Path, raise_exc=False):
@@ -74,17 +113,19 @@ class ProjectFolderManager:
     @classmethod
     def create_default_config_file(cls, project_folder: Path):
         cls._probe_project_folder(project_folder)
-        ocr_config = OCRConfig(pages_arg='1-5', language_arg='rus+eng', do_ocr=False)
-        conf = Config(
-            [FieldConfigRecord('author', 'Автор', 'Author'),
-             FieldConfigRecord('title', 'Название', 'Title'),
-             FieldConfigRecord('publisher', 'Издатель', 'Publisher'),
-             FieldConfigRecord('pages', 'Количество страниц', 'Pages'),
-             FieldConfigRecord('year', 'Год издания', 'Year'),
-             FieldConfigRecord('field_with_no_readme_field', 'Поле без соответствующего поля в README', None)],
-            ['.pdf', '.djvu'], lib_root_folder_name='lib_root',
-            orc_config=ocr_config)
+        conf = Config.get_default()
         utils.write_text_to_file(Path(project_folder, cls._config_file_name),
                                  text=conf.dumps())
         return conf
     pass
+
+    def make_relative_path(self, book_folder_path: Path):
+        project_path = self.project_folder
+        if not project_path.is_absolute():
+            raise ValueError('project_path must be absolute')
+        proj_path_parts_len = len(project_path.parts)
+        if not Path(*book_folder_path.parts[:proj_path_parts_len]).match(
+                str(project_path)):
+            raise ValueError(
+                f'book folders must be inside project folder; proj: {project_path}; book_folder: {book_folder_path}')
+        return Path(*book_folder_path.parts[proj_path_parts_len:])

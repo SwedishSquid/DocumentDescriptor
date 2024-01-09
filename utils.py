@@ -68,3 +68,16 @@ def copy_file(from_path: Path, to_path: Path):
     to_path = _make_long_path(to_path)
     shutil.copyfile(src=str(from_path), dst=str(to_path))
     pass
+
+
+def delete_from(path: Path):
+    path = _make_long_path(path)
+    if not path.exists():
+        return False
+    if path.is_dir():
+        shutil.rmtree(path)
+        return True
+    if path.is_file():
+        path.unlink()
+        return True
+    raise FileExistsError(f'not a file, not a dir, but still exists at {path}')

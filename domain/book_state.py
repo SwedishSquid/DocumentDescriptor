@@ -7,42 +7,29 @@ import utils
 class BookState:
     """contains state of book nearby"""
 
-    _name_field_name = 'name'
+    _original_rel_path_field_name = 'original_rel_path'
     _descr_stage_name = 'descr_stage'
+    _preprocessed_name = 'preprocessed'
     # _from_folder_to_state ='temp/book_state.json'
 
-    def __init__(self, name: str, descr_stage: DescriptionStage):
+    def __init__(self, original_rel_path: Path, descr_stage: DescriptionStage,
+                 preprocessed: bool):
         """:param name: full name of book file"""
-        self.name = name
+        self.original_rel_path = original_rel_path
         self.descr_stage = descr_stage
+        self.preprocessed = preprocessed
         pass
-
-    # @classmethod
-    # def load_from_book_folder(cls, folder_path):
-    #     return cls.loads(utils.read_text_from_file(
-    #         Path(folder_path, cls._from_folder_to_state))
-    #     )
-
-    @classmethod
-    def load_from_file(cls, filepath: Path):
-        return cls.loads(utils.read_text_from_file(filepath))
 
     @classmethod
     def loads(cls, s):
         data = utils.json_loads(s)
-        return BookState(data[cls._name_field_name],
-                         DescriptionStage(int(data[cls._descr_stage_name])))
-
-    # def dump_to_book_folder(self, folder):
-    #     utils.write_text_to_file(Path(folder, self._from_folder_to_state), self.dumps())
-    #     pass
-
-    def dump_to_file(self, filepath: Path):
-        utils.write_text_to_file(filepath, self.dumps())
-        pass
+        return BookState(Path(data[cls._original_rel_path_field_name]),
+                         DescriptionStage(int(data[cls._descr_stage_name])),
+                         data[cls._preprocessed_name])
 
     def dumps(self):
-        data = {self._name_field_name: self.name,
-                self._descr_stage_name: int(self.descr_stage)}
+        data = {self._original_rel_path_field_name: str(self.original_rel_path),
+                self._descr_stage_name: int(self.descr_stage),
+                self._preprocessed_name: self.preprocessed}
         return utils.json_dumps(data)
     pass

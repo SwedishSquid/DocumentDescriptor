@@ -1,10 +1,6 @@
 from pathlib import Path
 
-# import ocrmypdf
 from domain.converters.recognizer import Recognizer
-
-from domain.submodules.state import State
-from domain.submodules.lib_scanner import LibScanner
 
 from domain.book_data_holders.book_folder_manager import BookFolderManager
 from domain.converters import djvu_to_pdf
@@ -12,101 +8,91 @@ from domain.submodules.project_folder_manager import ProjectFolderManager
 import utils
 
 
+class PreprocessError(Exception):
+    """raise when can`t preprocess document"""
+
+
 class Preprocessor:
-    def __init__(self, project_dir):
-        self.project_dir = Path(project_dir)
-        self.proj_folder_manager = ProjectFolderManager(project_dir)
+    def __init__(self, project_folder_manager: ProjectFolderManager):
+        self.proj_folder_manager = project_folder_manager
+        self.project_dir = self.proj_folder_manager.project_folder
         self.config = self.proj_folder_manager.config
-        self.do_book_recognition = False
         pass
 
-    def preprocess_with_generator(self):
+    def preprocess_with_generator(self, original_books_to_preprocess: list, ms_receiver=None):
         """yields current preprocessed count and total amount"""
-        if self.is_preprocessed(self.project_dir):
-            raise FileExistsError('it seems that preprocessing already took place')
-
-        books_abs_paths = LibScanner.find_all_files(self.config.extensions,
-                                                    lib_root_path=self.proj_folder_manager.lib_root_path)
-
-        books_to_preprocess_paths = books_abs_paths
+        if ms_receiver is None:
+            ms_receiver = lambda s: print(s)
 
         count = 0
-        total_amount = len(books_to_preprocess_paths)
+        total_amount = len(original_books_to_preprocess)
 
         yield count, total_amount
 
-        folders_paths = []
-
-        for p in books_to_preprocess_paths:
-            folder = self.preprocess_book(p)
-            folders_paths.append(folder)
+        for abs_p in original_books_to_preprocess:
+            rel_p = self.proj_folder_manager.make_relative_path(abs_p)
+            bfm = BookFolderManager.write_new_folder(abs_p, self.proj_folder_manager.copy_folder_path, self.config.get_meta_scheme(), rel_p)
+            res = self.preprocess_book(bfm, ms_receiver)
+            bfm.book_state.preprocessed = res
+            bfm.save_book_state()
             count += 1
             yield count, total_amount
-
-        State.create_new(self.project_dir, folders_paths)
         pass
 
-    def preprocess_book(self, book_path: Path):
-        folder_manager = BookFolderManager.create_folder_from(book_path, self.config)
-        self._populate_temp_folder_with_pdf(folder_manager)
-        if self.config.orc_config.do_ocr:
-            self._apply_text_recognition(folder_manager)
-        return folder_manager.folder_path
+    def preprocess_book(self, book_folder_manager: BookFolderManager, ms_receiver=None):
+        if ms_receiver is None:
+            ms_receiver = lambda s: print(s)
+        try:
+            self._populate_temp_folder_with_pdf(book_folder_manager, ms_receiver)
+            if self.config.orc_config.do_ocr:
+                self._apply_text_recognition(book_folder_manager)
+        except PreprocessError as e:
+            ms_receiver(str(e))
+            if self.config.stop_when_cant_preprocess:
+                raise e
+            return False
+        return True
 
-    @classmethod
-    def is_preprocessed(cls, project_dir):
-        ans = State.exists(project_dir)
-        # todo: check if already preprocessed
-        return ans
-
-    def _populate_temp_folder_with_pdf(self, folder_manager: BookFolderManager):
+    def _populate_temp_folder_with_pdf(self, folder_manager: BookFolderManager, ms_receiver=None):
         """copy book to temp if it is pdf; else convert and place in temp"""
-        original = folder_manager.original_book_path
+        if ms_receiver is None:
+            ms_receiver = lambda s: print(s)
+        original = Path(self.project_dir,
+                        folder_manager.original_relative_filepath)
+
         extension = original.suffix.strip('.')
         if extension == 'pdf':
-            utils.copy_file(original, folder_manager.temp_book_path)
+            try:
+                utils.copy_file(original, folder_manager.temp_book_path)
+            except FileNotFoundError as e:
+                raise PreprocessError(f"original file not found; path may be too long; path = {original}")
         elif extension == 'djvu':
-            djvu_to_pdf.convert_djvu_to_pdf(original, folder_manager.temp_book_path)
+            # todo: check if works with long paths
+            try:
+                djvu_to_pdf.convert_djvu_to_pdf(original, folder_manager.temp_book_path)
+            except ChildProcessError as e:
+                ms_receiver(f'cant convert djvu to pdf at {original}')
+                raise PreprocessError(e)
+            except FileNotFoundError as e:
+                ms_receiver(f'original file not found; path may be too long; path={original}')
+                raise PreprocessError(e)
+            except EnvironmentError as e:
+                ms_receiver(str(e))
+                raise PreprocessError(e)
             pass
         else:
-            raise ValueError(f'book files with {extension} extension not supported; got on file {original}')
+            message = f'book files with {extension} extension not supported; got on file {original}'
+            ms_receiver(message)
+            raise PreprocessError(message)
         pass
-
-    # todo: somehow specify language of the book
 
     def _apply_text_recognition(self, folder_manager: BookFolderManager):
         # todo: pages_arg may be None; how to achieve that?
-        Recognizer.ocr(src_path=folder_manager.temp_book_path,
-                       dst_path=folder_manager.temp_book_path,
-                       language_arg=self.config.orc_config.language_arg,
-                       pages_arg=self.config.orc_config.pages_arg)
+        try:
+            Recognizer.ocr(src_path=folder_manager.temp_book_path,
+                           dst_path=folder_manager.temp_book_path,
+                           language_arg=self.config.orc_config.language_arg,
+                           pages_arg=self.config.orc_config.pages_arg)
+        except EnvironmentError as e:
+            raise PreprocessError(e)
         pass
-
-    # def _apply_text_recognition(self, folder_manager: BookFolderManager):
-    #     """after this method temp_book should contain text layer"""
-    #     if not self.do_book_recognition:
-    #         return
-    #     Preprocessor._make_recognized_copy(folder_manager.temp_book_path)
-    #
-    # @staticmethod
-    # def _make_recognized_copy(source, destination=None, language="rus"):
-    #     """replaces source pdf if destination not stated,
-    #
-    #     Parameters
-    #     ----------
-    #     language: [str] | str
-    #         possible values: "eng", "rus", ...
-    #         works fine only with single language
-    #     """
-    #     if destination is None:
-    #         destination = source
-    #     try:
-    #         ocrmypdf.ocr(source, destination, language=language)
-    #     except ocrmypdf.exceptions.PriorOcrFoundError:
-    #         # in case text already exists
-    #         print(f"{source} already has text")
-    #     except ocrmypdf.exceptions.MissingDependencyError:
-    #         print("Some dependency missing")
-    #         raise
-    #     except Exception as e:
-    #         raise
