@@ -67,6 +67,26 @@ class Glue:
 
         return Engine(project_folder_manager=proj_manager, book_folder_managers=finished_bfm)
 
+    def is_preprocessed(self, ms_receiver=None):
+        if ms_receiver is None:
+            ms_receiver = lambda s: print(s)
+        project_manager = self.get_project_manager(ms_receiver)
+        if not project_manager:
+            raise FileNotFoundError('check before calling this method')
+
+        config = project_manager.config
+
+        copy_folder_manager = CopyFolderManager(
+            project_manager.copy_folder_path)
+        copy_folder_manager.delete_all_not_finished_bfm()
+        original_books = LibScanner.find_all_files(config.extensions,
+                                                   project_manager.lib_root_path)
+        finished_bfm = copy_folder_manager.load_book_folders_managers()
+
+        books_to_preprocess = self._get_not_preprocessed_books(
+            all_original_books=original_books,
+            finished_bfm=finished_bfm)
+        return len(books_to_preprocess) == 0
 
     def _get_not_preprocessed_books(self, all_original_books: list,
                                     finished_bfm: list):

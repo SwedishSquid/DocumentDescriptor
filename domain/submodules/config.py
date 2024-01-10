@@ -97,7 +97,7 @@ class Config:
     @classmethod
     def get_default(cls):
         ocr_config = OCRConfig(pages_arg='1-5', language_arg='rus+eng',
-                               do_ocr=True)
+                               do_ocr=False)
         conf = Config(
             [FieldConfigRecord('author', 'Автор', 'Author'),
              FieldConfigRecord('title', 'Название', 'Title'),

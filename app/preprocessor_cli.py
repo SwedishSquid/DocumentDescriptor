@@ -25,8 +25,7 @@ class PreprocessorCLI:
             return
 
         for done, total in glue.get_preprocessor_generator(ms_receiver=ms_receiver):
-            if self._verbosity_level >= 1:
-                printProgressBar(done, total, prefix='Progress', suffix=f'Complete | {done}/{total}', length=50)
+            printProgressBar(done, total, prefix='Progress', suffix=f'Complete | {done}/{total}', length=50)
         self.output('done')
         pass
 

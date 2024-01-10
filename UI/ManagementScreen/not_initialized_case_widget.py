@@ -25,6 +25,9 @@ class NotInitializedCaseWidget(QWidget):
         buttons_widget.layout().addWidget(continue_button)
         buttons_widget.layout().addWidget(reject_button)
 
+        continue_button.clicked.connect(view.init_project)
+        reject_button.clicked.connect(view.switch_to_beginning_widget)
+
         layout.addWidget(msg)
         layout.addWidget(buttons_widget)
 

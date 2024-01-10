@@ -8,13 +8,17 @@ from domain.glue import Glue
 class App:
     def __init__(self):
         self.engine: Engine = None
+        self.glue: Glue = None
         pass
 
+    def reset_engine(self):
+        self.engine = self.glue.get_engine()
+
     def try_set_project_path(self, project_path):
-        glue = Glue(project_path)
-        if not glue.init_happened():
+        self.glue = Glue(project_path)
+        if not self.glue.init_happened():
             return False
-        self.engine = glue.get_engine()
+        self.engine = self.glue.get_engine()
         return True
 
     def get_next_book(self):
@@ -23,8 +27,13 @@ class App:
         return self.get_current_book()
 
     def get_current_book(self):
+        if not self.engine.try_set_book_index(0):
+            raise NotImplementedError
         book_info = self.engine.get_current_book()
         return book_info
+
+    def preprocess_single_book(self):
+        pass
 
     def try_set_index_and_get_book(self, index: int):
         #
@@ -47,4 +56,5 @@ class App:
 
     def get_full_book_list(self):
         return self.engine.get_full_book_list()
+
     pass

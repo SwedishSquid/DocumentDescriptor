@@ -1,4 +1,7 @@
-from UI.ManagementScreen.management_widget import ManagementWidget
+from pathlib import Path
+
+from UI.ManagementScreen.initialized_case_widget import InitializedCaseWidget
+from UI.ManagementScreen.not_initialized_case_widget import NotInitializedCaseWidget
 from app.App import App
 from UI.BeginningScreen.beginning_widget import BeginningWidget
 from UI.window_menu_bar import MenuBar
@@ -26,10 +29,12 @@ class View:
         self.window.setCentralWidget(self.stacked_widget)
 
         self.beginning_widget = BeginningWidget(self)
-        self.management_widget = ManagementWidget(self)
+        self.initialized_case_widget = InitializedCaseWidget(self)
+        self.not_initialized_case_widget = NotInitializedCaseWidget(self)
         self.main_widget = MainWidget(self)
         self.stacked_widget.addWidget(self.beginning_widget)
-        self.stacked_widget.addWidget(self.management_widget)
+        self.stacked_widget.addWidget(self.not_initialized_case_widget)
+        self.stacked_widget.addWidget(self.initialized_case_widget)
         self.stacked_widget.addWidget(self.main_widget)
 
     def run(self):
@@ -40,15 +45,19 @@ class View:
         self.window.show()
         self.q_app.exec()
 
-    def try_set_project_path(self, path: str):
-        if self.app.try_set_project_path(path):
-            self.beginning_widget.show_continue_button()
-            self.chosen_path = path
-            return True
-        self.beginning_widget.hide_continue_button()
-        return False
+    # def try_set_project_path(self, path: str):
+    #     if self.app.try_set_project_path(path):
+    #         self.beginning_widget.show_continue_button()
+    #         self.chosen_path = path
+    #         return True
+    #     self.beginning_widget.hide_continue_button()
+    #     return False
+
+    def allow_proceed(self):
+        self.beginning_widget.show_continue_button()
 
     def switch_to_main_widget(self):
+        self.app.reset_engine()
         self.stacked_widget.setCurrentWidget(self.main_widget)
         self.current_book_info = self.app.get_current_book()
         self._show_book()
@@ -57,9 +66,22 @@ class View:
         self.stacked_widget.setCurrentWidget(self.beginning_widget)
         self.window.setWindowTitle("")
 
-    def switch_to_management_widget(self):
-        self.stacked_widget.setCurrentWidget(self.management_widget)
-        self.window.setWindowTitle(self.chosen_path)
+    def switch_to_management_widget_with_path(self, path: str):
+        self.chosen_path = Path(path)
+        self.window.setWindowTitle(path)
+        if self.app.try_set_project_path(self.chosen_path):
+            self.initialized_case_widget.reset()
+            self.stacked_widget.setCurrentWidget(self.initialized_case_widget)
+        else:
+            self.stacked_widget.setCurrentWidget(self.not_initialized_case_widget)
+
+    def init_project(self):
+        self.app.glue.init_project(self.current_book_info)
+        self.initialized_case_widget.reset()
+        self.stacked_widget.setCurrentWidget(self.initialized_case_widget)
+
+    def resume_preprocessing(self):
+        self.app.glue.get_preprocessor_generator()
 
     def show_next_book(self):
         self.current_book_info = self.app.get_next_book()

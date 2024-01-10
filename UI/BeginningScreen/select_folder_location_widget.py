@@ -12,13 +12,10 @@ class SelectFolderLocationWidget(QWidget):
         sub_widget = QWidget()
         sub_widget.setLayout(QHBoxLayout())
 
-        self._input_field = self._create_input_field(input_field_info)
-        self._input_field.textChanged.connect(
-            lambda:
-            self.view.try_set_project_path(self._input_field.text())
-        )
+        self.input_field = self._create_input_field(input_field_info)
+        self.input_field.textChanged.connect(self.view.allow_proceed)
 
-        sub_widget.layout().addWidget(self._input_field)
+        sub_widget.layout().addWidget(self.input_field)
         sub_widget.layout().addWidget(self._create_enter_file_manager_button())
         sub_widget.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
 
@@ -60,4 +57,4 @@ class SelectFolderLocationWidget(QWidget):
         )
 
         if dir_path:
-            self._input_field.setText(dir_path)
+            self.input_field.setText(dir_path)

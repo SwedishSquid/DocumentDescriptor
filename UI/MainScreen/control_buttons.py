@@ -72,12 +72,12 @@ class ControlButtons(QWidget):
         return button
 
     @staticmethod
-    def create_blank_continue_button(text=""):
+    def create_blank_continue_button(text="", border_radius=40):
         button = QPushButton(text)
         button.setStyleSheet("""
                         QPushButton {
                             background-color: #91FF3A;
-                            border-radius: 40px;
+                            border-radius: %spx;
                         }
                         QPushButton:hover {
                             background-color: #7FDB3A;
@@ -85,17 +85,17 @@ class ControlButtons(QWidget):
                         QPushButton:pressed {
                             background-color: #70C13A;
                         }
-                    """)
+                    """ % str(border_radius))
         return button
 
     @staticmethod
-    def create_blank_reject_button(text=""):
+    def create_blank_reject_button(text="", border_radius=40):
         button = QPushButton(text)
         button.setFont(QFont('Arial', 14))
         button.setStyleSheet("""
                         QPushButton {
                             background-color: #FF4040;
-                            border-radius: 40px;
+                            border-radius: %spx;
                         }
                         QPushButton:hover {
                             background-color: #D14040;
@@ -103,5 +103,5 @@ class ControlButtons(QWidget):
                         QPushButton:pressed {
                             background-color: #A14040;
                         }
-                    """)
+                    """ % str(border_radius))
         return button
