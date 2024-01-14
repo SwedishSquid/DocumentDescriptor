@@ -2,11 +2,13 @@ from PySide6.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView,\
     QDialog
 from UI.MainScreen.book_list_item import Book
 from domain.book_data_holders.description_stage import DescriptionStage
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QColorConstants, QColor
 
 
 class BookList(QListWidget):
+    Book_Index_Chosen_Signal = Signal(int)
+
     colors_by_stage = {
         DescriptionStage.NOT_STARTED: QColorConstants.Gray,
         DescriptionStage.IN_PROGRESS: QColor(211, 188, 0),
@@ -14,9 +16,8 @@ class BookList(QListWidget):
         DescriptionStage.FINISHED: QColor(76, 148, 0)
     }
 
-    def __init__(self, view, dialog: QDialog):
+    def __init__(self, dialog: QDialog):
         super().__init__()
-        self.view = view
         self.dialog = dialog
 
         self.itemClicked.connect(lambda: dialog.done(1))
@@ -36,7 +37,8 @@ class BookList(QListWidget):
         item.setSizeHint(book.sizeHint())
         item.setFlags(Qt.ItemFlag.NoItemFlags)
         item.setBackground(self.colors_by_stage[stage])
+        pass
 
     def _on_book_click(self, item: QListWidgetItem):
         book = self.itemWidget(item)
-        self.view.show_book_by_number(book.number)
+        self.Book_Index_Chosen_Signal.emit(book.number)

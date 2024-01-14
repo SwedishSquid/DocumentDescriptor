@@ -8,18 +8,22 @@ class TestWidget(QWidget):
     pass
 
 
+some_signal = Signal(str)
+
+
 class WidgetWithButton(QWidget):
-    button_clicked_signal = Signal(str)
+    button_clicked_signal = some_signal
 
     def __init__(self):
         super().__init__()
         self.button = QPushButton(parent=self, text='i am button')
         self.button.clicked.connect(self._button_clicked_event)
+        self.something = self.button_clicked_signal
         pass
 
     @Slot()
     def _button_clicked_event(self):
-        self.button_clicked_signal.emit(str(random.randint(0, 100)))
+        self.something.emit(str(random.randint(0, 100)))
         print('signal emitted')
 
 
@@ -64,5 +68,5 @@ def run():
     app.exec()
 
 
-# run()
+run()
 

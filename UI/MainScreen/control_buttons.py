@@ -1,33 +1,35 @@
 from UI.constant_paths import path_to_pictures
-from UI.MainScreen.reject_qdialog import Reject
-from UI.MainScreen.full_book_list_qdialog import FullBookList
+
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtCore import QSize
 
 
 class ControlButtons(QWidget):
-    def __init__(self, view):
+    def __init__(self):
         super().__init__()
-        self.view = view
-        self.reject_dialog = Reject(self.view)
-        self.full_book_list_dialog = FullBookList(self.view)
+        # self.reject_dialog = Reject(self.view)
+        # self.full_book_list_dialog = FullBookList(self.view)
 
         layout = QHBoxLayout()
-        layout.addWidget(self._create_full_list_button_())
-        layout.addWidget(self._create_reject_button())
-        layout.addWidget(self._create_continue_button())
+        self.full_list_button = self._create_full_list_button_()
+        self.reject_button = self._create_reject_button()
+        self.continue_button = self._create_continue_button()
+
+        layout.addWidget(self.full_list_button)
+        layout.addWidget(self.reject_button)
+        layout.addWidget(self.continue_button)
 
         self.setLayout(layout)
 
     def _create_full_list_button_(self):
         button = QPushButton("Полный\n"
                              "список")
-        button.clicked.connect(
-            lambda:
-            self.view.show_full_book_list(
-                self.full_book_list_dialog.book_list))
-        button.clicked.connect(self.full_book_list_dialog.run)
+        # button.clicked.connect(
+        #     lambda:
+        #     self.view.show_full_book_list(
+        #         self.full_book_list_dialog.book_list))
+        # button.clicked.connect(self.full_book_list_dialog.run)
 
         font = QFont('Arial', 16)
         font.setBold(True)
@@ -51,7 +53,7 @@ class ControlButtons(QWidget):
 
     def _create_reject_button(self):
         button = self.create_blank_reject_button()
-        button.clicked.connect(self.reject_dialog.run)
+        # button.clicked.connect(self.reject_dialog.run)
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('cross'))))
         button.setIconSize(QSize(96, 96))
@@ -62,8 +64,8 @@ class ControlButtons(QWidget):
 
     def _create_continue_button(self):
         button = self.create_blank_continue_button()
-        button.clicked.connect(self.view.save_book_meta_as_finished)
-        button.clicked.connect(self.view.show_next_book)
+        # button.clicked.connect(self.view.save_book_meta_as_finished)
+        # button.clicked.connect(self.view.show_next_book)
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('right-arrow'))))
         button.setIconSize(QSize(96, 96))

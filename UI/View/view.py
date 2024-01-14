@@ -33,7 +33,12 @@ class View:
         self.beginning_widget = BeginningWidget()
         self.beginning_widget.Proceed_Button_Signal.connect(self._on_project_path_chosen_event)
 
-        self.main_widget = MainWidget(self)
+        self.main_widget = MainWidget()
+        self.main_widget.control_buttons.full_list_button.clicked.connect(self.show_full_book_list)
+        self.main_widget.control_buttons.continue_button.clicked.connect(self.on_saveAndNext_event)
+        self.main_widget.Reject_Book_Signal.connect(self.on_reject_book_event)
+        self.main_widget.New_Book_Index_Chosen_Signal.connect(self.on_change_book_via_full_list_event)
+
         self.stacked_widget.addWidget(self.beginning_widget)
 
         # fixme: unify under one widget with recognizable name
@@ -135,12 +140,27 @@ class View:
         self._save_fields_to_book_meta()
         self.app.save_as_in_progress(self.current_book_info.book_meta)
 
-    def show_full_book_list(self, book_list: BookList):
-        book_list.clear()
-        book_records = self.app.get_full_book_list()
-        for i in range(len(book_records)):
-            book_list.add_book(
-                i,
-                str(book_records[i].rel_path.name),
-                book_records[i].descr_stage
-            )
+    @Slot()
+    def show_full_book_list(self):
+        self.main_widget.run_full_book_list_dialog(self.app.get_full_book_list())
+        pass
+
+    @Slot()
+    def on_reject_book_event(self, message: str):
+        self.save_book_meta_as_rejected(message)
+        self.show_next_book()
+        pass
+
+    @Slot()
+    def on_saveAndNext_event(self):
+        self.save_book_meta_as_finished()
+        self.show_next_book()
+        pass
+
+    @Slot()
+    def on_change_book_via_full_list_event(self, index: int):
+        # todo: check if fields were changed
+        self.save_book_meta_as_in_progress()
+
+        self.show_book_by_number(index)
+        pass
