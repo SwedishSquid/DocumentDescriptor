@@ -11,11 +11,12 @@ from UI.constant_paths import path_to_pictures
 from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow, QSizePolicy, QStackedWidget
+from PySide6.QtCore import Signal, Slot
 
 
 class View:
     def __init__(self):
-        self.chosen_path = None
+        # self.chosen_path = None
         self.app = App()
         self.current_book_info = None
 
@@ -23,25 +24,28 @@ class View:
         self.q_app.setWindowIcon(QIcon(str(path_to_pictures.joinpath('file'))))
 
         self.window = QMainWindow()
+        self.window.setWindowTitle("Document descriptor")
         self.window.setMinimumSize(800, 600)
-        self.window.setMenuBar(MenuBar())
+        self.window.setMenuBar(MenuBar())   # todo: add functionality to menu bar or remove it
         self.stacked_widget = QStackedWidget()
         self.window.setCentralWidget(self.stacked_widget)
 
-        self.beginning_widget = BeginningWidget(self)
-        self.initialized_case_widget = InitializedCaseWidget(self)
-        self.not_initialized_case_widget = NotInitializedCaseWidget(self)
+        self.beginning_widget = BeginningWidget()
+        self.beginning_widget.Proceed_Button_Signal.connect(self._on_project_path_chosen_event)
+
         self.main_widget = MainWidget(self)
         self.stacked_widget.addWidget(self.beginning_widget)
+
+        # fixme: unify under one widget with recognizable name
+        self.initialized_case_widget = InitializedCaseWidget(self)
+        self.not_initialized_case_widget = NotInitializedCaseWidget(self)
         self.stacked_widget.addWidget(self.not_initialized_case_widget)
         self.stacked_widget.addWidget(self.initialized_case_widget)
+
         self.stacked_widget.addWidget(self.main_widget)
 
     def run(self):
-        # self.beginning_window.show()
-        # self.stacked_widget.addWidget(self.beginning_widget)
-        # self.window.setCentralWidget(self.beginning_widget)
-        # self.window.showMaximized()
+        self.stacked_widget.setCurrentWidget(self.beginning_widget)
         self.window.show()
         self.q_app.exec()
 
@@ -53,9 +57,6 @@ class View:
     #     self.beginning_widget.hide_continue_button()
     #     return False
 
-    def allow_proceed(self):
-        self.beginning_widget.show_continue_button()
-
     def switch_to_main_widget(self):
         self.app.reset_engine()
         self.stacked_widget.setCurrentWidget(self.main_widget)
@@ -65,11 +66,18 @@ class View:
     def switch_to_beginning_widget(self):
         self.stacked_widget.setCurrentWidget(self.beginning_widget)
         self.window.setWindowTitle("")
+        pass
+
+    @Slot()
+    def _on_project_path_chosen_event(self, path: Path):
+        self.switch_to_management_widget_with_path(str(path))
+        pass
 
     def switch_to_management_widget_with_path(self, path: str):
-        self.chosen_path = Path(path)
+        # todo: simplify
+        chosen_path = Path(path)
         self.window.setWindowTitle(path)
-        if self.app.try_set_project_path(self.chosen_path):
+        if self.app.try_set_project_path(chosen_path):
             self.initialized_case_widget.reset()
             self.stacked_widget.setCurrentWidget(self.initialized_case_widget)
         else:

@@ -2,18 +2,20 @@ from UI.constant_paths import path_to_pictures
 from PySide6.QtGui import QPalette, QColorConstants, QPixmap, QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, \
     QSizePolicy, QHBoxLayout, QPushButton, QFileDialog
+from PySide6.QtCore import Signal
 
 
 class SelectFolderLocationWidget(QWidget):
-    def __init__(self, caption: str, input_field_info: str, view):
-        super().__init__()
-        self.view = view
+    Some_Input_Signal = Signal(str)
 
+    def __init__(self, caption: str, input_field_info: str):
+        super().__init__()
         sub_widget = QWidget()
         sub_widget.setLayout(QHBoxLayout())
 
         self.input_field = self._create_input_field(input_field_info)
-        self.input_field.textChanged.connect(self.view.allow_proceed)
+
+        self.input_field.textChanged.connect(self._emit_someinput_signal)
 
         sub_widget.layout().addWidget(self.input_field)
         sub_widget.layout().addWidget(self._create_enter_file_manager_button())
@@ -31,6 +33,12 @@ class SelectFolderLocationWidget(QWidget):
         palette.setColor(self.backgroundRole(), QColorConstants.Gray)
         self.setPalette(palette)
         self.setAutoFillBackground(True)
+
+        pass
+
+    def _emit_someinput_signal(self):
+        self.Some_Input_Signal.emit(self.input_field.text())
+        pass
 
     def _create_header_label(self, caption: str):
         label = QLabel(caption)
