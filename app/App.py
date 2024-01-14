@@ -27,13 +27,9 @@ class App:
         return self.get_current_book()
 
     def get_current_book(self):
-        if not self.engine.try_set_book_index(0):
-            raise NotImplementedError
+        # todo: make something with zero book problem
         book_info = self.engine.get_current_book()
         return book_info
-
-    def preprocess_single_book(self):
-        pass
 
     def try_set_index_and_get_book(self, index: int):
         #
@@ -44,6 +40,7 @@ class App:
     def save_as_rejected(self, meta: BookMeta, message=''):
         """:param message: text explaining why this book is rejected"""
         # todo: save this message somewhere
+        print(message)
         self.engine.save_book_data(meta, DescriptionStage.REJECTED)
         pass
 
