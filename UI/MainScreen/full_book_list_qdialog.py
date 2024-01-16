@@ -12,7 +12,7 @@ class FullBookList(QDialog):
         self.book_list = BookList(view, self)
         self.setLayout(QVBoxLayout())
         self.layout().addWidget(self.book_list)
-        # self.accepted.connect(self.view.save_book_meta_as_in_progress)
+        self.accepted.connect(self.view.save_book_meta_as_in_progress)
 
     def run(self):
         self.exec()

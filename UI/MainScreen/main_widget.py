@@ -13,11 +13,12 @@ class MainWidget(QWidget):
         self.setWindowTitle("Document descriptor")
         self.pdf_viewer = BrowserPdfViewer()
         self.pdf_viewer.set_file(Path("E:/dev/DocumentDescriptor/DocumentDescriptor/dir_that_git_ignores/2/test.pdf"))
-        self.field_list = FieldList()
+        self.field_list = FieldList(view)
 
         layout = QHBoxLayout()
-        layout.addWidget(self._create_left_widget(view))
-        layout.addWidget(self.pdf_viewer)
+        layout.addStretch()
+        layout.addWidget(self._create_left_widget(view), 1)
+        layout.addWidget(self.pdf_viewer, 1)
         self.setLayout(layout)
 
     def _create_left_widget(self, view):
