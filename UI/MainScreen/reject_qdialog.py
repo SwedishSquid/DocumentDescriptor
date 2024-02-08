@@ -1,14 +1,15 @@
 from PySide6.QtWidgets import QDialog, QWidget, QPushButton, QLabel, \
     QVBoxLayout
 from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from UI.resizable_qtextedit import ResizableTextEdit
 
 
 class Reject(QDialog):
-    def __init__(self, view):
+    Reject_Book_Signal = Signal(str)
+
+    def __init__(self):
         super().__init__()
-        self.view = view
         self.setWindowTitle("Окно отклонения")
         self.setFixedSize(500, 250)
 
@@ -51,10 +52,7 @@ class Reject(QDialog):
         button.clicked.connect(lambda: self.done(1))
         button.clicked.connect(
             lambda:
-            self.view.save_book_meta_as_rejected(
-                self._text_edit.toPlainText()
-            ))
-        button.clicked.connect(self.view.show_next_book)
+            self.Reject_Book_Signal.emit(self._text_edit.toPlainText()))
 
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignRight)

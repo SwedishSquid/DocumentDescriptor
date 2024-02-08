@@ -1,20 +1,27 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QMainWindow, QPushButton
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
+from PySide6.QtCore import Qt, Signal, Slot
 from UI.BeginningScreen.select_folder_location_widget \
     import SelectFolderLocationWidget
 from UI.window_menu_bar import MenuBar
+from pathlib import Path
 
 
 class BeginningWidget(QWidget):
-    def __init__(self, view):
+    Proceed_Button_Signal = Signal(Path)   #
+
+    def __init__(self):
         super().__init__()
-        self.view = view
-        self.setWindowTitle("Document descriptor")
+
+
+        self._input_path: Path = None
 
         self._continue_button = self._create_continue_button()
         self.hide_continue_button()
+
         self.selectFolderLocationWidget = SelectFolderLocationWidget(
-            "Путь до исходных файлов", "Введите путь", self.view)
+            "Путь до исходных файлов", "Введите путь")
+        self.selectFolderLocationWidget.Some_Input_Signal.connect(
+            self._on_some_input)
 
         layout = QVBoxLayout()
         layout.addWidget(self.selectFolderLocationWidget)
@@ -28,13 +35,30 @@ class BeginningWidget(QWidget):
     def _create_continue_button(self):
         button = QPushButton("Продолжить")
         button.setFixedWidth(200)
-        button.clicked.connect(lambda: self.view.switch_to_management_widget_with_path(
-            self.selectFolderLocationWidget.input_field.text()))
+        button.clicked.connect(self._emit_proceed_button_signal)
 
         size_policy = button.sizePolicy()
         size_policy.setRetainSizeWhenHidden(True)
         button.setSizePolicy(size_policy)
         return button
+
+    def _emit_proceed_button_signal(self):
+        if self._input_path is not None:
+            self.Proceed_Button_Signal.emit(self._input_path)
+        pass
+
+    @Slot()
+    def _on_some_input(self, text: str):
+        # todo: log input text and path result
+        # print(text)
+        path = Path(text)
+        if path.is_dir() and path.is_absolute():
+            self.show_continue_button()
+            self._input_path = path
+        else:
+            self.hide_continue_button()
+            self._input_path = None
+        pass
 
     def show_continue_button(self):
         self._continue_button.show()
