@@ -5,9 +5,8 @@ from PySide6.QtGui import QColorConstants
 
 
 class FieldList(QListWidget):
-    def __init__(self, view):
+    def __init__(self):
         super().__init__()
-        Field.view = view
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
         self.verticalScrollBar().setSingleStep(5)
         self.setSpacing(3)

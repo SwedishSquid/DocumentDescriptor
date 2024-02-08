@@ -9,7 +9,7 @@ from PySide6.QtGui import QColorConstants, QColor
 class BookList(QListWidget):
     Book_Index_Chosen_Signal = Signal(int)
 
-    colors_by_stage = {
+    color_by_stage = {
         DescriptionStage.NOT_STARTED: QColorConstants.Gray,
         DescriptionStage.IN_PROGRESS: QColor(211, 188, 0),
         DescriptionStage.REJECTED: QColor(218, 106, 95),
@@ -20,8 +20,8 @@ class BookList(QListWidget):
         super().__init__()
         self.dialog = dialog
 
-        self.itemClicked.connect(lambda: dialog.done(1))
         self.itemClicked.connect(self._on_book_click)
+        self.itemClicked.connect(lambda: dialog.done(1))
 
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
         self.verticalScrollBar().setSingleStep(5)
@@ -36,7 +36,7 @@ class BookList(QListWidget):
 
         item.setSizeHint(book.sizeHint())
         item.setFlags(Qt.ItemFlag.NoItemFlags)
-        item.setBackground(self.colors_by_stage[stage])
+        item.setBackground(self.color_by_stage[stage])
         pass
 
     def _on_book_click(self, item: QListWidgetItem):

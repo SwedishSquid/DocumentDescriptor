@@ -19,7 +19,7 @@ class View:
         # self.chosen_path = None
         self.app = App()
         self.current_book_info = None
-        self.current_book_fields_changed = False
+        # self.current_book_fields_changed = False
 
         self.q_app = QApplication()
         self.q_app.setWindowIcon(QIcon(str(path_to_pictures.joinpath('file'))))
@@ -98,11 +98,11 @@ class View:
         self.app.glue.get_preprocessor_generator()
 
     def show_next_book(self):
-        self.current_book_info = self.app.get_next_book()
-        self.current_book_fields_changed = False
-        if self.current_book_info is None:
+        next_book_info = self.app.get_next_book()
+        if next_book_info is None:
             NoMoreFilesDialog().exec()
             return
+        self.current_book_info = next_book_info
         self._show_book()
 
     def show_book_by_number(self, num: int):
@@ -138,8 +138,6 @@ class View:
         self.app.save_as_finished(self.current_book_info.book_meta)
 
     def save_book_meta_as_in_progress(self):
-        if not self.current_book_fields_changed:
-            return
         self._save_fields_to_book_meta()
         self.app.save_as_in_progress(self.current_book_info.book_meta)
 

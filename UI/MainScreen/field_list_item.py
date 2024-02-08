@@ -4,8 +4,6 @@ from UI.resizable_qtextedit import ResizableTextEdit
 
 
 class Field(QWidget):
-    view = None
-
     def __init__(self, caption: str, content: str, name: str,
                  item: QListWidgetItem):
         super().__init__()
@@ -16,7 +14,7 @@ class Field(QWidget):
         self._text_edit.textChanged.connect(
             lambda: self._item.setSizeHint(self.sizeHint())
         )
-        self._text_edit.textChanged.connect(self.view.on_fields_change)
+        # self._text_edit.textChanged.connect(self.view.on_fields_change)
 
         layout = QVBoxLayout()
         layout.addStretch()
