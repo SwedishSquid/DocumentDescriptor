@@ -63,7 +63,8 @@ class View:
     #     return False
 
     def switch_to_main_widget(self):
-        self.app.reset_engine()
+        # fixme: why resetting engine here??
+        # self.app.reset_engine()
         self.stacked_widget.setCurrentWidget(self.main_widget)
         self.current_book_info = self.app.get_current_book()
         self._show_book()
