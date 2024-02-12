@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QWidget, QStackedLayout
-from UI.PreprocessorUI.logic.open_or_create_state import OpenOrCreateState
-from UI.PreprocessorUI.logic.create_path_choosing_state import CreatePathChoosingState
-from UI.PreprocessorUI.logic.open_path_choosing_state import OpenPathChoosingState
-from UI.PreprocessorUI.logic.project_control_state import ProjectControlState
-from UI.PreprocessorUI.logic.app_state_base import AppStateBase
+from UI.BeginningScreen.select_project_opening_option_state import SelectProjectOpeningOptionState
+from UI.BeginningScreen.create_new_project_option_state import CreateNewProjectOptionState
+from UI.BeginningScreen.open_existing_project_option_state import OpenExistingProjectOptionState
+from UI.ProjectControlScreen.project_control_state import ProjectControlState
+from UI.app_state_base import AppStateBase
 
 
 class StateViewWidget(QWidget):
@@ -12,11 +12,11 @@ class StateViewWidget(QWidget):
         self.layout = QStackedLayout()
         self.setLayout(self.layout)
 
-        self.open_or_create_state = OpenOrCreateState()
+        self.open_or_create_state = SelectProjectOpeningOptionState()
         self._configure_state(self.open_or_create_state)
-        self.create_path_choosing_state = CreatePathChoosingState()
+        self.create_path_choosing_state = CreateNewProjectOptionState()
         self._configure_state(self.create_path_choosing_state)
-        self.open_path_choosing_stata = OpenPathChoosingState()
+        self.open_path_choosing_stata = OpenExistingProjectOptionState()
         self._configure_state(self.open_path_choosing_stata)
         self.project_control_state = ProjectControlState()
         self._configure_state(self.project_control_state)

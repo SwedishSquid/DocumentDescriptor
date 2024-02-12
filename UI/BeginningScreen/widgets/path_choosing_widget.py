@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton,\
     QLabel
 from PySide6.QtCore import Signal
-from UI.BeginningScreen.select_folder_location_widget \
+from UI.BeginningScreen.widgets.select_folder_location_widget \
     import SelectFolderLocationWidget
 
 

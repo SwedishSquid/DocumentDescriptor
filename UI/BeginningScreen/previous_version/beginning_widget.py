@@ -1,8 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from PySide6.QtCore import Qt, Signal, Slot
-from UI.BeginningScreen.select_folder_location_widget \
+from UI.BeginningScreen.widgets.select_folder_location_widget \
     import SelectFolderLocationWidget
-from UI.window_menu_bar import MenuBar
 from pathlib import Path
 
 

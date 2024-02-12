@@ -1,15 +1,15 @@
-from UI.PreprocessorUI.logic.app_state_base import AppStateBase
-from UI.PreprocessorUI.widgets.open_or_create_widget import OpenOrCreateWidget
+from UI.app_state_base import AppStateBase
+from UI.BeginningScreen.widgets.open_create_recent_widget import OpenCreateRecentWidget
 from PySide6.QtCore import Signal
 
 
-class OpenOrCreateState(AppStateBase):
+class SelectProjectOpeningOptionState(AppStateBase):
     Create_New_Project = Signal()
     Open_Existing_Project = Signal()
 
     def __init__(self):
         super().__init__()
-        self.main_widget = OpenOrCreateWidget()
+        self.main_widget = OpenCreateRecentWidget()
         self.main_widget.Create_New_Project_Signal.connect(
             lambda: self.Create_New_Project.emit()
         )

@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QApplication, QMainWindow
-from UI.PreprocessorUI.widgets.path_choosing_widget import PathChoosingWidget
-from UI.PreprocessorUI.widgets.project_control_widget import ProjectControlWidget
-from UI.PreprocessorUI.widgets.preprocess_dialog.preprocess_dialog import PreprocessDialog
-from UI.PreprocessorUI.logic.state_view_widget import StateViewWidget
+from UI.BeginningScreen.widgets.path_choosing_widget import PathChoosingWidget
+from UI.ProjectControlScreen.project_control_widget import ProjectControlWidget
+from UI.ProjectControlScreen.preprocess_dialog.preprocess_dialog import PreprocessDialog
+from UI.View.state_view_widget import StateViewWidget
 
 
 def make_path_choosing_widget():

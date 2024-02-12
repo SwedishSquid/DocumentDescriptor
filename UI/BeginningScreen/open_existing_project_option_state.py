@@ -1,10 +1,10 @@
-from UI.PreprocessorUI.logic.app_state_base import AppStateBase
-from UI.PreprocessorUI.widgets.path_choosing_widget import PathChoosingWidget
+from UI.app_state_base import AppStateBase
+from UI.BeginningScreen.widgets.path_choosing_widget import PathChoosingWidget
 from pathlib import Path
 from PySide6.QtCore import Signal
 
 
-class OpenPathChoosingState(AppStateBase):
+class OpenExistingProjectOptionState(AppStateBase):
     Return_Signal = Signal()
     Path_Chosen = Signal(Path)
 

@@ -1,11 +1,11 @@
-from UI.PreprocessorUI.logic.app_state_base import AppStateBase
-from UI.PreprocessorUI.widgets.path_choosing_widget import PathChoosingWidget
+from UI.app_state_base import AppStateBase
+from UI.BeginningScreen.widgets.path_choosing_widget import PathChoosingWidget
 from pathlib import Path
 from PySide6.QtCore import Signal
 from domain.glue import Glue
 
 
-class CreatePathChoosingState(AppStateBase):
+class CreateNewProjectOptionState(AppStateBase):
     Return_Signal = Signal()
     Path_Chosen = Signal(Path)
 
@@ -41,6 +41,7 @@ class CreatePathChoosingState(AppStateBase):
 
     def _try_parse_path(self, user_input_path: str, ms_receiver=None):
         # todo: check if directory contains any files
+        # todo: remove logic from UI layer
         if ms_receiver is None:
             ms_receiver = lambda s: None
         try:

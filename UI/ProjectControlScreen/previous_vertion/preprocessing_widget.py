@@ -1,8 +1,7 @@
-from PySide6.QtCore import QThread
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QStackedWidget, QVBoxLayout, QSpacerItem
+from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QSpacerItem
 
-from UI.ManagementScreen.preprocessing_dialog import PreprocessingDialog
+from UI.ProjectControlScreen.previous_vertion.preprocessing_dialog import PreprocessingDialog
 
 
 class PreprocessingWidget(QWidget):

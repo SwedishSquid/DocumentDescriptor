@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QL
 from PySide6.QtCore import Signal
 
 
-class OpenOrCreateWidget(QWidget):
+class OpenCreateRecentWidget(QWidget):
     """the very first widget user will see - suggests to choose from 3 options:
     - create a new project
     - open an existing project

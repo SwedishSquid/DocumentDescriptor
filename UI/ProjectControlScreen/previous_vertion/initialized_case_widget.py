@@ -1,10 +1,8 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QSpacerItem, QSizePolicy
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QSpacerItem, QSizePolicy
 
-from UI.MainScreen.control_buttons import ControlButtons
-from UI.ManagementScreen import statistics_widget
-from UI.ManagementScreen.navigation_buttons import NavigationButtons
-from UI.ManagementScreen.preprocessing_widget import PreprocessingWidget
-from UI.ManagementScreen.statistics_widget import StatisticsWidget
+from UI.ProjectControlScreen.previous_vertion.navigation_buttons import NavigationButtons
+from UI.ProjectControlScreen.previous_vertion.preprocessing_widget import PreprocessingWidget
+from UI.ProjectControlScreen.previous_vertion.statistics_widget import StatisticsWidget
 
 
 class InitializedCaseWidget(QWidget):

@@ -1,17 +1,16 @@
 from pathlib import Path
 
-from UI.ManagementScreen.initialized_case_widget import InitializedCaseWidget
-from UI.ManagementScreen.not_initialized_case_widget import NotInitializedCaseWidget
+from UI.ProjectControlScreen.previous_vertion.initialized_case_widget import InitializedCaseWidget
+from UI.ProjectControlScreen.previous_vertion.not_initialized_case_widget import NotInitializedCaseWidget
 from app.App import App
-from UI.BeginningScreen.beginning_widget import BeginningWidget
+from UI.BeginningScreen.previous_version.beginning_widget import BeginningWidget
 from UI.window_menu_bar import MenuBar
 from UI.MainScreen.main_widget import MainWidget
-from UI.MainScreen.book_list import BookList
 from UI.constant_paths import path_to_pictures
 from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow, QSizePolicy, QStackedWidget
-from PySide6.QtCore import Signal, Slot
+from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget
+from PySide6.QtCore import Slot
 
 
 class View:
