@@ -4,6 +4,7 @@ from UI.BeginningScreen.create_new_project_option_state import CreateNewProjectO
 from UI.BeginningScreen.open_existing_project_option_state import OpenExistingProjectOptionState
 from UI.ProjectControlScreen.project_control_state import ProjectControlState
 from UI.app_state_base import AppStateBase
+from UI.MainScreen.logic.descriptor_state import DescriptorState
 
 
 class StateViewWidget(QWidget):
@@ -20,6 +21,8 @@ class StateViewWidget(QWidget):
         self._configure_state(self.open_path_choosing_stata)
         self.project_control_state = ProjectControlState()
         self._configure_state(self.project_control_state)
+        self._descriptor_state = DescriptorState()
+        self._configure_state(self._descriptor_state)
 
         self.open_or_create_state.Create_New_Project.connect(
             self.create_path_choosing_state.transfer_control
@@ -43,7 +46,7 @@ class StateViewWidget(QWidget):
         )
 
         self.project_control_state.Open_Descriptor.connect(
-            lambda p: print(f'open descriptor at {p} please')
+            self._descriptor_state.transfer_control
         )
         self.project_control_state.Return_Signal.connect(
             self.open_or_create_state.transfer_control

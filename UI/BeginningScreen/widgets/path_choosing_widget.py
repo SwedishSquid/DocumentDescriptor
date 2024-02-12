@@ -10,7 +10,8 @@ class PathChoosingWidget(QWidget):
     to unblock continue button use enable_continue_button method
     Emitted signals:
     Continue_Signal - user pressed continue button;
-    Return_Signal - user pressed return button
+    Return_Signal - user pressed return button;
+    Something_Inputted_As_Path - user changed input field;
     """
     Continue_Signal = Signal(str)
     Return_Signal = Signal()

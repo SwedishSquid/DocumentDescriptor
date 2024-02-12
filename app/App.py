@@ -22,6 +22,8 @@ class App:
         return True
 
     def get_next_book(self):
+        """change current book to current next book
+        (increment index + return book_info)"""
         if not self.engine.try_set_book_index(self.engine.current_book_index + 1):
             return None
         return self.get_current_book()
