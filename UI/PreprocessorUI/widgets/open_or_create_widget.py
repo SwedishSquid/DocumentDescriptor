@@ -3,6 +3,10 @@ from PySide6.QtCore import Signal
 
 
 class OpenOrCreateWidget(QWidget):
+    """the very first widget user will see - suggests to choose from 3 options:
+    - create a new project
+    - open an existing project
+    - open recently opened project (coming soon)"""
     Create_New_Project_Signal = Signal()
     Open_Existing_Project_Signal = Signal()
 
@@ -26,5 +30,4 @@ class OpenOrCreateWidget(QWidget):
         vertical_layout.addLayout(horizontal_layout)
         vertical_layout.addWidget(self.recent_projects_widget)
         pass
-
     pass

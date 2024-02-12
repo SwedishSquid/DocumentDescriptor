@@ -36,7 +36,7 @@ class PathChoosingWidget(QWidget):
         )
         self.continue_button = QPushButton(text=continue_button_text)
         self.continue_button.clicked.connect(
-            lambda: self.Continue_Signal.emit(self.get_input_text())
+            self._on_continue_clicked
         )
         self.continue_button.setEnabled(False)
 
@@ -53,6 +53,9 @@ class PathChoosingWidget(QWidget):
 
     def get_input_text(self):
         return self.folder_selection_widget.get_input_text()
+
+    def clear_input_text(self):
+        self.folder_selection_widget.clear_input_text()
 
     def enable_continue_button(self):
         """every time user change there input, continue button disables
@@ -80,4 +83,7 @@ class PathChoosingWidget(QWidget):
         self.set_feedback_string('')
         self.Something_Inputted_As_Path.emit(new_input_text)
         pass
+
+    def _on_continue_clicked(self):
+        self.Continue_Signal.emit(self.get_input_text())
     pass

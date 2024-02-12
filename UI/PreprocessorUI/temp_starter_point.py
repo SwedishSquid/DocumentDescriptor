@@ -1,9 +1,8 @@
 from PySide6.QtWidgets import QApplication, QMainWindow
-from UI.PreprocessorUI.path_choosing_widget import PathChoosingWidget
-from UI.PreprocessorUI.project_control_widget import ProjectControlWidget
-from UI.PreprocessorUI.preprocess_dialog.preprocess_progress_widget import PreprocessProgressWidget
-from UI.PreprocessorUI.preprocess_dialog.preprocess_dialog import PreprocessDialog
-from UI.PreprocessorUI.preprocessor_widget import PreprocessorWidget
+from UI.PreprocessorUI.widgets.path_choosing_widget import PathChoosingWidget
+from UI.PreprocessorUI.widgets.project_control_widget import ProjectControlWidget
+from UI.PreprocessorUI.widgets.preprocess_dialog.preprocess_dialog import PreprocessDialog
+from UI.PreprocessorUI.logic.state_view_widget import StateViewWidget
 
 
 def make_path_choosing_widget():
@@ -45,7 +44,7 @@ class TempView:
         self.window.setWindowTitle("App for development needs")
         self.window.setMinimumSize(800, 600)
 
-        w = PreprocessorWidget()
+        w = StateViewWidget()
 
         self.window.setCentralWidget(w)
         pass
