@@ -103,6 +103,6 @@ class DescriptorState(AppStateBase):
     def _on_change_book_via_full_list_event(self, index: int):
         book_info = self.app.get_current_book()
         # todo: change save type to something that depends on previous state
-        self.app.save_as_in_progress(book_info.book_meta)
+        self.app.save_with_previous_state_flag(book_info.book_meta)
         self._show_book_by_index(index)
     pass

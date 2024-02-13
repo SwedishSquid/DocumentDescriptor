@@ -53,6 +53,16 @@ class App:
     def save_as_in_progress(self, meta: BookMeta):
         self.engine.save_book_data(meta, DescriptionStage.IN_PROGRESS)
 
+    def save_with_previous_state_flag(self, meta: BookMeta):
+        """if previous state is NOT_STARTED,
+         then new state will be IN_PROGRESS
+        """
+        cur_state = self.get_current_book().description_stage
+        if cur_state == DescriptionStage.NOT_STARTED:
+            cur_state = DescriptionStage.IN_PROGRESS
+        self.engine.save_book_data(meta, cur_state)
+        pass
+
     def get_full_book_list(self):
         return self.engine.get_full_book_list()
 
