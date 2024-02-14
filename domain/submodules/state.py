@@ -4,6 +4,7 @@ import utils
 
 
 class State:
+    """deprecated"""
     _state_folder_name = 'state'
     _book_folders_filename = 'book_folders.json'
     _dynamic_state_filename = 'dynamic_state.json'

@@ -4,9 +4,9 @@ from domain.book_state import BookState
 from domain.submodules.meta_filehandler import MetaFilehandler
 from domain.book_data_holders.book_meta import BookMeta
 from domain.book_data_holders.description_stage import DescriptionStage
-from domain.submodules.config import Config
 from domain.book_data_holders.book_meta_scheme import BookMetaScheme
 from domain.submodules.readme_reader import ReadmeReader
+import re
 import utils
 
 
@@ -16,7 +16,8 @@ class BookFolderManager:
     _unique_folder_index = 0
     _book_folder_name_common_prefix = 'book'
 
-    def __init__(self, book_folder_path: Path, meta: BookMeta, book_state: BookState):
+    def __init__(self, sequence_number: int, book_folder_path: Path, meta: BookMeta, book_state: BookState):
+        self.sequence_number = sequence_number
         self.folder_path = Path(book_folder_path)
         if not self.folder_path.is_absolute():
             raise ValueError(f'book_folder_path must be absolute; got {book_folder_path}')
@@ -87,10 +88,13 @@ class BookFolderManager:
             state_path = Path(folder, cls._book_state_file_name)
             book_state = BookState.loads(utils.read_text_from_file(state_path))
             meta = MetaFilehandler().read_from_file(folder)
+            sequence_number = cls._get_sequence_number_from_folder_path(folder)
         except Exception as e:
             ms_receiver(str(e))
             return None
-        return BookFolderManager(book_folder_path=folder, meta=meta,
+        return BookFolderManager(sequence_number=sequence_number,
+                                 book_folder_path=folder,
+                                 meta=meta,
                                  book_state=book_state)
 
     @classmethod
@@ -98,6 +102,7 @@ class BookFolderManager:
                          meta_scheme: BookMetaScheme, original_book_rel_path: Path):
         folder = cls._get_available_book_folder_path(where_to_place_folder)
         utils.make_directory(folder, parents=True)
+        sequence_number = cls._get_sequence_number_from_folder_path(folder)
 
         meta = cls._create_meta(book_folder=book_file.parent, meta_scheme=meta_scheme,
                                 initial_filename=book_file.name)
@@ -107,7 +112,17 @@ class BookFolderManager:
         state = BookState(original_rel_path=original_book_rel_path, descr_stage=DescriptionStage.NOT_STARTED, preprocessed=False)
         state_filepath = Path(folder, cls._book_state_file_name)
         utils.write_text_to_file(state_filepath, state.dumps())         # state
-        return BookFolderManager(book_folder_path=folder, meta=meta, book_state=state)
+        return BookFolderManager(sequence_number=sequence_number,
+                                 book_folder_path=folder,
+                                 meta=meta, book_state=state)
+
+    @classmethod
+    def _get_sequence_number_from_folder_path(cls, folder_path: Path):
+        s = folder_path.name
+        pattern = rf'{cls._book_folder_name_common_prefix}(\d+)'
+        match = re.match(pattern, s)
+        num = int(match.groups()[0])
+        return num
 
     @classmethod
     def _get_available_book_folder_path(cls, parent_folder: Path):
