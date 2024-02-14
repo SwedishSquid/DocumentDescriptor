@@ -1,16 +1,21 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton,\
     QLabel
 from PySide6.QtCore import Signal
+from UI.ProjectControlScreen.project_statistics_widget import ProjectStatisticsWidget
 
 
 class ProjectControlWidget(QWidget):
     Start_Preprocessing_Signal = Signal()
     Open_Main_App_Signal = Signal()
     Export_Signal = Signal()
+    Refresh_Statistics = Signal()
 
     def __init__(self):
         super(ProjectControlWidget, self).__init__()
-        self.statistics_widget = QLabel("statistics coming soon")       # todo: make statistics widget
+        self.statistics_widget = ProjectStatisticsWidget()       # todo: make statistics widget
+        self.statistics_widget.Reload_Statistics_Signal.connect(
+            lambda: self.Refresh_Statistics.emit()
+        )
 
         self.start_preprocessing_button = QPushButton(text='start preprocessing')
         self.start_preprocessing_button.clicked.connect(

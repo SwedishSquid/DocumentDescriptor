@@ -5,6 +5,7 @@ from pathlib import Path
 from PySide6.QtCore import Signal
 from domain.glue import Glue
 from threading import Thread
+from domain.statistics import Statistics
 
 
 class ProjectControlState(AppStateBase):
@@ -23,6 +24,9 @@ class ProjectControlState(AppStateBase):
         self.main_widget.Export_Signal.connect(
             self._start_exporting
         )
+        self.main_widget.Refresh_Statistics.connect(
+            self._refresh_statistics
+        )
         # todo: add return option
 
         self.preprocess_dialog = PreprocessDialog()
@@ -36,7 +40,13 @@ class ProjectControlState(AppStateBase):
     def transfer_control(self, project_path: Path):
         # todo: check if path is valid
         self.project_path = project_path
+        self._refresh_statistics()
         self.Show_Main_Widget.emit(self.get_main_widget())
+        pass
+
+    def _refresh_statistics(self):
+        stats = Statistics.make_statistics_from_project_path(self.project_path)
+        self.main_widget.statistics_widget.set_statistics(stats)
         pass
 
     def _start_preprocessing(self):
