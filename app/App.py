@@ -42,8 +42,7 @@ class App:
     def save_as_rejected(self, meta: BookMeta, message=''):
         """:param message: text explaining why this book is rejected"""
         # todo: save this message somewhere
-        print(message)
-        self.engine.save_book_data(meta, DescriptionStage.REJECTED)
+        self.engine.save_book_data(meta, DescriptionStage.REJECTED, message)
         pass
 
     def save_as_finished(self, meta: BookMeta):

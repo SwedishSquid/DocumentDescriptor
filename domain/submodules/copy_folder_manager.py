@@ -19,6 +19,11 @@ class CopyFolderManager:
                 bfm = BookFolderManager.load_from_path(path, ms_receiver)
                 if bfm and bfm.book_state.preprocessed:
                     result.append(bfm)
+        # fixme: this sort thing might not be very consistent:
+        #   ../book2 or ../book10, what shall go first?
+        #   .glob thinks that book10; this sort on windows11 thinks that book2;
+        #   for this app book2 is the right answer
+        result.sort(key=lambda bfm: str(bfm.book_state.original_rel_path))
         return result
 
     def _get_all_subpaths(self):

@@ -23,6 +23,7 @@ class Reject(QDialog):
         self.setLayout(layout)
 
     def run(self):
+        self._text_edit.setText('')
         self.exec()
 
     def _create_central_widget(self):

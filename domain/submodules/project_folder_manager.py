@@ -129,3 +129,6 @@ class ProjectFolderManager:
             raise ValueError(
                 f'book folders must be inside project folder; proj: {project_path}; book_folder: {book_folder_path}')
         return Path(*book_folder_path.parts[proj_path_parts_len:])
+
+    def make_absolute_path(self, relative_to_project_folder_path: Path):
+        return Path(self.project_folder, relative_to_project_folder_path)

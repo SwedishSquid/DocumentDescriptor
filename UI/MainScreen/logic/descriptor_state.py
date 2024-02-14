@@ -95,7 +95,7 @@ class DescriptorState(AppStateBase):
     def _on_reject_book_event(self, message: str):
         book_info = self.app.get_current_book()
         self._fetch_user_input_to_book_meta(book_info)
-        self.app.save_as_rejected(book_info.book_meta)
+        self.app.save_as_rejected(book_info.book_meta, message)
         self._show_next_book()
         pass
 
@@ -103,6 +103,7 @@ class DescriptorState(AppStateBase):
     def _on_change_book_via_full_list_event(self, index: int):
         book_info = self.app.get_current_book()
         # todo: change save type to something that depends on previous state
+        self._fetch_user_input_to_book_meta(book_info)
         self.app.save_with_previous_state_flag(book_info.book_meta)
         self._show_book_by_index(index)
     pass
