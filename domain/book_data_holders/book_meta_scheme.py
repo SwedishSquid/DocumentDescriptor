@@ -3,6 +3,8 @@ from domain.field_config_record import FieldConfigRecord
 
 
 class BookMetaScheme:
+    """scheme for a meta file
+    contains mapping from meta fields names to human readable names and readme names"""
     def __init__(self, name_to_human_read_plus_readme_pair: dict):
         self._name_to_data = dict()
         for name in name_to_human_read_plus_readme_pair:
@@ -66,6 +68,7 @@ class BookMetaScheme:
 
 
 class BookMetaSchemeAdapter(BookMetaScheme):
+    """adapter for usage convenience"""
     def __init__(self, records: list):
         name_to_human_read_plus_readme_pair = dict()
         for r in records:

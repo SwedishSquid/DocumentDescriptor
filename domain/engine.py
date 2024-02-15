@@ -11,6 +11,7 @@ FullListRecord = namedtuple('FullListRecord', 'rel_path descr_stage')
 
 
 class Engine:
+    """core of descriptor part"""
     def __init__(self, project_folder_manager: ProjectFolderManager,
                  book_folder_managers: list):
         self.project_folder_manager = project_folder_manager

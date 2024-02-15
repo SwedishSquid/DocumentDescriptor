@@ -8,6 +8,9 @@ from domain.engine import Engine
 
 
 class Glue:
+    """some strange module
+     made in attempt to unite descriptor and preprocessor"""
+
     def __init__(self, project_path: Path):
         self.project_path = project_path
         pass

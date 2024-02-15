@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from domain.converters.recognizer import Recognizer
+from domain.external_parts.recognizer import Recognizer
 
 from domain.book_data_holders.book_folder_manager import BookFolderManager
-from domain.converters import djvu_to_pdf
+from domain.external_parts import djvu_to_pdf
 from domain.submodules.project_folder_manager import ProjectFolderManager
 import utils
 
@@ -13,6 +13,10 @@ class PreprocessError(Exception):
 
 
 class Preprocessor:
+    """Core of preprocessor part.
+    Long automated tasks are made with this.
+    Examples: copying files, converting them to pdf, applying OCR"""
+
     def __init__(self, project_folder_manager: ProjectFolderManager):
         self.proj_folder_manager = project_folder_manager
         self.project_dir = self.proj_folder_manager.project_folder

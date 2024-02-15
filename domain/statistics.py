@@ -29,6 +29,7 @@ class Statistics:
 
     @classmethod
     def make_statistics_from_project_path(cls, project_path: Path):
+        # fixme: why so much code?
         manager = ProjectFolderManager.load_from_path(project_path)
         config = manager.config
         source_books_paths = LibScanner.find_all_files(
