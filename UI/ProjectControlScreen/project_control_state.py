@@ -6,8 +6,6 @@ from PySide6.QtCore import Signal
 from domain.glue import Glue
 from threading import Thread
 from domain.statistics import Statistics
-from domain.submodules.exporter import Exporter
-from domain.submodules.project_folder_manager import ProjectFolderManager
 
 
 class ProjectControlState(AppStateBase):
@@ -78,7 +76,7 @@ class ProjectControlState(AppStateBase):
 
     def _start_exporting(self):
         print('exporting started')
-        exporter = Exporter(project_folder_manager=ProjectFolderManager.load_from_path(self.project_path))
+        exporter = Glue(self.project_path).get_exporter()
         exporter.export_finished_books()
         exporter.export_rejected_books()
         print('exporting finished')

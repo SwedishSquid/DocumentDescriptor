@@ -5,11 +5,13 @@ from domain.submodules.copy_folder_manager import CopyFolderManager
 from domain.submodules.lib_scanner import LibScanner
 from domain.book_data_holders.book_folder_manager import BookFolderManager
 from domain.engine import Engine
+from domain.exporter import Exporter
 
 
 class Glue:
     """some strange module
-     made in attempt to unite descriptor and preprocessor"""
+     made in attempt to unite descriptor and preprocessor
+     and exporter"""
 
     def __init__(self, project_path: Path):
         self.project_path = project_path
@@ -69,6 +71,9 @@ class Glue:
         already_preprocessed_bfm = copy_folder_manager.load_book_folders_managers()
 
         return Engine(project_folder_manager=proj_manager, book_folder_managers=already_preprocessed_bfm)
+
+    def get_exporter(self):
+        return Exporter(self.get_project_manager())
 
     def is_preprocessed(self, ms_receiver=None):
         if ms_receiver is None:
