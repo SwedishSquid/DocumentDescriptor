@@ -7,16 +7,24 @@ from domain.submodules.config import Config, ConfigFormatError
 class ProjectFolderManager:
     _config_file_name = 'config.json'
     _copy_folder_name = 'copy'
+    _export_folder_name = 'export'
 
     def __init__(self, project_folder, config: Config):
         self.project_folder = Path(project_folder)
-        self.copy_folder_path = Path(project_folder, self._copy_folder_name)
         self.config = config
         pass
 
     @property
     def lib_root_path(self):
         return Path(self.project_folder, self.config.lib_root_folder_name)
+
+    @property
+    def export_folder_path(self):
+        return Path(self.project_folder, self._export_folder_name)
+
+    @property
+    def copy_folder_path(self):
+        return Path(self.project_folder, self._copy_folder_name)
 
     @classmethod
     def load_from_path(cls, project_path: Path, ms_receiver=None):
