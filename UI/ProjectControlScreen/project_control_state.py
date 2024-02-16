@@ -58,8 +58,7 @@ class ProjectControlState(AppStateBase):
         glue = Glue(self.project_path)
 
         def func_to_thread():
-            for done, total in glue.get_preprocessor_generator(
-                    ms_receiver=ms_receiver):
+            for done, total in glue.get_preprocessor_generator():
                 ms_receiver(f'!!! done {done} out of {total} !!!')
             pass
 

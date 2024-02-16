@@ -2,6 +2,7 @@ from UI.constant_paths import path_to_pictures
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
 from UI.View.state_view_widget import StateViewWidget
+import logging
 
 
 class View:
@@ -18,5 +19,6 @@ class View:
         pass
 
     def run(self):
+        logging.info('app started')
         self.window.show()
         return self.q_app.exec()

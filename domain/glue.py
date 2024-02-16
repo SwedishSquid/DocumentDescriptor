@@ -34,8 +34,7 @@ class Glue:
         pass
 
     def get_preprocessor_generator(self, ms_receiver=None):
-        if ms_receiver is None:
-            ms_receiver = lambda s: print(s)
+        # todo: remove ms_receiver
         project_manager = self.get_project_manager(ms_receiver)
         if not project_manager:
             raise FileNotFoundError('check before calling this method')
@@ -55,7 +54,7 @@ class Glue:
             all_original_books=original_books,
             already_preprocessed_bfm=already_preprocessed_bfm)
 
-        return Preprocessor(project_manager).preprocess_with_generator(books_to_preprocess, ms_receiver=ms_receiver)
+        return Preprocessor(project_manager).preprocess_with_generator(books_to_preprocess)
 
     def get_engine(self, ms_receiver=None):
         if ms_receiver is None:

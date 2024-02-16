@@ -81,3 +81,7 @@ def delete_from(path: Path):
         path.unlink()
         return True
     raise FileExistsError(f'not a file, not a dir, but still exists at {path}')
+
+
+def get_app_root_path():
+    return Path(__file__).resolve().parent
