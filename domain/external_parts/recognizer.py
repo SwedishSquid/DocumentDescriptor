@@ -1,15 +1,23 @@
 from pathlib import Path
 import subprocess
 import platform
+import logging
+
+
+class OCRError(Exception):
+    """raised when something wrong with ORC"""
+    pass
 
 
 class Recognizer:
     # ocrmypdf ./source/big_rus.pdf ./big_rus_ocr.pdf -l rus+eng --pages 1-5 --clean  -q
     @staticmethod
     def ocr(src_path: Path, dst_path: Path, language_arg: str, pages_arg: str):
+        logger = logging.getLogger(__name__)
+        logger.info('OCR method called')
         if platform.system().lower() != 'linux':
-            raise EnvironmentError(f'ocr on your platform({platform.system()}) not supported')
-
+            message = 'OCR is currently supported on linux systems only; very likely that programm won`t be able to perform OCR'
+            logger.warning(message)
         src = str(src_path)
         dst = str(dst_path)
         language = f'-l {language_arg}'
@@ -18,8 +26,13 @@ class Recognizer:
         else:
             pages = f'--pages {pages_arg}'
         command = f'ocrmypdf "{src}" "{dst}" {language} {pages} --clean -q'
-        res = subprocess.run(command, shell=True)
-        # todo: handle return code != 0
-        # check lang errors
+        logger.info(f'OCR subprocess command >> {command}')
+        completed_process = subprocess.run(command, shell=True)
+        logger.info(f'subprocess return code = {completed_process.returncode}')
+        try:
+            completed_process.check_returncode()
+        except subprocess.CalledProcessError as e:
+            logger.debug(f'OCR failed with {e.with_traceback(tb=None)}')
+            raise OCRError(e)
         pass
     pass

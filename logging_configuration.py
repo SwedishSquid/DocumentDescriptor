@@ -3,9 +3,42 @@ from pathlib import Path
 import utils
 
 
-def configure_main_logger(level='INFO'):
-    logger = logging.getLogger('root')
+default_log_level = 'WARNING'
+
+
+def _load_possible_log_level():
+    filepath = Path(utils.get_app_root_path(), 'app-logs', 'log-config.json')
+    saved_level = None
+    possible_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
+    if utils.is_file(filepath):
+        try:
+            saved_level = utils.json_loads(utils.read_text_from_file(filepath))['log_level']
+        except Exception:
+            # todo: handle better
+            saved_level = None
+        pass
+
+    if saved_level not in possible_levels:
+        default_log_config = {
+            'comment_on_log_levels': 'possible variants: DEBUG, INFO, WARNING, ERROR, CRITICAL; DEBUG is most informative, CRITICAL is the least; see python logging module for more info',
+            'log_level': default_log_level
+        }
+        utils.write_text_to_file(filepath, utils.json_dumps(default_log_config))
+        return default_log_level
+    return saved_level
+
+
+def _set_logging_level(logger, level=None):
+    if level is None:
+        level = _load_possible_log_level()
     logger.setLevel(level)
+    pass
+
+
+def configure_main_logger(level=None):
+    logger = logging.getLogger('root')
+
+    _set_logging_level(logger, level)
 
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -22,6 +55,9 @@ def configure_main_logger(level='INFO'):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
+
+
+
 
 
 # configure_logger('root')

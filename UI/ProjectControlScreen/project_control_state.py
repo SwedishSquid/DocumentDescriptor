@@ -58,8 +58,19 @@ class ProjectControlState(AppStateBase):
         glue = Glue(self.project_path)
 
         def func_to_thread():
-            for done, total in glue.get_preprocessor_generator():
-                ms_receiver(f'!!! done {done} out of {total} !!!')
+            generator, total_book_count = glue.get_preprocessor_generator()
+            completed_count = 0
+            for completed_book_preprocessing in generator:
+                completed_count += 1
+                ms_receiver(f'!!! done {completed_count} out of {total_book_count} !!!')
+                if not completed_book_preprocessing.success:
+                    ms_receiver(f'cant preprocess book at {completed_book_preprocessing.original_book_path}')
+                    if glue.get_project_manager().config.stop_when_cant_preprocess:
+                        ms_receiver('stopping cause configured to stop when cant preprocess')
+                        break
+                    else:
+                        pass
+                        ms_receiver('skipped that book cause configured to skip when cant preprocess')
             pass
 
         thread = Thread(target=func_to_thread)

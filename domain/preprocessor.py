@@ -1,10 +1,9 @@
-from pathlib import Path
-
-from domain.external_parts.recognizer import Recognizer
+from domain.external_parts.recognizer import Recognizer, OCRError
 
 from domain.book_data_holders.book_folder_manager import BookFolderManager
 from domain.external_parts import djvu_to_pdf
 from domain.submodules.project_folder_manager import ProjectFolderManager
+from domain.completed_book_preprocessing import CompletedBookPreprocessing
 import utils
 import logging
 
@@ -20,46 +19,45 @@ class Preprocessor:
 
     def __init__(self, project_folder_manager: ProjectFolderManager):
         self.proj_folder_manager = project_folder_manager
-        self.project_dir = self.proj_folder_manager.project_folder
+        # self.project_dir = self.proj_folder_manager.project_folder
         self.config = self.proj_folder_manager.config
         self.logger = logging.getLogger(__name__)
         pass
 
     def preprocess_with_generator(self, original_books_to_preprocess: list):
-        """yields current preprocessed count and total amount"""
-
-        count = 0
-        total_amount = len(original_books_to_preprocess)
-
-        yield count, total_amount
+        """yields current preprocessed count and total amount
+        :param original_books_to_preprocess: paths to original books that should be preprocessed"""
 
         for abs_p in original_books_to_preprocess:
             rel_p = self.proj_folder_manager.make_relative_path(abs_p)
-            bfm = BookFolderManager.write_new_folder(abs_p, self.proj_folder_manager.copy_folder_path, self.config.get_meta_scheme(), rel_p)
-            res = self.preprocess_book(bfm)
-            bfm.book_state.preprocessed = res
+            bfm = BookFolderManager.write_new_folder(
+                abs_p,
+                self.proj_folder_manager.copy_folder_path,
+                self.config.get_meta_scheme(), rel_p)
+            preprocessing_result = self.preprocess_book(bfm)
+            bfm.book_state.preprocessed = preprocessing_result.success
             bfm.save_book_state()
-            count += 1
-            yield count, total_amount
+
+            yield preprocessing_result
         pass
 
     def preprocess_book(self, book_folder_manager: BookFolderManager):
         self.logger.info('start preprocessing of a book at %s', str(book_folder_manager.temp_book_path))
+        absolute_path = self.proj_folder_manager.make_absolute_path(book_folder_manager.original_relative_filepath)
+        completed_book_preprocessing = CompletedBookPreprocessing(True, absolute_path)
         try:
             self._populate_temp_folder_with_pdf(book_folder_manager)
             if self.config.orc_config.do_ocr:
                 self._apply_text_recognition(book_folder_manager)
         except PreprocessError as e:
-            self.logger.warning(f'exception {e} while preprocessing book at {book_folder_manager.temp_book_path}')
-            if self.config.stop_when_cant_preprocess:
-                raise e
-            return False
-        return True
+            self.logger.debug(f'exception {e} while preprocessing book at {book_folder_manager.temp_book_path}')
+            self.logger.exception(e)
+            completed_book_preprocessing.success = False
+        return completed_book_preprocessing
 
     def _populate_temp_folder_with_pdf(self, folder_manager: BookFolderManager):
         """copy book to temp if it is pdf; else convert and place in temp"""
-        original = Path(self.project_dir,
-                        folder_manager.original_relative_filepath)
+        original = self.proj_folder_manager.make_absolute_path(folder_manager.original_relative_filepath)
 
         extension = original.suffix.strip('.')
         self.logger.debug(
@@ -95,12 +93,8 @@ class Preprocessor:
 
     def _apply_text_recognition(self, folder_manager: BookFolderManager):
         # todo: pages_arg may be None; how to achieve that?
-        try:
-            Recognizer.ocr(src_path=folder_manager.temp_book_path,
-                           dst_path=folder_manager.temp_book_path,
-                           language_arg=self.config.orc_config.language_arg,
-                           pages_arg=self.config.orc_config.pages_arg)
-        except EnvironmentError as e:
-            self.logger.debug(f'caught {e} while applying OCR')
-            raise PreprocessError(e)
+        Recognizer.ocr(src_path=folder_manager.temp_book_path,
+                       dst_path=folder_manager.temp_book_path,
+                       language_arg=self.config.orc_config.language_arg,
+                       pages_arg=self.config.orc_config.pages_arg)
         pass

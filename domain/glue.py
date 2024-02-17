@@ -34,6 +34,7 @@ class Glue:
         pass
 
     def get_preprocessor_generator(self, ms_receiver=None):
+        """:returns: generator_object and books_count"""
         # todo: remove ms_receiver
         project_manager = self.get_project_manager(ms_receiver)
         if not project_manager:
@@ -54,7 +55,9 @@ class Glue:
             all_original_books=original_books,
             already_preprocessed_bfm=already_preprocessed_bfm)
 
-        return Preprocessor(project_manager).preprocess_with_generator(books_to_preprocess)
+        books_count = len(books_to_preprocess)
+        generator = Preprocessor(project_manager).preprocess_with_generator(books_to_preprocess)
+        return generator, books_count
 
     def get_engine(self, ms_receiver=None):
         if ms_receiver is None:

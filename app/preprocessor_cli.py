@@ -24,14 +24,32 @@ class PreprocessorCLI:
             self.output(f'folder {args.project} not recognized as a project')
             return
 
-        for done, total in glue.get_preprocessor_generator(ms_receiver=ms_receiver):
-            printProgressBar(done, total, prefix='Progress', suffix=f'Complete | {done}/{total}', length=50)
-        self.output('done')
+        generator, total_book_count = glue.get_preprocessor_generator(ms_receiver=ms_receiver)
+        completed_count = 0
+        skipped_count = 0
+        self._print_progress_bar(completed_count, total_book_count)
+        for completed_book_preprocessing in generator:
+            completed_count += 1
+            if completed_book_preprocessing.success:
+                self._print_progress_bar(completed_count, total_book_count)
+            else:
+                skipped_count += 1
+                self.output(f'can`t preprocess {completed_book_preprocessing.original_book_path}')
+                if glue.get_project_manager(self.output).config.stop_when_cant_preprocess:
+                    self.output('stop preprocessing cause cannot preprocess')
+                    break
+        self.output(f'preprocessed {completed_count - skipped_count}')
         pass
 
     def init_handler(self, args):
         self.output('attempt to initialize the project')
         Glue(args.project).init_project(ms_receiver=lambda s: self.output(s))
+        pass
+
+    def _print_progress_bar(self, completed_count, total_count):
+        suffix = f'Complete | {completed_count}/{total_count}'
+        printProgressBar(completed_count, total_count,
+                         prefix='Progress', suffix=suffix, length=50)
         pass
 
     def _get_parser(self):
@@ -68,6 +86,3 @@ class PreprocessorCLI:
             print(data, end=end)
         pass
     pass
-
-
-# PreprocessorCLI().run(sys.argv)
