@@ -11,6 +11,8 @@ from domain.statistics import Statistics
 class ProjectControlState(AppStateBase):
     Open_Descriptor = Signal(Path)
     Return_Signal = Signal()
+    _Add_Text_To_Preprocess_Dialog = Signal(str)
+    _Change_Message_At_Preprocess_Dialog = Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -30,6 +32,9 @@ class ProjectControlState(AppStateBase):
         # todo: add return option
 
         self.preprocess_dialog = PreprocessDialog()
+
+        self._Add_Text_To_Preprocess_Dialog.connect(self.preprocess_dialog.add_output_text)
+        self._Change_Message_At_Preprocess_Dialog.connect(self.preprocess_dialog.set_message)
 
         self.project_path: Path = None
         pass
@@ -52,7 +57,13 @@ class ProjectControlState(AppStateBase):
     def _start_preprocessing(self):
         # todo: protect against multiple calls
         def ms_receiver(s: str):
-            self.preprocess_dialog.add_output_text(s)
+            # do it thread safe
+            # self.preprocess_dialog.add_output_text(s)
+            self._Add_Text_To_Preprocess_Dialog.emit(s)
+            pass
+
+        def set_message(s: str):
+            self._Change_Message_At_Preprocess_Dialog.emit(s)
             pass
 
         glue = Glue(self.project_path)
@@ -71,12 +82,12 @@ class ProjectControlState(AppStateBase):
                     else:
                         pass
                         ms_receiver('skipped that book cause configured to skip when cant preprocess')
-            self.preprocess_dialog.set_message('preprocessing finished')
+            set_message('preprocessing finished')
             pass
 
         thread = Thread(target=func_to_thread)
         thread.start()
-        self.preprocess_dialog.set_message('do not close until preprocessing finished')
+        set_message('do not close until preprocessing finished')
         print('preprocessing started')
         self.preprocess_dialog.exec()
         if thread.is_alive():
