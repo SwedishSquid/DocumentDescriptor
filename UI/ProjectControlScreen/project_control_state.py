@@ -57,6 +57,7 @@ class ProjectControlState(AppStateBase):
 
     def _start_preprocessing(self):
         # todo: protect against multiple calls
+        # fixme: what a mess
         def ms_receiver(s: str):
             # do it thread safe
             # self.preprocess_dialog.add_output_text(s)
@@ -95,7 +96,7 @@ class ProjectControlState(AppStateBase):
             # todo: do something to stop it
             print('thread is still active. please wait')
             info_dialog = InformDialog()
-            info_dialog.set_info_message_thread_safe('please reboot the application')
+            info_dialog.set_info_message_thread_safe('please reboot the application; preprocessing was not finished, so no guarantees that app will work as expected')
             info_dialog.exec()
             thread.join()
 
