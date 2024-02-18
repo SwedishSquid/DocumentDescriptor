@@ -18,6 +18,7 @@ class Glue:
         pass
 
     def init_happened(self, ms_receiver=None):
+        # todo: check if it is a good way of testing for project folder
         proj_manager = self.get_project_manager(ms_receiver)
         return proj_manager is not None
 
