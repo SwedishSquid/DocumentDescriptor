@@ -16,9 +16,10 @@ class MainWidget(QWidget):
         self.field_list = FieldList()
 
         layout = QHBoxLayout()
+        layout.addStretch()
         self.control_buttons = ControlButtons()  # part of public interface
-        layout.addWidget(self._create_left_widget(self.control_buttons))
-        layout.addWidget(self.pdf_viewer)
+        layout.addWidget(self._create_left_widget(self.control_buttons), 1)
+        layout.addWidget(self.pdf_viewer, 1)
         self.setLayout(layout)
 
         self._reject_dialog = Reject()
