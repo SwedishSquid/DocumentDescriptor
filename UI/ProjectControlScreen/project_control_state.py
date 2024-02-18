@@ -77,28 +77,42 @@ class ProjectControlState(AppStateBase):
             completed_count = 0
             for completed_book_preprocessing in generator:
                 completed_count += 1
-                ms_receiver(f'!!! done {completed_count} out of {total_book_count} !!!')
+                m = f'!!! done {completed_count} out of {total_book_count} !!!'
+                m_rus = f'!!! Сделано {completed_count} из {total_book_count} !!!'
+                ms_receiver(m_rus)
                 if not completed_book_preprocessing.success:
-                    ms_receiver(f'cant preprocess book at {completed_book_preprocessing.original_book_path}')
+                    m = f'cant preprocess book at {completed_book_preprocessing.original_book_path}'
+                    m_rus = f'Не получается предобработать книгу {completed_book_preprocessing.original_book_path}'
+                    ms_receiver(m_rus)
                     if glue.get_project_manager().config.stop_when_cant_preprocess:
-                        ms_receiver('stopping cause configured to stop when cant preprocess')
+                        m = 'stopping cause configured to stop when cant preprocess'
+                        m_rus = 'Предобработка прервана, т.к. в настройках (в конфиге) указано останавливаться когда не получается предобработать документ'
+                        ms_receiver(m_rus)
                         break
                     else:
                         pass
-                        ms_receiver('skipped that book cause configured to skip when cant preprocess')
-            set_message('preprocessing finished')
+                        m = 'skipped that book cause configured to skip when cant preprocess'
+                        m_rus = 'Документ, который не удалось предобработать, пропущен. (такие вот настройки)'
+                        ms_receiver(m_rus)
+            m = 'preprocessing finished'
+            m_rus = 'Предобработка завершена'
+            set_message(m_rus)
             pass
 
         thread = Thread(target=func_to_thread)
         thread.start()
-        set_message('do not close until preprocessing finished')
+        m = 'do not close until preprocessing finished'
+        m_rus = 'Пожалуйста, не закрывайте это окно до окончания предобработки'
+        set_message(m_rus)
         print('preprocessing started')
         self.preprocess_dialog.exec()
         if thread.is_alive():
             # todo: do something to stop it
             print('thread is still active. please wait')
             info_dialog = InformDialog()
-            info_dialog.set_info_message_thread_safe('please reboot the application; preprocessing was not finished, so no guarantees that app will work as expected')
+            m = 'please reboot the application; preprocessing was not finished, so no guarantees that app will work as expected'
+            m_rus = 'Пожалуйста, перезагрузите приложение. Предобработка не была завершена, и нет гарантий, что приложение продолжит адекватно работать (надеюсь исправить этот момент в будущих версиях)'
+            info_dialog.set_info_message_thread_safe(m_rus)
             info_dialog.exec()
             thread.join()
 
@@ -108,14 +122,17 @@ class ProjectControlState(AppStateBase):
     def _start_exporting(self):
         print('exporting started')
         inform_dialog = InformDialog()
-        inform_dialog.set_info_message_thread_safe(
-            'export started; please do not close this window')
+        m = 'export started; please do not close this window'
+        m_rus = 'Экспорт данных начат, Не закрывайте это окно'
+        inform_dialog.set_info_message_thread_safe(m_rus)
 
         def _export():
             exporter = Glue(self.project_path).get_exporter()
             exporter.export_finished_books()
             exporter.export_rejected_books()
-            inform_dialog.set_info_message_thread_safe('export finished; this window can be closed now')
+            m = 'export finished; this window can be closed now'
+            m_rus = 'Экспорт данных завершен. Окно может быть закрыто'
+            inform_dialog.set_info_message_thread_safe(m_rus)
             pass
 
         thread = Thread(target=_export)

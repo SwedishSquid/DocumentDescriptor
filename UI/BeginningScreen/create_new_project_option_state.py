@@ -11,9 +11,15 @@ class CreateNewProjectOptionState(AppStateBase):
 
     def __init__(self):
         super().__init__()
+        m1 = 'please select folder in which project files will be stored'
+        m1_rus = 'Пожалуйста, выберите папку, в которой будут созданы файлы проекта'
         self.main_widget = PathChoosingWidget(
-            'please select folder in which project files will be stored',
-            default_feedback='some feedback')
+            input_description=m1_rus,
+            return_button_text='Назад',
+            input_field_hint='Вводить путь здесь (можно еще выбрать в проводнике кнопкой справа)',
+            continue_button_text='Продолжить',
+            default_feedback='Здесь будет написано, подходит выбранная папка или нет',
+        )
         self.main_widget.Something_Inputted_As_Path.connect(
             self._verify_path
         )
@@ -50,12 +56,18 @@ class CreateNewProjectOptionState(AppStateBase):
             ms_receiver(str(e))
             return
         if not path.is_absolute():
-            ms_receiver('path must be absolute')
+            m = 'path must be absolute'
+            m_rus = 'Папка не подходит. Путь должен быть абсолютным (начинаться с буквы диска. Например E:/...'
+            ms_receiver(m_rus)
             return
         if path.is_file():
-            ms_receiver('path must represent a folder, not a file')
+            m = 'path must represent a folder, not a file'
+            m_rus = 'Папка не подходит. Это же не папка, а файл.'
+            ms_receiver(m_rus)
             return
-        ms_receiver(f'project files will be located at {path}')
+        m = f'project files will be located at {path}'
+        m_rus = f'Все ок. Файлы проекта будут расположены в {path}'
+        ms_receiver(m_rus)
         return path
 
     def _create_project_and_proceed(self):

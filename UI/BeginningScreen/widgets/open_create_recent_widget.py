@@ -12,14 +12,19 @@ class OpenCreateRecentWidget(QWidget):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.create_new_button = QPushButton(text='create new')
+        m = 'create new'
+        m_rus = 'Создать новый проект'
+        self.create_new_button = QPushButton(text=m_rus)
         self.create_new_button.clicked.connect(
             lambda : self.Create_New_Project_Signal.emit())
-        self.open_existing_button = QPushButton(text='open existing')
+        m = 'open existing'
+        m_rus = 'Открыть существующий проект'
+        self.open_existing_button = QPushButton(text=m_rus)
         self.open_existing_button.clicked.connect(
             lambda: self.Open_Existing_Project_Signal.emit())
-        self.recent_projects_widget = QLabel(text='open recent; (coming soon)')
+        m = 'open recent; (coming soon)'
+        m_rus = 'Недавно открытые проекты (В версии 1.1.0 еще не сделано)'
+        self.recent_projects_widget = QLabel(text=m_rus)
 
         horizontal_layout = QHBoxLayout()
         horizontal_layout.addWidget(self.create_new_button)

@@ -2,8 +2,8 @@ from UI.app_state_base import AppStateBase
 from UI.BeginningScreen.widgets.path_choosing_widget import PathChoosingWidget
 from pathlib import Path
 from PySide6.QtCore import Signal
-from domain.submodules.project_folder_manager import ProjectFolderManager
 from domain.glue import Glue
+
 
 class OpenExistingProjectOptionState(AppStateBase):
     Return_Signal = Signal()
@@ -11,9 +11,14 @@ class OpenExistingProjectOptionState(AppStateBase):
 
     def __init__(self):
         super().__init__()
+        m = 'please select existing project folder'
+        m_rus = 'Пожалуйста, выберите существующую папку проекта (ранее созданный проект)'
         self.main_widget = PathChoosingWidget(
-            'please select existing project folder',
-            default_feedback='some default feedback'
+            m_rus,
+            return_button_text='Назад',
+            input_field_hint='Вводить путь здесь (можно еще выбрать в проводнике кнопкой справа)',
+            continue_button_text='Продолжить',
+            default_feedback='Здесь отобразится, подходит ли выбранная папка'
         )
         self.main_widget.Something_Inputted_As_Path.connect(
             self._verify_path
@@ -50,15 +55,23 @@ class OpenExistingProjectOptionState(AppStateBase):
             ms_receiver(str(e))
             return
         if not path.is_absolute():
-            ms_receiver('path must be absolute')
+            m = 'path must be absolute'
+            m_rus = 'Папка не подходит. Путь должен быть абсолютным (начинаться с буквы диска. Например E:/...'
+            ms_receiver(m_rus)
             return
         if not path.is_dir():
-            ms_receiver('path must point at an existing project directory')
+            m = 'path must point at an existing project directory'
+            m_rus = 'Папка не подходит. Она либо не существует, либо это файл.'
+            ms_receiver(m_rus)
             return
         if not Glue(path).init_happened():
-            ms_receiver('not a valid project')
+            m = 'not a valid project'
+            m_rus = 'Папка не подходит. Не удается открыть проект. Возможно в папке просто нет нужных файлов. Возможно что то не так с файлом конфигурации (config.json)'
+            ms_receiver(m_rus)
             return
-        ms_receiver('project found')
+        m = 'project found'
+        m_rus = 'Все ок. Проект найден'
+        ms_receiver(m_rus)
         return True
 
     def _open_and_proceed(self, user_input_path: str):

@@ -12,22 +12,25 @@ class ProjectControlWidget(QWidget):
 
     def __init__(self):
         super(ProjectControlWidget, self).__init__()
-        self.statistics_widget = ProjectStatisticsWidget()       # todo: make statistics widget
+        self.statistics_widget = ProjectStatisticsWidget()
         self.statistics_widget.Reload_Statistics_Signal.connect(
             lambda: self.Refresh_Statistics.emit()
         )
-
-        self.start_preprocessing_button = QPushButton(text='start preprocessing')
+        m = 'start preprocessing'
+        m_rus = 'Начать предобработку'
+        self.start_preprocessing_button = QPushButton(text=m_rus)
         self.start_preprocessing_button.clicked.connect(
             lambda: self.Start_Preprocessing_Signal.emit()
         )
-
-        self.open_main_app_button = QPushButton(text='open descriptor app')
+        m = 'open descriptor app'
+        m_rus = 'Перейти к описанию предобработанных документов'
+        self.open_main_app_button = QPushButton(text=m_rus)
         self.open_main_app_button.clicked.connect(
             lambda: self.Open_Main_App_Signal.emit()
         )
-
-        self.export_button = QPushButton(text='export')
+        m = 'export'
+        m_rus = 'Экспорт обработанных ранее документов'
+        self.export_button = QPushButton(text=m_rus)
         self.export_button.clicked.connect(
             lambda: self.Export_Signal.emit()
         )

@@ -20,7 +20,9 @@ class ProjectStatisticsWidget(QWidget):
         self.label = QLabel()
         layout.addWidget(self.label)
 
-        self.reload_button = QPushButton(text='reload')
+        m = 'reload'
+        m_rus = 'Обновить статистику по проекту'
+        self.reload_button = QPushButton(text=m_rus)
         layout.addWidget(self.reload_button)
         self.reload_button.clicked.connect(lambda: self.Reload_Statistics_Signal.emit())
         pass
