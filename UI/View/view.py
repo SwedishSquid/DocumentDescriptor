@@ -3,6 +3,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
 from UI.View.state_view_widget import StateViewWidget
 import logging
+import version
 
 
 class View:
@@ -11,7 +12,7 @@ class View:
         self.q_app.setWindowIcon(QIcon(str(path_to_pictures.joinpath('file'))))
 
         self.window = QMainWindow()
-        self.window.setWindowTitle("Document Descriptor")
+        self.window.setWindowTitle(f"Document Descriptor {version.get_version()}")
         self.window.setMinimumSize(800, 600)
 
         widget = StateViewWidget()

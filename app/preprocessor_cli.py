@@ -2,11 +2,11 @@ import argparse
 from pathlib import Path
 from UI.console_progress_bar import printProgressBar
 from domain.glue import Glue
+import version
 
 
 class PreprocessorCLI:
     """console interface for preprocessing"""
-    _version = '0.1.0'      # todo: store version somewhere else
     _verbosity_level = 1
 
     def run(self, arguments):
@@ -56,7 +56,7 @@ class PreprocessorCLI:
         parser = argparse.ArgumentParser(prog='preprocessor',
                                          epilog='source: https://github.com/SwedishSquid/DocumentDescriptor')
         parser.add_argument('--version', action='version',
-                            version=f'%(prog)s {self._version}',
+                            version=f'%(prog)s {version.get_version()}',
                             help='current version')
         parser.add_argument('-v', '--verbose',
                             type=int,
