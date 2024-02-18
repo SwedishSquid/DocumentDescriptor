@@ -39,7 +39,7 @@ class Field(QWidget):
 
     def _create_label(self, caption: str):
         label = QLabel(caption)
-        label.setMargin(10)
+        label.setMargin(0)
         label.setFont(QFont('Arial', 14))
         return label
 
