@@ -6,6 +6,7 @@ from PySide6.QtCore import Signal
 from domain.glue import Glue
 from threading import Thread
 from domain.statistics import Statistics
+from UI.helpers.inform_dialog import InformDialog
 
 
 class ProjectControlState(AppStateBase):
@@ -93,6 +94,9 @@ class ProjectControlState(AppStateBase):
         if thread.is_alive():
             # todo: do something to stop it
             print('thread is still active. please wait')
+            info_dialog = InformDialog()
+            info_dialog.set_info_message_thread_safe('please reboot the application')
+            info_dialog.exec()
             thread.join()
 
         print('preprocessing finished')

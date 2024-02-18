@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout
 from UI.ProjectControlScreen.preprocess_dialog.preprocess_progress_widget import PreprocessProgressWidget
-import time
 
 
 class PreprocessDialog(QDialog):
