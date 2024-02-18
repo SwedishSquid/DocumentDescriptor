@@ -34,7 +34,8 @@ def exists(path: Path):
 
 def write_text_to_file(filepath: Path, text: str, encoding='utf-8'):
     filepath = _make_long_path(filepath)
-    filepath.write_text(text, encoding=encoding)
+    with open(file=filepath, mode='w+', encoding=encoding) as file:
+        file.write(text)
 
 
 def read_text_from_file(filepath: Path, encoding='utf-8'):

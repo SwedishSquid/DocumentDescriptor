@@ -23,6 +23,7 @@ def _load_possible_log_level():
             'comment_on_log_levels': 'possible variants: DEBUG, INFO, WARNING, ERROR, CRITICAL; DEBUG is most informative, CRITICAL is the least; see python logging module for more info',
             'log_level': default_log_level
         }
+        utils.make_directory(filepath.parent, parents=True, exist_ok=True)
         utils.write_text_to_file(filepath, utils.json_dumps(default_log_config))
         return default_log_level
     return saved_level

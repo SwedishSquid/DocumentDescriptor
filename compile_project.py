@@ -22,6 +22,7 @@ def _make_resource_arguments():
 
 
 def compile_descriptor_app():
+    # full options list https://pyinstaller.org/en/stable/usage.html#options
     PyInstaller.__main__.run([
         'main.py',
         # '--onefile',
@@ -29,6 +30,7 @@ def compile_descriptor_app():
         # '--noconsole',     # leaves only GUI; ignored on linux
         *_make_resource_arguments(),
         '--clean',      # means not to use cashed files
+        '-y',       # replace previously compiled binary files in dist
     ])
 
 
