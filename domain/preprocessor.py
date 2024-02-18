@@ -72,7 +72,7 @@ class Preprocessor:
             # todo: check if works with long paths
             self.logger.debug('converting djvu to pdf')
             try:
-                djvu_to_pdf.convert_djvu_to_pdf(original, folder_manager.temp_book_path)
+                djvu_to_pdf.convert_djvu_to_pdf(original, folder_manager.temp_book_path, self.proj_folder_manager.stdout_djvu_converter_filepath)
             except ChildProcessError as e:
                 self.logger.warning(f'cant convert djvu to pdf at {original}')
                 self.logger.debug(f'exception {e} raised')
@@ -96,5 +96,6 @@ class Preprocessor:
         Recognizer.ocr(src_path=folder_manager.temp_book_path,
                        dst_path=folder_manager.temp_book_path,
                        language_arg=self.config.orc_config.language_arg,
-                       pages_arg=self.config.orc_config.pages_arg)
+                       pages_arg=self.config.orc_config.pages_arg,
+                       subp_output_file=self.proj_folder_manager.stdout_ocr_filepath)
         pass

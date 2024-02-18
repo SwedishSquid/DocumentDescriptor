@@ -8,6 +8,8 @@ class ProjectFolderManager:
     _config_file_name = 'config.json'
     _copy_folder_name = 'copy'
     _export_folder_name = 'export'
+    _ocr_output_filename = 'ocr_stdout.txt'
+    _djvu_converter_output_filename = 'djvu_converter_stdout.txt'
 
     def __init__(self, project_folder, config: Config):
         self.project_folder = Path(project_folder)
@@ -25,6 +27,14 @@ class ProjectFolderManager:
     @property
     def copy_folder_path(self):
         return Path(self.project_folder, self._copy_folder_name)
+
+    @property
+    def stdout_ocr_filepath(self):
+        return Path(self.project_folder, self._ocr_output_filename)
+
+    @property
+    def stdout_djvu_converter_filepath(self):
+        return Path(self.project_folder, self._djvu_converter_output_filename)
 
     @classmethod
     def load_from_path(cls, project_path: Path, ms_receiver=None):

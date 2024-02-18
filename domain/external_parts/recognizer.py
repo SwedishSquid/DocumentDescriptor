@@ -3,6 +3,8 @@ import subprocess
 import platform
 import logging
 
+import utils
+
 
 class OCRError(Exception):
     """raised when something wrong with ORC"""
@@ -12,7 +14,8 @@ class OCRError(Exception):
 class Recognizer:
     # ocrmypdf ./source/big_rus.pdf ./big_rus_ocr.pdf -l rus+eng --pages 1-5 --clean  -q
     @staticmethod
-    def ocr(src_path: Path, dst_path: Path, language_arg: str, pages_arg: str):
+    def ocr(src_path: Path, dst_path: Path, language_arg: str, pages_arg: str,
+            subp_output_file=None):
         logger = logging.getLogger(__name__)
         logger.info('OCR method called')
         if platform.system().lower() != 'linux':
@@ -27,7 +30,12 @@ class Recognizer:
             pages = f'--pages {pages_arg}'
         command = f'ocrmypdf "{src}" "{dst}" {language} {pages} --clean -q'
         logger.info(f'OCR subprocess command >> {command}')
-        completed_process = subprocess.run(command, shell=True)
+        # todo: check if this file is ok
+        if subp_output_file is None:
+            completed_process = subprocess.run(command, shell=True)
+        else:
+            with open(subp_output_file, 'w') as file:
+                completed_process = subprocess.run(command, shell=True, stdout=file)
         logger.info(f'subprocess return code = {completed_process.returncode}')
         try:
             completed_process.check_returncode()
