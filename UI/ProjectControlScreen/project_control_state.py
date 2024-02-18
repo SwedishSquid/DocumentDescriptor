@@ -71,16 +71,19 @@ class ProjectControlState(AppStateBase):
                     else:
                         pass
                         ms_receiver('skipped that book cause configured to skip when cant preprocess')
+            self.preprocess_dialog.set_message('preprocessing finished')
             pass
 
         thread = Thread(target=func_to_thread)
         thread.start()
+        self.preprocess_dialog.set_message('do not close until preprocessing finished')
         print('preprocessing started')
         self.preprocess_dialog.exec()
         if thread.is_alive():
             # todo: do something to stop it
             print('thread is still active. please wait')
             thread.join()
+
         print('preprocessing finished')
         pass
 

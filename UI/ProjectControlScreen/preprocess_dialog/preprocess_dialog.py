@@ -13,9 +13,9 @@ class PreprocessDialog(QDialog):
 
         self.setLayout(layout)
 
-    # def set_message(self, text: str):
-    #     self.widget.set_message(text)
-    #     pass
+    def set_message(self, text: str):
+        self.widget.set_message(text)
+        pass
 
     def add_output_text(self, text: str):
         """WARNING: this is dangerous thing - without inner time.sleep(0.01) fails app with memory-leak like message
