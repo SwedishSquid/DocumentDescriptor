@@ -28,14 +28,14 @@ class Recognizer:
             pages = ''
         else:
             pages = f'--pages {pages_arg}'
-        command = f'ocrmypdf "{src}" "{dst}" {language} {pages} --clean -q'
+        command = f'ocrmypdf "{src}" "{dst}" {language} {pages} --clean' # -q'      # where -q means quiet - no console output
         logger.info(f'OCR subprocess command >> {command}')
         # todo: check if this file is ok
         if subp_output_file is None:
             completed_process = subprocess.run(command, shell=True)
         else:
             with open(subp_output_file, 'w') as file:
-                completed_process = subprocess.run(command, shell=True, stdout=file)
+                completed_process = subprocess.run(command, shell=True, stderr=file)
         logger.info(f'subprocess return code = {completed_process.returncode}')
         try:
             completed_process.check_returncode()

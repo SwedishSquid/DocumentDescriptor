@@ -5,7 +5,7 @@ import platform
 import utils
 
 
-def convert_djvu_to_pdf(src: Path, dst: Path, stdout_filepath: Path=None):
+def convert_djvu_to_pdf(src: Path, dst: Path, stderr_filepath: Path=None):
     # todo: find a way around for this to work everywhere
     if platform.system().lower() != 'linux':
         raise EnvironmentError(f'conversion not possible on {platform.system()}')
@@ -13,9 +13,9 @@ def convert_djvu_to_pdf(src: Path, dst: Path, stdout_filepath: Path=None):
     pdf_path = dst
     command = f'ddjvu -format=pdf "{djvu_path}" "{pdf_path}"'
     # todo: check if this file is ok
-    if stdout_filepath is not None:
-        with open(stdout_filepath, 'w') as file:
-            res = subprocess.run(command, shell=True, stdout=file)
+    if stderr_filepath is not None:
+        with open(stderr_filepath, 'w') as file:
+            res = subprocess.run(command, shell=True, stderr=file)
     else:
         res = subprocess.run(command, shell=True)
     if res.returncode != 0:

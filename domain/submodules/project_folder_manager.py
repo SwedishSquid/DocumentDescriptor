@@ -29,11 +29,11 @@ class ProjectFolderManager:
         return Path(self.project_folder, self._copy_folder_name)
 
     @property
-    def stdout_ocr_filepath(self):
+    def stderr_ocr_filepath(self):
         return Path(self.project_folder, self._ocr_output_filename)
 
     @property
-    def stdout_djvu_converter_filepath(self):
+    def stderr_djvu_converter_filepath(self):
         return Path(self.project_folder, self._djvu_converter_output_filename)
 
     @classmethod
