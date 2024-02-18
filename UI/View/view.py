@@ -19,7 +19,6 @@ class View:
         # self.chosen_path = None
         self.app = App()
         self.current_book_info = None
-        # self.current_book_fields_changed = False
 
         self.q_app = QApplication()
         self.q_app.setWindowIcon(QIcon(str(path_to_pictures.joinpath('file'))))
@@ -54,14 +53,6 @@ class View:
         self.stacked_widget.setCurrentWidget(self.beginning_widget)
         self.window.show()
         self.q_app.exec()
-
-    # def try_set_project_path(self, path: str):
-    #     if self.app.try_set_project_path(path):
-    #         self.beginning_widget.show_continue_button()
-    #         self.chosen_path = path
-    #         return True
-    #     self.beginning_widget.hide_continue_button()
-    #     return False
 
     def switch_to_main_widget(self):
         self.app.reset_engine()
@@ -128,6 +119,7 @@ class View:
         book_meta = self.current_book_info.book_meta
         for name, content in field_list.get_all_fields():
             book_meta.fields[name] = content
+        field_list.is_change = False
 
     def save_book_meta_as_rejected(self, message: str):
         self._save_fields_to_book_meta()
@@ -160,8 +152,8 @@ class View:
 
     @Slot()
     def on_change_book_via_full_list_event(self, index: int):
-        # todo: check if fields were changed
-        self.save_book_meta_as_in_progress()
+        if self.main_widget.field_list.is_change:
+            self.save_book_meta_as_in_progress()
 
         self.show_book_by_number(index)
         pass

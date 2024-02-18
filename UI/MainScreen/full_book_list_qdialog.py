@@ -12,7 +12,6 @@ class FullBookList(QDialog):
         self.book_list = BookList(self)
         self.setLayout(QVBoxLayout())
         self.layout().addWidget(self.book_list)
-        # self.accepted.connect(self.view.save_book_meta_as_in_progress)
 
     def run_dialog(self, book_records: list):
         self.book_list.clear()
