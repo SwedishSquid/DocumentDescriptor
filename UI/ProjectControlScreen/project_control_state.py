@@ -1,3 +1,5 @@
+import time
+
 from UI.app_state_base import AppStateBase
 from UI.ProjectControlScreen.project_control_widget import ProjectControlWidget
 from UI.ProjectControlScreen.preprocess_dialog.preprocess_dialog import PreprocessDialog
@@ -105,9 +107,21 @@ class ProjectControlState(AppStateBase):
 
     def _start_exporting(self):
         print('exporting started')
-        exporter = Glue(self.project_path).get_exporter()
-        exporter.export_finished_books()
-        exporter.export_rejected_books()
+        inform_dialog = InformDialog()
+        inform_dialog.set_info_message_thread_safe(
+            'export started; please do not close this window')
+
+        def _export():
+            exporter = Glue(self.project_path).get_exporter()
+            exporter.export_finished_books()
+            exporter.export_rejected_books()
+            inform_dialog.set_info_message_thread_safe('export finished; this window can be closed now')
+            pass
+
+        thread = Thread(target=_export)
+        thread.start()
+
+        inform_dialog.exec()
         print('exporting finished')
         pass
     pass

@@ -57,9 +57,9 @@ def move_file(from_path: Path, to_path: Path):
     pass
 
 
-def make_directory(dir_path: Path, parents=False):
+def make_directory(dir_path: Path, parents=False, exist_ok=False):
     dir_path = _make_long_path(dir_path)
-    dir_path.mkdir(parents=parents)
+    dir_path.mkdir(parents=parents, exist_ok=exist_ok)
     pass
 
 

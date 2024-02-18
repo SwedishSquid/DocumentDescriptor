@@ -67,7 +67,7 @@ class Exporter:
         )
         for bfm in bfm_to_export:
             export_book_subfolder = Path(export_to, bfm.folder_path.name)
-            utils.make_directory(export_book_subfolder, parents=True)
+            utils.make_directory(export_book_subfolder, parents=True, exist_ok=True)
             self._copy_meta_file(bfm, export_book_subfolder)
             self._copy_original_book(bfm, export_book_subfolder)
             if do_export_book_state:
