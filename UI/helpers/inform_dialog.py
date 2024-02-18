@@ -8,6 +8,7 @@ class InformDialog(QDialog):
     def __init__(self):
         super(InformDialog, self).__init__()
         self.widget = QLabel()
+        self.widget.setWordWrap(True)
         self._Set_Info_Message.connect(self._set_info_message)
         layout = QVBoxLayout()
         layout.addWidget(self.widget)
