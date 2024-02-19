@@ -1,7 +1,7 @@
 from UI.constant_paths import path_to_pictures
 
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton
-from PySide6.QtGui import QFont, QPixmap, QKeySequence
+from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtCore import QSize, QKeyCombination, Qt
 
 
@@ -51,7 +51,7 @@ class ControlButtons(QWidget):
         button = self.create_blank_reject_button()
 
         button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_U))
-        button.setToolTip("Отменить документ <b>Ctrl+U</b>")
+        button.setToolTip("Отменить <b>Ctrl+U</b>")
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('cross'))))
         button.setIconSize(QSize(96, 96))
@@ -64,7 +64,7 @@ class ControlButtons(QWidget):
         button = self.create_blank_continue_button()
 
         button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_N))
-        button.setToolTip("Перейти к следующему документу <b>Ctrl+N</b>")
+        button.setToolTip("Перейти к следующему <b>Ctrl+N</b>")
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('right-arrow'))))
         button.setIconSize(QSize(96, 96))

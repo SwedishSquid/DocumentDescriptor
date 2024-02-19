@@ -19,20 +19,20 @@ class Book(QWidget):
         self._stage = stage
 
         layout = QHBoxLayout()
-        layout.addWidget(self._create_label())
+        layout.addWidget(self._create_label_with_number())
 
-        self._text_holder = self._create_text_holder(name)
-        layout.addWidget(self._text_holder)
+        self._name_holder = self._create_name_holder(name)
+        layout.addWidget(self._name_holder)
         layout.setSpacing(10)
 
         self.setLayout(layout)
 
-    def _create_label(self):
+    def _create_label_with_number(self):
         label = QLabel(str(self.number + 1))
         label.setFont(QFont('Arial', 14))
         return label
 
-    def _create_text_holder(self, content: str):
+    def _create_name_holder(self, content: str):
         text_edit = ResizableTextEdit()
         text_edit.setFont(QFont('Arial', 14))
         text_edit.setTextColor(QColorConstants.Black)

@@ -12,6 +12,7 @@ class Field(QWidget):
         super().__init__()
         self.name = name
         self._item = item
+        self._font_size = 14
         self.text_edit = self._create_text_edit(content)
 
         self.text_edit.textChanged.connect(
@@ -40,12 +41,12 @@ class Field(QWidget):
     def _create_label(self, caption: str):
         label = QLabel(caption)
         label.setMargin(10)
-        label.setFont(QFont('Arial', 14))
+        label.setFont(QFont('Arial', self._font_size))
         return label
 
     def _create_text_edit(self, content: str):
         text_edit = FieldTextEdit()
-        text_edit.setFont(QFont('Arial', 14))
+        text_edit.setFont(QFont('Arial', self._font_size))
         text_edit.setText(content)
 
         return text_edit

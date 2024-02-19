@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QMainWindow
+from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QLabel
+from PySide6.QtGui import QFont
 from UI.MainScreen.control_buttons import ControlButtons
 # from UI.MainScreen.pdf_viewer import PDFViewer
 from UI.MainScreen.reject_qdialog import Reject
@@ -14,11 +15,11 @@ class MainWidget(QWidget):
         self.pdf_viewer = BrowserPdfViewer()
         self.pdf_viewer.set_file(Path())
         self.field_list = FieldList()
+        self.control_buttons = ControlButtons()  # part of public interface
 
         layout = QHBoxLayout()
         layout.addStretch()
-        self.control_buttons = ControlButtons()  # part of public interface
-        layout.addWidget(self._create_left_widget(self.control_buttons), 1)
+        layout.addWidget(self._create_left_widget(), 1)
         layout.addWidget(self.pdf_viewer, 1)
         self.setLayout(layout)
 
@@ -36,14 +37,21 @@ class MainWidget(QWidget):
         self._full_book_list_dialog.run_dialog(full_list_records)
         pass
 
-    def _create_left_widget(self, control_buttons: ControlButtons):
+    def _create_left_widget(self):
         layout1 = QVBoxLayout()
         layout1.addStretch()
         layout1.addWidget(self.field_list, 4)
-        layout1.addWidget(control_buttons, 1)
+
+        # bottom_widget = self.control_buttons
+        layout1.addWidget(self.control_buttons, 1)
         widget1 = QWidget()
         widget1.setLayout(layout1)
         return widget1
+
+    # def _create_label_with_number(self):
+    #     label = QLabel(str(self.number + 1))
+    #     label.setFont(QFont('Arial', 14))
+    #     return label
 
     def set_document(self, path):
         self.pdf_viewer.set_file(Path(path))

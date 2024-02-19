@@ -24,7 +24,7 @@ class BookList(QListWidget):
         self.itemClicked.connect(lambda: dialog.done(1))
 
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
-        self.verticalScrollBar().setSingleStep(5)
+        self.verticalScrollBar().setSingleStep(10)
         self.setSpacing(3)
 
     def add_book(self, number: int, book_name: str, stage: DescriptionStage):
