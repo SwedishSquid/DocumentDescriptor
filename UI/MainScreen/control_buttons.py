@@ -1,15 +1,13 @@
 from UI.constant_paths import path_to_pictures
 
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QPushButton
-from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtCore import QSize
+from PySide6.QtGui import QFont, QPixmap, QKeySequence
+from PySide6.QtCore import QSize, QKeyCombination, Qt
 
 
 class ControlButtons(QWidget):
     def __init__(self):
         super().__init__()
-        # self.reject_dialog = Reject(self.view)
-        # self.full_book_list_dialog = FullBookList(self.view)
 
         layout = QHBoxLayout()
         self.full_list_button = self._create_full_list_button_()
@@ -25,11 +23,9 @@ class ControlButtons(QWidget):
     def _create_full_list_button_(self):
         button = QPushButton("Полный\n"
                              "список")
-        # button.clicked.connect(
-        #     lambda:
-        #     self.view.show_full_book_list(
-        #         self.full_book_list_dialog.book_list))
-        # button.clicked.connect(self.full_book_list_dialog.run)
+
+        button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_L))
+        button.setToolTip("Показать список всех документов <b>Ctrl+L</b>")
 
         font = QFont('Arial', 16)
         font.setBold(True)
@@ -53,7 +49,9 @@ class ControlButtons(QWidget):
 
     def _create_reject_button(self):
         button = self.create_blank_reject_button()
-        # button.clicked.connect(self.reject_dialog.run)
+
+        button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_U))
+        button.setToolTip("Отменить документ <b>Ctrl+U</b>")
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('cross'))))
         button.setIconSize(QSize(96, 96))
@@ -64,8 +62,9 @@ class ControlButtons(QWidget):
 
     def _create_continue_button(self):
         button = self.create_blank_continue_button()
-        # button.clicked.connect(self.view.save_book_meta_as_finished)
-        # button.clicked.connect(self.view.show_next_book)
+
+        button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_N))
+        button.setToolTip("Перейти к следующему документу <b>Ctrl+N</b>")
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('right-arrow'))))
         button.setIconSize(QSize(96, 96))
