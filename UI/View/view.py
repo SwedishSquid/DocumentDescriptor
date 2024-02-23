@@ -7,6 +7,10 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 from UI.View.state_view_widget import StateViewWidget
 import logging
 import version
+from PySide6.QtWidgets import QApplication, QMainWindow
+from UI.View.state_view_widget import StateViewWidget
+import logging
+import version
 
 
 class View:
@@ -16,6 +20,7 @@ class View:
 
         self.window = QMainWindow()
         self.window.setWindowTitle(f"Document Descriptor {version.get_version()}")
+        self.window.setWindowTitle(f"Document Descriptor {version.get_version()}")
         self.window.setMinimumSize(800, 600)
 
         widget = StateViewWidget(self.window)
@@ -24,5 +29,7 @@ class View:
 
     def run(self):
         logging.info('app started')
+        logging.info('app started')
         self.window.show()
+        return self.q_app.exec()
         return self.q_app.exec()

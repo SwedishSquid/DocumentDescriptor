@@ -55,6 +55,8 @@ class Field(QWidget):
     def _create_caption_label(self, caption: str, font_size: int):
         label = QLabel(caption)
         label.setFont(QFont('Arial', font_size))
+        label.setMargin(0)
+        label.setFont(QFont('Arial', 14))
         return label
 
     def _create_text_edit(self, content: str, font_size: int):
