@@ -1,12 +1,11 @@
 from pathlib import Path
-
 from UI.ManagementScreen.initialized_case_widget import InitializedCaseWidget
 from UI.ManagementScreen.not_initialized_case_widget import NotInitializedCaseWidget
 from app.App import App
 from UI.BeginningScreen.beginning_widget import BeginningWidget
 from UI.window_menu_bar import MenuBar
+from UI.main_widget_menu_bar import MainWidgetMenuBar
 from UI.MainScreen.main_widget import MainWidget
-from UI.MainScreen.book_list import BookList
 from UI.constant_paths import path_to_pictures
 from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
 from PySide6.QtGui import QIcon
@@ -38,6 +37,9 @@ class View:
         self.main_widget.control_buttons.continue_button.clicked.connect(self.on_saveAndNext_event)
         self.main_widget.Reject_Book_Signal.connect(self.on_reject_book_event)
         self.main_widget.New_Book_Index_Chosen_Signal.connect(self.on_change_book_via_full_list_event)
+        self.main_widget_menu_bar = MainWidgetMenuBar()
+        self.main_widget_menu_bar.increase_font_size.triggered.connect(self.main_widget.increase_fields_font_size)
+        self.main_widget_menu_bar.decrease_font_size.triggered.connect(self.main_widget.decrease_fields_font_size)
 
         self.stacked_widget.addWidget(self.beginning_widget)
 
@@ -57,6 +59,7 @@ class View:
     def switch_to_main_widget(self):
         self.app.reset_engine()
         self.stacked_widget.setCurrentWidget(self.main_widget)
+        self.window.setMenuBar(self.main_widget_menu_bar)
         self.current_book_info = self.app.get_current_book()
         self._show_book()
 

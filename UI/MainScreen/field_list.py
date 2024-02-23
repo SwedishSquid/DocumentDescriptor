@@ -1,21 +1,22 @@
 from PySide6.QtWidgets import QListWidget, QAbstractItemView, QListWidgetItem
 from UI.MainScreen.field_list_item import Field
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColorConstants
+from PySide6.QtGui import QColorConstants, QFont
 
 
 class FieldList(QListWidget):
-    def __init__(self):
+    def __init__(self, font_size: int):
         super().__init__()
         self.is_change = False
+        self.font_size = font_size
 
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
         self.verticalScrollBar().setSingleStep(5)
-        self.setSpacing(3)
+        self.setSpacing(1)
 
     def add_field(self, caption: str, content: str, name: str):
         item = QListWidgetItem()
-        widget = Field(caption, content, name, item)
+        widget = Field(caption, content, name, self.font_size, item)
         widget.text_edit.textChanged.connect(self._on_field_change)
         widget.enterPressed.connect(self._on_enter_press)
         self.addItem(item)
@@ -29,14 +30,30 @@ class FieldList(QListWidget):
         item.setBackground(QColorConstants.Gray)
 
     def get_all_fields(self):
+        for field in self._get_all_fields():
+            yield field.name, field.get_content()
+
+    def _get_all_fields(self):
         for i in range(self.count()):
             item = self.item(i)
-            field = self.itemWidget(item)
-            yield field.name, field.get_content()
+            field: Field = self.itemWidget(item)
+            yield field
+
+    def change_fields_font_size(self, new_size: int):
+        if new_size <= 0 or new_size == self.font_size:
+            return
+        self.font_size = new_size
+        for field in self._get_all_fields():
+            field.change_font_size(self.font_size)
+
+
 
     def clear(self):
         self.is_change = False
         super().clear()
+
+    def _on_field_change(self):
+        self.is_change = True
 
     def _on_enter_press(self, item: QListWidgetItem):
         next_idx = self.indexFromItem(item).row() + 1
@@ -60,10 +77,9 @@ class FieldList(QListWidget):
             item.setSizeHint(size_hint)
 
     def _item_view_width(self):
-        item_width = self.viewport().width()
+        contents_margins_size = self.contentsMargins().left() \
+                          + self.contentsMargins().right()
+        item_width = self.viewport().width() - contents_margins_size - self.spacing()
         if self.verticalScrollBar().isVisible():
             item_width -= self.verticalScrollBar().width()
         return item_width
-
-    def _on_field_change(self):
-        self.is_change = True

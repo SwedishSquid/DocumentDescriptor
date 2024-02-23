@@ -14,7 +14,7 @@ class MainWidget(QWidget):
         super().__init__()
         self.pdf_viewer = BrowserPdfViewer()
         self.pdf_viewer.set_file(Path())
-        self.field_list = FieldList()
+        self.field_list = FieldList(font_size=14)
         self.control_buttons = ControlButtons()  # part of public interface
 
         layout = QHBoxLayout()
@@ -55,3 +55,11 @@ class MainWidget(QWidget):
 
     def set_document(self, path):
         self.pdf_viewer.set_file(Path(path))
+
+    def increase_fields_font_size(self):
+        new_size = self.field_list.font_size + 1
+        self.field_list.change_fields_font_size(new_size)
+
+    def decrease_fields_font_size(self):
+        new_size = self.field_list.font_size - 1
+        self.field_list.change_fields_font_size(new_size)
