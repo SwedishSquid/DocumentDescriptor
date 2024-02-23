@@ -5,7 +5,6 @@ from PySide6.QtGui import Qt
 class ResizableTextEdit(QTextEdit):
     def __init__(self):
         super().__init__()
-        # self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         self.textChanged.connect(self.on_text_change)
 
     def on_text_change(self):

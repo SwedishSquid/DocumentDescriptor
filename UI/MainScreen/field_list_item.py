@@ -50,7 +50,8 @@ class Field(QWidget):
         text_edit_font = self.text_edit.font()
         text_edit_font.setPointSize(new_size)
         self.text_edit.setFont(text_edit_font)
-        self.text_edit.textChanged.emit()
+        self.text_edit.on_text_change()
+        self.text_edit.resized.emit()
 
     def _create_caption_label(self, caption: str, font_size: int):
         label = QLabel(caption)
