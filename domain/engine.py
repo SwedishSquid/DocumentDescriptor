@@ -6,12 +6,12 @@ from collections import namedtuple
 
 from domain.submodules.project_folder_manager import ProjectFolderManager
 from domain.book_data_holders.book_folder_manager import BookFolderManager
-from domain.submodules.state import State
 
 FullListRecord = namedtuple('FullListRecord', 'rel_path descr_stage')
 
 
 class Engine:
+    """core of descriptor part"""
     def __init__(self, project_folder_manager: ProjectFolderManager,
                  book_folder_managers: list):
         self.project_folder_manager = project_folder_manager
@@ -21,15 +21,18 @@ class Engine:
         self._current_book_index = 0
         pass
 
-    def save_book_data(self, book_meta: BookMeta, stage: DescriptionStage):
+    def save_book_data(self, book_meta: BookMeta, stage: DescriptionStage, message: str = None):
         """save progress with this"""
         if stage == DescriptionStage.NOT_STARTED:
             raise ValueError(f'current stage must not be {DescriptionStage.NOT_STARTED} == not started')
 
         folder_manager = self._get_current_book_folder_manager()
+        folder_manager: BookFolderManager
         folder_manager.save_book_meta(book_meta)
 
         folder_manager.book_state.descr_stage = stage
+        if message is not None:
+            folder_manager.book_state.message = message
         folder_manager.save_book_state()
         pass
 
@@ -44,6 +47,12 @@ class Engine:
             descr_stage=folder_manager.book_state.descr_stage
         )
         return info
+
+    # def set_message_to_current_book(self, message: str):
+    #     book_folder_manager = self._get_current_book_folder_manager()
+    #     book_folder_manager: BookFolderManager
+    #     book_folder_manager.book_state.message = message
+    #     pass
 
     def get_full_book_list(self):
         """indexes are the same (with what they are the same???!)

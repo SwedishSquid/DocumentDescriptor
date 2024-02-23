@@ -7,7 +7,7 @@ from PySide6.QtGui import QColorConstants, QFont
 class FieldList(QListWidget):
     def __init__(self, font_size: int):
         super().__init__()
-        self.is_change = False
+        self.is_changed = False
         self.font_size = font_size
 
         self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
@@ -46,14 +46,12 @@ class FieldList(QListWidget):
         for field in self._get_all_fields():
             field.change_font_size(self.font_size)
 
-
-
     def clear(self):
-        self.is_change = False
+        self.is_changed = False
         super().clear()
 
     def _on_field_change(self):
-        self.is_change = True
+        self.is_changed = True
 
     def _on_enter_press(self, item: QListWidgetItem):
         next_idx = self.indexFromItem(item).row() + 1

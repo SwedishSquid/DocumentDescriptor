@@ -5,14 +5,20 @@ from domain.submodules.copy_folder_manager import CopyFolderManager
 from domain.submodules.lib_scanner import LibScanner
 from domain.book_data_holders.book_folder_manager import BookFolderManager
 from domain.engine import Engine
+from domain.exporter import Exporter
 
 
 class Glue:
+    """some strange module
+     made in attempt to unite descriptor and preprocessor
+     and exporter"""
+
     def __init__(self, project_path: Path):
         self.project_path = project_path
         pass
 
     def init_happened(self, ms_receiver=None):
+        # todo: check if it is a good way of testing for project folder
         proj_manager = self.get_project_manager(ms_receiver)
         return proj_manager is not None
 
@@ -29,8 +35,8 @@ class Glue:
         pass
 
     def get_preprocessor_generator(self, ms_receiver=None):
-        if ms_receiver is None:
-            ms_receiver = lambda s: print(s)
+        """:returns: generator_object and books_count"""
+        # todo: remove ms_receiver
         project_manager = self.get_project_manager(ms_receiver)
         if not project_manager:
             raise FileNotFoundError('check before calling this method')
@@ -39,18 +45,20 @@ class Glue:
 
         copy_folder_manager = CopyFolderManager(
             project_manager.copy_folder_path)
-        copy_folder_manager.delete_all_not_finished_bfm()
+        copy_folder_manager.delete_all_not_preprocessed_bfm()
 
-        finished_bfm = copy_folder_manager.load_book_folders_managers()
+        already_preprocessed_bfm = copy_folder_manager.load_book_folders_managers()
 
         original_books = LibScanner.find_all_files(config.extensions,
                                                    project_manager.lib_root_path)
 
         books_to_preprocess = self._get_not_preprocessed_books(
             all_original_books=original_books,
-            finished_bfm=finished_bfm)
+            already_preprocessed_bfm=already_preprocessed_bfm)
 
-        return Preprocessor(project_manager).preprocess_with_generator(books_to_preprocess, ms_receiver=ms_receiver)
+        books_count = len(books_to_preprocess)
+        generator = Preprocessor(project_manager).preprocess_with_generator(books_to_preprocess)
+        return generator, books_count
 
     def get_engine(self, ms_receiver=None):
         if ms_receiver is None:
@@ -61,11 +69,14 @@ class Glue:
 
         copy_folder_manager = CopyFolderManager(
             proj_manager.copy_folder_path)
-        copy_folder_manager.delete_all_not_finished_bfm()
+        copy_folder_manager.delete_all_not_preprocessed_bfm()
 
-        finished_bfm = copy_folder_manager.load_book_folders_managers()
+        already_preprocessed_bfm = copy_folder_manager.load_book_folders_managers()
 
-        return Engine(project_folder_manager=proj_manager, book_folder_managers=finished_bfm)
+        return Engine(project_folder_manager=proj_manager, book_folder_managers=already_preprocessed_bfm)
+
+    def get_exporter(self):
+        return Exporter(self.get_project_manager())
 
     def is_preprocessed(self, ms_receiver=None):
         if ms_receiver is None:
@@ -78,23 +89,23 @@ class Glue:
 
         copy_folder_manager = CopyFolderManager(
             project_manager.copy_folder_path)
-        copy_folder_manager.delete_all_not_finished_bfm()
+        copy_folder_manager.delete_all_not_preprocessed_bfm()
         original_books = LibScanner.find_all_files(config.extensions,
                                                    project_manager.lib_root_path)
-        finished_bfm = copy_folder_manager.load_book_folders_managers()
+        already_preprocessed_bfm = copy_folder_manager.load_book_folders_managers()
 
         books_to_preprocess = self._get_not_preprocessed_books(
             all_original_books=original_books,
-            finished_bfm=finished_bfm)
+            already_preprocessed_bfm=already_preprocessed_bfm)
         return len(books_to_preprocess) == 0
 
     def _get_not_preprocessed_books(self, all_original_books: list,
-                                    finished_bfm: list):
+                                    already_preprocessed_bfm: list):
         project_manager = self.get_project_manager()
         finished_rel = set()
 
         result = []
-        for bfm in finished_bfm:
+        for bfm in already_preprocessed_bfm:
             bfm: BookFolderManager = bfm
             finished_rel.add(bfm.original_relative_filepath)
         for book in all_original_books:

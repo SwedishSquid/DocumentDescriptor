@@ -19,13 +19,14 @@ class CopyFolderManager:
                 bfm = BookFolderManager.load_from_path(path, ms_receiver)
                 if bfm and bfm.book_state.preprocessed:
                     result.append(bfm)
+        result.sort(key=lambda bfm: bfm.sequence_number)
         return result
 
     def _get_all_subpaths(self):
         for path in self.copy_folder_path.glob('*'):
             yield path
 
-    def delete_all_not_finished_bfm(self):
+    def delete_all_not_preprocessed_bfm(self):
         for path in self._get_all_subpaths():
             if utils.is_dir(path):
                 bfm = BookFolderManager.load_from_path(path)

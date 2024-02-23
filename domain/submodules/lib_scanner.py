@@ -3,6 +3,9 @@ import utils
 
 
 class LibScanner:
+    """scans through lib_root folder in search of files
+    with specified extensions"""
+
     @staticmethod
     def find_all_files(extensions, lib_root_path):
         """gets absolute path to every file of listed extension

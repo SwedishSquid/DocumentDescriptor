@@ -3,6 +3,8 @@ from pathlib import Path
 
 from domain.preprocessor import Preprocessor
 
+# todo: make more tests
+
 
 class MyTestCase(unittest.TestCase):
 

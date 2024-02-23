@@ -1,9 +1,8 @@
-from PySide6.QtWidgets import QMenu
+from PySide6.QtWidgets import QMenu, QMenuBar
 from PySide6.QtGui import QAction
-from UI.window_menu_bar import MenuBar
 
 
-class MainWidgetMenuBar(MenuBar):
+class DescriptorStateMenuBar(QMenuBar):
     def __init__(self):
         super().__init__()
         self.addMenu(self._create_fields_menu())

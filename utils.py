@@ -34,7 +34,8 @@ def exists(path: Path):
 
 def write_text_to_file(filepath: Path, text: str, encoding='utf-8'):
     filepath = _make_long_path(filepath)
-    filepath.write_text(text, encoding=encoding)
+    with open(file=filepath, mode='w+', encoding=encoding) as file:
+        file.write(text)
 
 
 def read_text_from_file(filepath: Path, encoding='utf-8'):
@@ -57,9 +58,9 @@ def move_file(from_path: Path, to_path: Path):
     pass
 
 
-def make_directory(dir_path: Path, parents=False):
+def make_directory(dir_path: Path, parents=False, exist_ok=False):
     dir_path = _make_long_path(dir_path)
-    dir_path.mkdir(parents=parents)
+    dir_path.mkdir(parents=parents, exist_ok=exist_ok)
     pass
 
 
@@ -81,3 +82,7 @@ def delete_from(path: Path):
         path.unlink()
         return True
     raise FileExistsError(f'not a file, not a dir, but still exists at {path}')
+
+
+def get_app_root_path():
+    return Path(__file__).resolve().parent

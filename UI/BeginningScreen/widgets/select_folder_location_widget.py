@@ -36,6 +36,13 @@ class SelectFolderLocationWidget(QWidget):
 
         pass
 
+    def get_input_text(self):
+        return self.input_field.text()
+
+    def clear_input_text(self):
+        self.input_field.setText('')
+        pass
+
     def _emit_someinput_signal(self):
         self.Some_Input_Signal.emit(self.input_field.text())
         pass
