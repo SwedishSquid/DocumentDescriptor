@@ -23,19 +23,15 @@ class Recognizer:
             logger.warning(message)
         src = str(src_path)
         dst = str(dst_path)
-        language = f'-l {language_arg}'
-        if pages_arg is None:
-            pages = ''
-        else:
-            pages = f'--pages {pages_arg}'
-        command = f'ocrmypdf "{src}" "{dst}" {language} {pages} --clean' # -q'      # where -q means quiet - no console output
+        command = [f'ocrmypdf', f'"{src}"', f'"{dst}"', '-l' f'{language_arg}', f'--pages', f'{pages_arg}', '--clean']  # -q'      # where -q means quiet - no console output
         logger.info(f'OCR subprocess command >> {command}')
         # todo: check if this file is ok
         if subp_output_file is None:
-            completed_process = subprocess.run(command, shell=True)
+            completed_process = subprocess.run(command)
         else:
             with open(subp_output_file, 'w') as file:
-                completed_process = subprocess.run(command, shell=True, stderr=file)
+                completed_process = subprocess.run(command, stdout=file,
+                                                   stderr=subprocess.STDOUT)
         logger.info(f'subprocess return code = {completed_process.returncode}')
         try:
             completed_process.check_returncode()
