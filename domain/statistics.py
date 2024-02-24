@@ -1,5 +1,5 @@
 from pathlib import Path
-from domain.submodules.project_folder_manager import ProjectFolderManager
+from domain.glue import Glue
 from domain.submodules.copy_folder_manager import CopyFolderManager
 from domain.submodules.lib_scanner import LibScanner
 from domain.book_data_holders.description_stage import DescriptionStage
@@ -30,7 +30,8 @@ class Statistics:
     @classmethod
     def make_statistics_from_project_path(cls, project_path: Path):
         # fixme: why so much code?
-        manager = ProjectFolderManager.load_from_path(project_path)
+        manager = Glue(project_path).get_project_manager()
+
         config = manager.config
         source_books_paths = LibScanner.find_all_files(
             extensions=config.extensions,
