@@ -97,5 +97,6 @@ class Preprocessor:
                        dst_path=folder_manager.temp_book_path,
                        language_arg=self.config.orc_config.language_arg,
                        pages_arg=self.config.orc_config.pages_arg,
-                       subp_output_file=self.proj_folder_manager.stderr_ocr_filepath)
+                       subp_output_file=self.proj_folder_manager.stderr_ocr_filepath,
+                       other_args=self.config.orc_config.other_args)
         pass

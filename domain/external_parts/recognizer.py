@@ -15,7 +15,9 @@ class Recognizer:
     # ocrmypdf ./source/big_rus.pdf ./big_rus_ocr.pdf -l rus+eng --pages 1-5 --clean  -q
     @staticmethod
     def ocr(src_path: Path, dst_path: Path, language_arg: str, pages_arg: str,
-            subp_output_file=None):
+            subp_output_file=None, other_args=None):
+        if other_args is None:
+            other_args = ''
         logger = logging.getLogger(__name__)
         logger.info('OCR method called')
         if platform.system().lower() != 'linux':
@@ -23,7 +25,7 @@ class Recognizer:
             logger.warning(message)
         src = str(src_path)
         dst = str(dst_path)
-        command = ' '.join([f'ocrmypdf', f'"{src}"', f'"{dst}"', '-l' f'{language_arg}', f'--pages', f'{pages_arg}', '--clean'])  # -q'      # where -q means quiet - no console output
+        command = ' '.join([f'ocrmypdf', f'"{src}"', f'"{dst}"', '-l' f'{language_arg}', f'--pages', f'{pages_arg}', '--clean', other_args])  # -q'      # where -q means quiet - no console output
         logger.info(f'OCR subprocess command >> {command}')
         # todo: check if this file is ok
         if subp_output_file is None:
