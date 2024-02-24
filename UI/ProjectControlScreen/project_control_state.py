@@ -24,13 +24,13 @@ class ProjectControlState(AppStateBase):
 
         self.main_widget = ProjectControlWidget()
         self.main_widget.Start_Preprocessing_Signal.connect(
-            self._start_preprocessing
+            self._action_trigger_decorator(self._start_preprocessing)
         )
         self.main_widget.Open_Main_App_Signal.connect(
             lambda: self.Open_Descriptor.emit(self.project_path)
         )
         self.main_widget.Export_Signal.connect(
-            self._start_exporting
+            self._action_trigger_decorator(self._start_exporting)
         )
         self.main_widget.Refresh_Statistics.connect(
             self._refresh_statistics
@@ -44,7 +44,7 @@ class ProjectControlState(AppStateBase):
 
         self.project_path: Path = None
 
-        self.can_start_actions_flag = True      # to prevent user from starting several actions at once
+        self._can_start_actions = True      # to prevent user from starting several actions at once
         pass
 
     def get_main_widget(self):
@@ -55,7 +55,26 @@ class ProjectControlState(AppStateBase):
         self.project_path = project_path
         self._refresh_statistics()
         self.Show_Main_Widget.emit(self.get_main_widget())
+        self.main_widget.set_enabled_for_all_action_buttons(True)
         pass
+
+    def _enable_all_actions(self):
+        self._can_start_actions = True
+        self.main_widget.set_enabled_for_all_action_buttons(True)
+        pass
+
+    def _disable_all_actions(self):
+        self._can_start_actions = False
+        self.main_widget.set_enabled_for_all_action_buttons(False)
+        pass
+
+    def _action_trigger_decorator(self, action_trigger_func):
+        def inner_func(*args, **kwargs):
+            self._disable_all_actions()
+            action_trigger_func(*args, **kwargs)
+            self._enable_all_actions()
+            pass
+        return inner_func
 
     def _refresh_statistics(self):
         stats = Statistics.make_statistics_from_project_path(self.project_path)

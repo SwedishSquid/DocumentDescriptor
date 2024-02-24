@@ -42,4 +42,10 @@ class ProjectControlWidget(QWidget):
         top_level_layout.addWidget(self.export_button)
         self.setLayout(top_level_layout)
         pass
+
+    def set_enabled_for_all_action_buttons(self, enabled: bool):
+        self.open_main_app_button.setEnabled(enabled)
+        self.start_preprocessing_button.setEnabled(enabled)
+        self.export_button.setEnabled(enabled)
+        pass
     pass
