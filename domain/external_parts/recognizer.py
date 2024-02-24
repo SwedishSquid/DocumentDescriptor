@@ -23,20 +23,20 @@ class Recognizer:
             logger.warning(message)
         src = str(src_path)
         dst = str(dst_path)
-        command = [f'ocrmypdf', f'"{src}"', f'"{dst}"', '-l' f'{language_arg}', f'--pages', f'{pages_arg}', '--clean']  # -q'      # where -q means quiet - no console output
+        command = ' '.join([f'ocrmypdf', f'"{src}"', f'"{dst}"', '-l' f'{language_arg}', f'--pages', f'{pages_arg}', '--clean'])  # -q'      # where -q means quiet - no console output
         logger.info(f'OCR subprocess command >> {command}')
         # todo: check if this file is ok
         if subp_output_file is None:
-            completed_process = subprocess.run(command)
+            completed_process = subprocess.run(command, shell=True)
         else:
             with open(subp_output_file, 'w') as file:
                 completed_process = subprocess.run(command, stdout=file,
-                                                   stderr=subprocess.STDOUT)
+                                                   stderr=subprocess.STDOUT, shell=True)
         logger.info(f'subprocess return code = {completed_process.returncode}')
         try:
             completed_process.check_returncode()
         except subprocess.CalledProcessError as e:
-            logger.debug(f'OCR failed with {e.with_traceback(tb=None)}')
+            logger.debug(f'OCR failed with {e}')
             raise OCRError(e)
         pass
     pass

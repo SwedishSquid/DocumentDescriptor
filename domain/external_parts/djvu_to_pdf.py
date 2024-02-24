@@ -11,12 +11,13 @@ def convert_djvu_to_pdf(src: Path, dst: Path, stdout_filepath: Path=None):
         raise EnvironmentError(f'conversion not possible on {platform.system()}')
     djvu_path = src
     pdf_path = dst
-    command = [f'ddjvu', '-format=pdf', f'"{djvu_path}"', f'"{pdf_path}"']
+    command = ' '.join([f'ddjvu', '-format=pdf', f'"{djvu_path}"', f'"{pdf_path}"'])
 
     # todo: check if this file is ok
     if stdout_filepath is not None:
         with open(stdout_filepath, 'w+') as file:
-            res = subprocess.run(command, stdout=file, stderr=subprocess.STDOUT)
+            res = subprocess.run(command, stdout=file,
+                                 stderr=subprocess.STDOUT, shell=True)
     else:
         res = subprocess.run(command)
     if res.returncode != 0:
