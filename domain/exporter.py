@@ -5,6 +5,7 @@ from domain.book_data_holders.description_stage import DescriptionStage
 from domain.book_data_holders.book_folder_manager import BookFolderManager
 import utils
 from pathlib import Path
+import logging
 
 
 class Exporter:
@@ -14,6 +15,7 @@ class Exporter:
 
     def __init__(self, project_folder_manager: ProjectFolderManager):
         self.manager = project_folder_manager
+        self.logger = logging.getLogger(__name__)
         pass
 
     @property
@@ -26,6 +28,7 @@ class Exporter:
 
     def export_finished_books(self):
         """considers IN_PROGRESS to be finished too"""
+        self.logger.info('exporting finished books')
         self._export_whatever(
             export_to=self.finished_export_folder,
             acceptable_descr_stages=[DescriptionStage.FINISHED,
@@ -33,6 +36,7 @@ class Exporter:
         pass
 
     def export_rejected_books(self):
+        self.logger.info('exporting rejected books')
         self._export_whatever(export_to=self.rejected_export_folder,
                               acceptable_descr_stages=[DescriptionStage.REJECTED],
                               do_export_book_state=True)
@@ -51,6 +55,7 @@ class Exporter:
             .load_book_folders_managers()
         sourced_bfm = [bfm for bfm in all_preprocessed_bfm_in_copy_folder
                        if self.manager.make_absolute_path(bfm.original_relative_filepath) in source_books_paths]
+        self.logger.debug(f'found {len(sourced_bfm)} sourced books in copy folder')
         return sourced_bfm
 
     def get_sourced_bfm_by_descr_stage(self, acceptable_descr_stages: list):
@@ -65,6 +70,7 @@ class Exporter:
         bfm_to_export = self.get_sourced_bfm_by_descr_stage(
             acceptable_descr_stages
         )
+        self.logger.debug(f'found {len(bfm_to_export)} books to export')
         for bfm in bfm_to_export:
             export_book_subfolder = Path(export_to, bfm.folder_path.name)
             utils.make_directory(export_book_subfolder, parents=True, exist_ok=True)
