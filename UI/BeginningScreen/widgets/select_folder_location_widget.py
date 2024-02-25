@@ -55,6 +55,7 @@ class SelectFolderLocationWidget(QWidget):
 
     def _create_input_field(self, info: str):
         input_field = QLineEdit()
+        input_field.setFont(QFont('Arial', 12))
         input_field.setPlaceholderText(info)
         return input_field
 

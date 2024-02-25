@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton,\
     QLabel
 from PySide6.QtCore import Signal
+from PySide6.QtGui import QFont, Qt
 from UI.BeginningScreen.widgets.select_folder_location_widget \
     import SelectFolderLocationWidget
 
@@ -30,12 +31,15 @@ class PathChoosingWidget(QWidget):
             self._on_input_changed)
 
         self.feedback_label = QLabel(text=default_feedback)
+        self.feedback_label.setFont(QFont('Arial', 12))
+        self.feedback_label.setWordWrap(True)
+        self.feedback_label.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        self.return_button = QPushButton(text=return_button_text)
+        self.return_button = self._make_button(text=return_button_text)
         self.return_button.clicked.connect(
             lambda: self.Return_Signal.emit()
         )
-        self.continue_button = QPushButton(text=continue_button_text)
+        self.continue_button = self._make_button(text=continue_button_text)
         self.continue_button.clicked.connect(
             self._on_continue_clicked
         )
@@ -87,4 +91,12 @@ class PathChoosingWidget(QWidget):
 
     def _on_continue_clicked(self):
         self.Continue_Signal.emit(self.get_input_text())
+        pass
+
+    def _make_button(self, text):
+        button = QPushButton(text=text)
+        font = QFont('Arial', 12)
+        button.setFont(font)
+        button.setFixedSize(270, 50)
+        return button
     pass
