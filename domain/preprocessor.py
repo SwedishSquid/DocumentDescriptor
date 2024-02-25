@@ -48,7 +48,13 @@ class Preprocessor:
         try:
             self._populate_temp_folder_with_pdf(book_folder_manager)
             if self.config.orc_config.do_ocr:
-                self._apply_text_recognition(book_folder_manager)
+                try:
+                    self._apply_text_recognition(book_folder_manager)
+                except OCRError as e:
+                    if self.config.orc_config.consider_OCR_error_fatal:
+                        raise PreprocessError(e)
+                    else:
+                        self.logger.error('ocr was not so successful, to investigate futher, set consider_OCR_error_fatal=True and after preprocessing stop ispect ocr stdout.txt file')
         except PreprocessError as e:
             self.logger.debug(f'exception {e} while preprocessing book at {book_folder_manager.temp_book_path}')
             self.logger.exception(e)
@@ -97,5 +103,6 @@ class Preprocessor:
                        dst_path=folder_manager.temp_book_path,
                        language_arg=self.config.orc_config.language_arg,
                        pages_arg=self.config.orc_config.pages_arg,
-                       subp_output_file=self.proj_folder_manager.stderr_ocr_filepath)
+                       subp_output_file=self.proj_folder_manager.stderr_ocr_filepath,
+                       other_args=self.config.orc_config.other_args)
         pass

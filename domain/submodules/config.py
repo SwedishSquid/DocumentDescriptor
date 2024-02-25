@@ -12,24 +12,32 @@ class OCRConfig:
     _pages_arg_name = 'pages'
     _language_arg_name = 'language'
     _do_ocr_name = 'do_OCR'
+    _other_flags_name = 'other_args'
+    _consider_OCR_error_fatal_name = 'consider_OCR_error_fatal'
 
-    def __init__(self, pages_arg, language_arg, do_ocr):
+    def __init__(self, pages_arg, language_arg, do_ocr, other_args, consider_OCR_error_fatal):
         self.pages_arg = pages_arg
         self.language_arg = language_arg
         self.do_ocr = do_ocr
+        self.other_args = other_args    # 'can be empty, or --redo-ocr, or --force-ocr, or something else. for more info see ocrmypdf docs'
+        self.consider_OCR_error_fatal = consider_OCR_error_fatal
         pass
 
     @classmethod
     def load_from_dict(cls, ocr_data):
         return OCRConfig(pages_arg=ocr_data[cls._pages_arg_name],
                          language_arg=ocr_data[cls._language_arg_name],
-                         do_ocr=ocr_data[cls._do_ocr_name])
+                         do_ocr=ocr_data[cls._do_ocr_name],
+                         other_args=ocr_data[cls._other_flags_name],
+                         consider_OCR_error_fatal=ocr_data[cls._consider_OCR_error_fatal_name])
 
     def dump_to_dict(self):
         ocr_data = dict()
         ocr_data[self._pages_arg_name] = self.pages_arg
         ocr_data[self._language_arg_name] = self.language_arg
         ocr_data[self._do_ocr_name] = self.do_ocr
+        ocr_data[self._other_flags_name] = self.other_args
+        ocr_data[self._consider_OCR_error_fatal_name] = self.consider_OCR_error_fatal
         return ocr_data
 
     pass
@@ -97,7 +105,8 @@ class Config:
     @classmethod
     def get_default(cls):
         ocr_config = OCRConfig(pages_arg='1-5', language_arg='rus+eng',
-                               do_ocr=False)
+                               do_ocr=True, other_args='--force-ocr',
+                               consider_OCR_error_fatal=False)
         conf = Config(
             [FieldConfigRecord('author', 'Автор', 'Author'),
              FieldConfigRecord('title', 'Название', 'Title'),
