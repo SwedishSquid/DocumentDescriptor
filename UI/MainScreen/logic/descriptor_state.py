@@ -25,9 +25,9 @@ class DescriptorState(AppStateBase):
         self.window = window
         self.menu_bar = DescriptorStateMenuBar()
         self.menu_bar.increase_font_size.triggered.connect(
-            self.main_widget.increase_fields_font_size)
+            self.main_widget.field_list.increase_fields_font_size)
         self.menu_bar.decrease_font_size.triggered.connect(
-            self.main_widget.decrease_fields_font_size)
+            self.main_widget.field_list.decrease_fields_font_size)
 
         self.app = App()
         pass
@@ -67,6 +67,7 @@ class DescriptorState(AppStateBase):
             book_info.absolute_path
         )
         self._set_book_meta_fields(book_info)
+        self._set_book_info(book_info)
         pass
 
     def _set_book_meta_fields(self, book_info: BookInfo):
@@ -78,6 +79,13 @@ class DescriptorState(AppStateBase):
             name = meta_scheme.get_human_readable_name(field_name)
             field_list.add_field(name, fields[field_name], field_name)
         pass
+
+    def _set_book_info(self, book_info: BookInfo):
+        book_number = self.app.get_book_number(book_info)
+        book_name = book_info.book_meta.initial_file_name
+        description_stage = self.app.get_book_description_stage(book_info)
+        self.main_widget.book_info.set_book(book_number, book_name,
+                                            description_stage)
 
     def _fetch_user_input_to_book_meta(self, book_info: BookInfo):
         field_list = self.main_widget.field_list

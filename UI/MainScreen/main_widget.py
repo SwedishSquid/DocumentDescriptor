@@ -1,11 +1,10 @@
-from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QLabel
-from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QSizePolicy
 from UI.MainScreen.control_buttons import ControlButtons
-# from UI.MainScreen.pdf_viewer import PDFViewer
 from UI.MainScreen.reject_qdialog import Reject
 from UI.MainScreen.full_book_list_qdialog import FullBookList
 from UI.MainScreen.field_list import FieldList
 from UI.MainScreen.browser_pdf_viewer import BrowserPdfViewer
+from UI.MainScreen.book_info_widget import BookInfoWidget
 from pathlib import Path
 
 
@@ -16,6 +15,7 @@ class MainWidget(QWidget):
         self.pdf_viewer.set_file(Path())
         self.field_list = FieldList(font_size=14)
         self.control_buttons = ControlButtons()  # part of public interface
+        self.book_info = BookInfoWidget()
 
         layout = QHBoxLayout()
         layout.addStretch()
@@ -38,28 +38,15 @@ class MainWidget(QWidget):
         pass
 
     def _create_left_widget(self):
-        layout1 = QVBoxLayout()
-        layout1.addStretch()
-        layout1.addWidget(self.field_list, 4)
+        layout = QVBoxLayout()
+        layout.addStretch()
+        layout.addWidget(self.field_list, 20)
+        layout.addWidget(self.control_buttons, 4)
+        layout.addWidget(self.book_info, 1)
 
-        # bottom_widget = self.control_buttons
-        layout1.addWidget(self.control_buttons, 1)
-        widget1 = QWidget()
-        widget1.setLayout(layout1)
-        return widget1
-
-    # def _create_label_with_number(self):
-    #     label = QLabel(str(self.number + 1))
-    #     label.setFont(QFont('Arial', 14))
-    #     return label
+        widget = QWidget()
+        widget.setLayout(layout)
+        return widget
 
     def set_document(self, path):
         self.pdf_viewer.set_file(Path(path))
-
-    def increase_fields_font_size(self):
-        new_size = self.field_list.font_size + 1
-        self.field_list.change_fields_font_size(new_size)
-
-    def decrease_fields_font_size(self):
-        new_size = self.field_list.font_size - 1
-        self.field_list.change_fields_font_size(new_size)

@@ -1,5 +1,6 @@
 from domain.engine import Engine
 from domain.book_data_holders.book_meta import BookMeta
+from domain.book_data_holders.book_info import BookInfo
 from domain.book_data_holders.description_stage import DescriptionStage
 from domain.glue import Glue
 
@@ -38,6 +39,14 @@ class App:
         if not self.engine.try_set_book_index(index):
             return False
         return self.get_current_book()
+
+    def get_book_number(self, book_info: BookInfo):
+        # todo: implement this method
+        return 1
+
+    def get_book_description_stage(self, book_info: BookInfo):
+        # todo: implement this method
+        return DescriptionStage.IN_PROGRESS
 
     def save_as_rejected(self, meta: BookMeta, message=''):
         """:param message: text explaining why this book is rejected"""

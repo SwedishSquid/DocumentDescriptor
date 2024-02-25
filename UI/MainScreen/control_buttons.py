@@ -50,8 +50,8 @@ class ControlButtons(QWidget):
     def _create_reject_button(self):
         button = self.create_blank_reject_button()
 
-        button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_U))
-        button.setToolTip("Отменить <b>Ctrl+U</b>")
+        button.setShortcut(QKeyCombination(Qt.Modifier.CTRL, Qt.Key.Key_R))
+        button.setToolTip("Отменить <b>Ctrl+R</b>")
 
         button.setIcon(QPixmap(str(path_to_pictures.joinpath('cross'))))
         button.setIconSize(QSize(96, 96))

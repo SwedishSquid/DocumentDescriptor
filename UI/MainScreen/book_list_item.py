@@ -1,18 +1,11 @@
 from PySide6.QtWidgets import QWidget, QLabel, QHBoxLayout
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QColorConstants
 from domain.book_data_holders.description_stage import DescriptionStage
 from UI.resizable_qtextedit import ResizableTextEdit
-from PySide6.QtGui import QColorConstants, QColor
+import UI.colors as colors
 
 
 class Book(QWidget):
-    colors_by_stage = {
-        DescriptionStage.NOT_STARTED: QColorConstants.White,
-        DescriptionStage.IN_PROGRESS: QColor(255, 238, 154),
-        DescriptionStage.REJECTED: QColor(255, 195, 154),
-        DescriptionStage.FINISHED: QColor(206, 255, 154)
-    }
-
     def __init__(self, number: int, name: str, stage: DescriptionStage):
         super().__init__()
         self.number = number
@@ -23,7 +16,6 @@ class Book(QWidget):
 
         self._name_holder = self._create_name_holder(name)
         layout.addWidget(self._name_holder)
-        layout.setSpacing(10)
 
         self.setLayout(layout)
 
@@ -42,7 +34,8 @@ class Book(QWidget):
 
         palette = text_edit.viewport().palette()
         palette.setColor(text_edit.viewport().backgroundRole(),
-                         self.colors_by_stage[self._stage])
+                         colors.color_by_stage_for_text_document_background[
+                             self._stage])
         text_edit.viewport().setPalette(palette)
         return text_edit
 

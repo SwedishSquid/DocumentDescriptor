@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QListWidget, QAbstractItemView, QListWidgetItem
 from UI.MainScreen.field_list_item import Field
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColorConstants, QFont
+from PySide6.QtGui import QColorConstants
 
 
 class FieldList(QListWidget):
@@ -45,6 +45,12 @@ class FieldList(QListWidget):
         self.font_size = new_size
         for field in self._get_all_fields():
             field.change_font_size(self.font_size)
+
+    def increase_fields_font_size(self):
+        self.change_fields_font_size(self.font_size + 1)
+
+    def decrease_fields_font_size(self):
+        self.change_fields_font_size(self.font_size - 1)
 
     def clear(self):
         self.is_changed = False
