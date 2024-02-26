@@ -28,6 +28,7 @@ MANIFEST
 
 dir_that_git_ignores/
 app-logs/
+temp/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
