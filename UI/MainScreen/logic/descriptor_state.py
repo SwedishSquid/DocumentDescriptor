@@ -25,9 +25,11 @@ class DescriptorState(AppStateBase):
         self.window = window
         self.menu_bar = DescriptorStateMenuBar()
         self.menu_bar.increase_font_size.triggered.connect(
-            self.main_widget.increase_fields_font_size)
+            self._on_increase_fields_font_size
+        )
         self.menu_bar.decrease_font_size.triggered.connect(
-            self.main_widget.decrease_fields_font_size)
+            self._on_decrease_fields_font_size
+        )
 
         self.app = App()
         pass
@@ -117,3 +119,15 @@ class DescriptorState(AppStateBase):
             self.app.save_as_in_progress(book_info.book_meta)
         self._show_book_by_index(index)
     pass
+
+    def _on_increase_fields_font_size(self):
+        self.main_widget.increase_fields_font_size()
+        self.menu_bar.fields_menu.setActiveAction(
+            self.menu_bar.increase_font_size)
+        self.menu_bar.fields_menu.exec_()
+
+    def _on_decrease_fields_font_size(self):
+        self.main_widget.decrease_fields_font_size()
+        self.menu_bar.fields_menu.setActiveAction(
+            self.menu_bar.decrease_font_size)
+        self.menu_bar.fields_menu.exec_()

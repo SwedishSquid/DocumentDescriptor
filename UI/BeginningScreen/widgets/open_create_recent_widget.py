@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QFont
 
 
@@ -29,8 +29,10 @@ class OpenCreateRecentWidget(QWidget):
         self.recent_projects_widget.setFont(QFont('Arial', 12))
 
         horizontal_layout = QHBoxLayout()
-        horizontal_layout.addWidget(self.create_new_button)
-        horizontal_layout.addWidget(self.open_existing_button)
+        horizontal_layout.addWidget(self.create_new_button,
+                                    alignment=Qt.AlignmentFlag.AlignVCenter)
+        horizontal_layout.addWidget(self.open_existing_button,
+                                    alignment=Qt.AlignmentFlag.AlignVCenter)
 
         vertical_layout = QVBoxLayout()
         self.setLayout(vertical_layout)

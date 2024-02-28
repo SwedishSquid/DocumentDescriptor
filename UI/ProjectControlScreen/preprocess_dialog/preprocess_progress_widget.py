@@ -1,13 +1,14 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton,\
-    QLabel, QTextEdit
-from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
+from PySide6.QtGui import QFont
 
 
 class PreprocessProgressWidget(QWidget):
     def __init__(self):
         super(PreprocessProgressWidget, self).__init__()
         self.message = QLabel('message here')
+        self.message.setFont(QFont("Arial", 10))
         self.output_console = QTextEdit()
+        self.output_console.setFont(QFont("Arial", 12))
         self.output_console.setReadOnly(True)
 
         layout = QVBoxLayout()

@@ -45,14 +45,23 @@ class PathChoosingWidget(QWidget):
         )
         self.continue_button.setEnabled(False)
 
+        select_folder_and_feedback_layout = QVBoxLayout()
+        select_folder_and_feedback_layout.addWidget(self.folder_selection_widget)
+        select_folder_and_feedback_layout.addWidget(self.feedback_label)
+        select_folder_and_feedback_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         buttons_layout = QHBoxLayout()
-        buttons_layout.addWidget(self.return_button)
-        buttons_layout.addWidget(self.continue_button)
+        buttons_layout.addStretch(3)
+        buttons_layout.addWidget(self.return_button, 2)
+        buttons_layout.addStretch(1)
+        buttons_layout.addWidget(self.continue_button, 2)
+        buttons_layout.addStretch(3)
+        buttons_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
-        main_layout.addWidget(self.folder_selection_widget)
-        main_layout.addWidget(self.feedback_label)
+        # main_layout.addStretch()
+        main_layout.addLayout(select_folder_and_feedback_layout)
         main_layout.addLayout(buttons_layout)
         pass
 

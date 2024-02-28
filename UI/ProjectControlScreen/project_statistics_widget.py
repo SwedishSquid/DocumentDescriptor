@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, \
-    QTextEdit, QSizePolicy, QHBoxLayout
+    QHBoxLayout
 
 from domain.statistics import Statistics
 from PySide6.QtCore import Signal
@@ -22,13 +22,15 @@ class ProjectStatisticsWidget(QWidget):
         main_layout.addLayout(secondary_layout)
 
         self.stats_label = self._make_stats_label()
-        secondary_layout.addWidget(self.stats_label)
+        secondary_layout.addWidget(self.stats_label,
+                                   alignment=Qt.AlignmentFlag.AlignCenter)
 
         m = 'reload'
         m_rus = 'Обновить статистику по проекту'
         self.refresh_button = self._make_refresh_button(m_rus)
-        secondary_layout.addWidget(self.refresh_button)
-        self.refresh_button.clicked.connect(lambda: self.Reload_Statistics_Signal.emit())
+        secondary_layout.addWidget(self.refresh_button,
+                                   alignment=Qt.AlignmentFlag.AlignLeft)
+        self.refresh_button.clicked.connect(self.Reload_Statistics_Signal.emit)
         pass
 
     def set_statistics(self, stats: Statistics):

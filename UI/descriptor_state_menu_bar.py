@@ -5,7 +5,8 @@ from PySide6.QtGui import QAction
 class DescriptorStateMenuBar(QMenuBar):
     def __init__(self):
         super().__init__()
-        self.addMenu(self._create_fields_menu())
+        self.fields_menu = self._create_fields_menu()
+        self.addMenu(self.fields_menu)
 
     def _create_fields_menu(self):
         fields_menu = QMenu("Поля")
