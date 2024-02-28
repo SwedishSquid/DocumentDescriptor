@@ -7,12 +7,17 @@ from pathlib import Path
 from app.App import App
 from domain.book_data_holders.book_info import BookInfo
 from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
+from infrastructure.saved_state import SavedStateManager, SavedStateSymbols
 
 
 class DescriptorState(AppStateBase):
     def __init__(self, window: QMainWindow):
         super(DescriptorState, self).__init__()
         self.main_widget = MainWidget()
+        main_widget_fields_font_size = \
+            SavedStateManager.get(SavedStateSymbols.FontSize, default_value=14)
+        self.main_widget.field_list.change_fields_font_size(
+            main_widget_fields_font_size)
         self.main_widget.control_buttons.full_list_button.clicked.connect(
             self._show_full_book_list)
         self.main_widget.control_buttons.continue_button.clicked.connect(
@@ -129,13 +134,19 @@ class DescriptorState(AppStateBase):
     pass
 
     def _on_increase_fields_font_size(self):
-        self.main_widget.increase_fields_font_size()
+        self.main_widget.field_list.increase_fields_font_size()
+        self._save_fields_font_size()
         self.menu_bar.fields_menu.setActiveAction(
             self.menu_bar.increase_font_size)
         self.menu_bar.fields_menu.exec_()
 
     def _on_decrease_fields_font_size(self):
-        self.main_widget.decrease_fields_font_size()
+        self.main_widget.field_list.decrease_fields_font_size()
+        self._save_fields_font_size()
         self.menu_bar.fields_menu.setActiveAction(
             self.menu_bar.decrease_font_size)
         self.menu_bar.fields_menu.exec_()
+
+    def _save_fields_font_size(self):
+        font_size = self.main_widget.field_list.font_size
+        SavedStateManager.put(SavedStateSymbols.FontSize, font_size)

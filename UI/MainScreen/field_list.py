@@ -5,6 +5,7 @@ from PySide6.QtGui import QColorConstants
 
 
 class FieldList(QListWidget):
+    _max_fields_font_size = 30
     def __init__(self, font_size: int):
         super().__init__()
         self.is_changed = False
@@ -40,7 +41,8 @@ class FieldList(QListWidget):
             yield field
 
     def change_fields_font_size(self, new_size: int):
-        if new_size <= 0 or new_size == self.font_size:
+        if new_size <= 0 or new_size > self._max_fields_font_size \
+                 or new_size == self.font_size:
             return
         self.font_size = new_size
         for field in self._get_all_fields():
