@@ -3,6 +3,8 @@ from UI.BeginningScreen.widgets.path_choosing_widget import PathChoosingWidget
 from UI.ProjectControlScreen.project_control_widget import ProjectControlWidget
 from UI.ProjectControlScreen.preprocess_dialog.preprocess_dialog import PreprocessDialog
 from UI.View.state_view_widget import StateViewWidget
+from domain.statistics import Statistics
+from pathlib import Path
 
 
 def make_path_choosing_widget():
@@ -33,6 +35,18 @@ def make_project_control_widget():
     w.Start_Preprocessing_Signal.connect(
         lambda: d.exec()
     )
+
+    w.statistics_widget.set_statistics(Statistics(
+        Path('path here'),
+        4,
+        3,
+        2,
+        1,
+        5,
+        6,
+        233,
+    ))
+
     return w
 
 
@@ -44,7 +58,7 @@ class TempView:
         self.window.setWindowTitle("App for development needs")
         self.window.setMinimumSize(800, 600)
 
-        w = StateViewWidget()
+        w = make_project_control_widget()
 
         self.window.setCentralWidget(w)
         pass
