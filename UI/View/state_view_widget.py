@@ -30,6 +30,9 @@ class StateViewWidget(QWidget):
         self.open_or_create_state.Open_Existing_Project.connect(
             self.open_path_choosing_stata.transfer_control
         )
+        self.open_or_create_state.Open_Recent_Project.connect(
+            self.project_control_state.transfer_control
+        )
 
         self.create_path_choosing_state.Path_Chosen.connect(
             self.project_control_state.transfer_control
