@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QMessageBox
+from PySide6.QtGui import QFont
 from PySide6.QtCore import Slot
 from UI.app_state_base import AppStateBase
 from UI.MainScreen.main_widget import MainWidget
@@ -6,7 +7,6 @@ from UI.descriptor_state_menu_bar import DescriptorStateMenuBar
 from pathlib import Path
 from app.App import App
 from domain.book_data_holders.book_info import BookInfo
-from UI.MainScreen.no_more_files_dialog import NoMoreFilesDialog
 from infrastructure.saved_state import SavedStateManager, SavedStateSymbols
 
 
@@ -36,6 +36,14 @@ class DescriptorState(AppStateBase):
             self._on_decrease_fields_font_size
         )
 
+        self._no_more_files_msg_box = QMessageBox(
+            QMessageBox.Icon.Information,
+            'Книги закончились!',
+            'Документов больше нет. Поздравляем!',
+            QMessageBox.StandardButton.Ok
+        )
+        self._no_more_files_msg_box.setFont(QFont('Arial', 12))
+
         self.app = App()
         pass
 
@@ -55,7 +63,7 @@ class DescriptorState(AppStateBase):
     def _show_next_book(self):
         book_info = self.app.get_next_book()
         if book_info is None:
-            NoMoreFilesDialog().exec()
+            self._no_more_files_msg_box.exec()
             return
         self._show_current_book()
         pass

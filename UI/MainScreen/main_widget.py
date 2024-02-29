@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout, QSizePolicy
+from PySide6.QtWidgets import QHBoxLayout, QWidget, QVBoxLayout
 from UI.MainScreen.control_buttons import ControlButtons
 from UI.MainScreen.reject_qdialog import Reject
 from UI.MainScreen.full_book_list_qdialog import FullBookList
