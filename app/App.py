@@ -40,13 +40,13 @@ class App:
             return False
         return self.get_current_book()
 
-    def get_book_number(self, book_info: BookInfo):
+    def get_current_book_index(self):
         # todo: implement this method
-        return ''
+        return self.engine.current_book_index
 
     def get_book_description_stage(self, book_info: BookInfo):
         # todo: implement this method
-        return DescriptionStage.NOT_STARTED
+        return book_info.description_stage
 
     def save_as_rejected(self, meta: BookMeta, message=''):
         """:param message: text explaining why this book is rejected"""

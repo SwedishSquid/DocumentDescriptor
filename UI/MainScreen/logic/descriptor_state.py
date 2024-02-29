@@ -96,9 +96,9 @@ class DescriptorState(AppStateBase):
         pass
 
     def _set_book_info(self, book_info: BookInfo):
-        book_number = self.app.get_book_number(book_info)
+        book_number = self.app.get_current_book_index() + 1
         book_name = book_info.book_meta.initial_file_name
-        description_stage = self.app.get_book_description_stage(book_info)
+        description_stage = book_info.description_stage
         self.main_widget.book_info.set_book(book_number, book_name,
                                             description_stage)
 
