@@ -64,6 +64,7 @@ class DescriptorState(AppStateBase):
         book_info = self.app.get_next_book()
         if book_info is None:
             self._no_more_files_msg_box.exec()
+            self._set_book_info(self.app.get_current_book())
             return
         self._show_current_book()
         pass

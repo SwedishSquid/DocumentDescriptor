@@ -41,12 +41,7 @@ class App:
         return self.get_current_book()
 
     def get_current_book_index(self):
-        # todo: implement this method
         return self.engine.current_book_index
-
-    def get_book_description_stage(self, book_info: BookInfo):
-        # todo: implement this method
-        return book_info.description_stage
 
     def save_as_rejected(self, meta: BookMeta, message=''):
         """:param message: text explaining why this book is rejected"""
