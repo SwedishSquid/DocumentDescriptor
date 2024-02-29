@@ -1,6 +1,3 @@
-from pathlib import Path
-
-from UI.MainScreen.main_widget import MainWidget
 from UI.constant_paths import path_to_pictures
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QMainWindow
@@ -23,6 +20,6 @@ class View:
         pass
 
     def run(self):
-        logging.info('app started')
+        logging.info(f'app started; current version = {version.get_version()}')
         self.window.show()
         return self.q_app.exec()

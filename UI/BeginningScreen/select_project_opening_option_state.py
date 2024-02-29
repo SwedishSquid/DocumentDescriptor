@@ -4,6 +4,7 @@ from PySide6.QtCore import Signal
 from pathlib import Path
 from domain.glue import Glue
 from UI.helpers.inform_dialog import InformDialog
+from domain.submodules.previous_projects_storage_manager import PreviousProjectsStorageManager
 
 
 class SelectProjectOpeningOptionState(AppStateBase):
@@ -24,14 +25,14 @@ class SelectProjectOpeningOptionState(AppStateBase):
             self._on_recent_project_selected
         )
 
-        # self.main_widget.set_recent_projects([Path(r'E:\ProjectLib\result_root')])
         pass
 
     def get_main_widget(self):
         return self.main_widget
 
     def transfer_control(self):
-        # todo: reload recent projects list
+        self.main_widget.set_recent_projects(
+            PreviousProjectsStorageManager().load_projects_paths())
         self.Show_Main_Widget.emit(self.get_main_widget())
         pass
 
