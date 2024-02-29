@@ -34,6 +34,7 @@ class RecentProjectsWidget(QWidget):
         pass
 
     def set_project_paths(self, project_paths: list):
+        self.list.clear()
         for path in project_paths:
             el = LoadedQListWidgetItem(path, str(path))
             el.setFont(QFont('Arial', 15))
