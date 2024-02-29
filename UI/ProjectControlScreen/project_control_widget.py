@@ -71,7 +71,7 @@ class ProjectControlWidget(QWidget):
 
         b.setStyleSheet("""
                 QPushButton {
-                    background-color: #009292;
+                    background-color: #00ACAD;
                     border-radius: 40px;
                 }
                 QPushButton:hover {
