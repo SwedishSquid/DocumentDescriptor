@@ -1,5 +1,3 @@
-import time
-
 from UI.app_state_base import AppStateBase
 from UI.ProjectControlScreen.project_control_widget import ProjectControlWidget
 from UI.ProjectControlScreen.preprocess_dialog.preprocess_dialog import PreprocessDialog
@@ -10,6 +8,7 @@ from threading import Thread, Event
 from domain.statistics import Statistics
 from UI.helpers.inform_dialog import InformDialog
 import logging
+from domain.submodules.previous_projects_storage_manager import PreviousProjectsStorageManager
 
 
 class ProjectControlState(AppStateBase):
@@ -56,6 +55,7 @@ class ProjectControlState(AppStateBase):
         self._refresh_statistics()
         self.Show_Main_Widget.emit(self.get_main_widget())
         self.main_widget.set_enabled_for_all_action_buttons(True)
+        PreviousProjectsStorageManager().update_projects_list(self.project_path)
         pass
 
     def _enable_all_actions(self):
