@@ -42,11 +42,11 @@ class App:
 
     def get_book_number(self, book_info: BookInfo):
         # todo: implement this method
-        return 1
+        return ''
 
     def get_book_description_stage(self, book_info: BookInfo):
         # todo: implement this method
-        return DescriptionStage.IN_PROGRESS
+        return DescriptionStage.NOT_STARTED
 
     def save_as_rejected(self, meta: BookMeta, message=''):
         """:param message: text explaining why this book is rejected"""
