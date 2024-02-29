@@ -21,6 +21,10 @@ def _make_resource_arguments():
     return arguments
 
 
+def _make_icon_path():
+    return resource_locator.get_resource_folder().joinpath('pictures/papyrus.ico')
+
+
 def compile_descriptor_app():
     # full options list https://pyinstaller.org/en/stable/usage.html#options
     PyInstaller.__main__.run([
@@ -31,6 +35,7 @@ def compile_descriptor_app():
         *_make_resource_arguments(),
         '--clean',      # means not to use cashed files
         '-y',       # replace previously compiled binary files in dist
+        f'--icon={_make_icon_path()}',
     ])
 
 
