@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QTextCursor
 
 
 class PreprocessProgressWidget(QWidget):
@@ -22,7 +22,9 @@ class PreprocessProgressWidget(QWidget):
         pass
 
     def add_output_text(self, text: str):
-        self.output_console.insertPlainText(text + '\n')
+        cursor = self.output_console.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
+        cursor.insertText(text + '\n')
         pass
 
     pass
