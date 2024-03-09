@@ -8,6 +8,7 @@ from pathlib import Path
 from app.App import App
 from domain.book_data_holders.book_info import BookInfo
 from infrastructure.saved_state import SavedStateManager, SavedStateSymbols
+import logging
 
 
 class DescriptorState(AppStateBase):
@@ -55,7 +56,7 @@ class DescriptorState(AppStateBase):
         if not self.app.try_set_project_path(path):
             raise ValueError('by this time project should already exist'
                              ' and be initialised')
-        self._show_current_book()
+        self._try_show_current_book()
         self.Show_Main_Widget.emit(self.get_main_widget())
         self.window.setMenuBar(self.menu_bar)
         pass
@@ -85,6 +86,14 @@ class DescriptorState(AppStateBase):
         self._set_book_meta_fields(book_info)
         self._set_book_info(book_info)
         pass
+
+    def _try_show_current_book(self):
+        try:
+            self._show_current_book()
+        except IndexError as e:
+            logging.getLogger(__name__).warning('cant show current document. Probably because lib_root is empty')
+            return False
+        return True
 
     def _set_book_meta_fields(self, book_info: BookInfo):
         field_list = self.main_widget.field_list
