@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 import utils
+import sys
+import traceback
 
 
 default_log_level = 'WARNING'
@@ -36,6 +38,16 @@ def _set_logging_level(logger, level=None):
     pass
 
 
+def _set_exception_hook():
+    def my_exception_hook(type, value, tb):
+        logging.critical(f'something happened again, uncaught exception of type = {type}, value = {value}')
+        logging.critical(f'traceback = {traceback.extract_tb(tb)}')
+        raise type(value)   # reraise exception
+        pass
+    sys.excepthook = my_exception_hook
+    pass
+
+
 def configure_main_logger(level=None):
     logger = logging.getLogger('root')
 
@@ -55,6 +67,8 @@ def configure_main_logger(level=None):
     file_handler = logging.FileHandler(filename=path, mode='w', encoding='utf-8', )
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
+
+    _set_exception_hook()
     return logger
 
 
